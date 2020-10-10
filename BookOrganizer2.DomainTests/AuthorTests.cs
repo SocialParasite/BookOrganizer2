@@ -1,6 +1,7 @@
 ﻿using BookOrganizer2.Domain;
 using FluentAssertions;
 using System;
+using System.Runtime.InteropServices;
 using BookOrganizer2.Domain.Exceptions;
 using Xunit;
 
@@ -62,6 +63,50 @@ namespace BookOrganizer2.DomainTests
             Action action = () => sut.SetLastName(name);
 
             action.Should().Throw<InvalidLastNameException>();
+        }
+
+        [Fact]
+        public void ValidBirthday()
+        {
+            var author = new Author();
+            author.SetDateOfBirth(new DateTime(1950, 12, 24));
+
+            author.DateOfBirth.Should().HaveYear(1950);
+            author.DateOfBirth.Should().HaveMonth(12);
+            author.DateOfBirth.Should().HaveDay(24);
+        }
+
+        [Fact]
+        public void BirthdayCanBeNull()
+        {
+            var author = new Author();
+            author.SetDateOfBirth(null);
+
+            author.DateOfBirth.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData("")]
+        public void ValidBiography(string bio)
+        {
+            var author = new Author();
+            author.SetBiography(bio);
+
+            author.Biography.Should().BeOfType<string>();
+            author.Biography.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AuthorMugshotsAreStoredUnderCurrentUsersProfileInAuthorPicsSubfolder()
+        {
+            var author = new Author();
+            var pic = @"C:\temp\testingAuthorPicsPath\fake.jpg";
+            author.SetMugshotPath(pic);
+
+            //var test = "C:\\Users\\tonij\\Pictures\\BookOrganizer\\AuthorPics\\fake.jpg";
+
+            //author.MugshotPath.Should().Be(test);
+            author.MugshotPath.Should().Be(pic);
         }
     }
 }

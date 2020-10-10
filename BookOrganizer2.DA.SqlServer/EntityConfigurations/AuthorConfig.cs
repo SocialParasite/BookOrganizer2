@@ -19,6 +19,12 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
             builder.Property(x => x.LastName)
                 .IsRequired()
                 .HasMaxLength(64);
+
+            builder.Property(x => x.DateOfBirth)
+                .HasColumnType("date");
+
+            builder.Property(x => x.MugshotPath)
+                .HasMaxLength(256);
         }
     }
 }
