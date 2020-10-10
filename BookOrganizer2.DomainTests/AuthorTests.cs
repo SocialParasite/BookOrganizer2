@@ -66,7 +66,7 @@ namespace BookOrganizer2.DomainTests
         }
 
         [Fact]
-        public void ValidBirthday()
+        public void Valid_Birthday()
         {
             var author = new Author();
             author.SetDateOfBirth(new DateTime(1950, 12, 24));
@@ -77,7 +77,7 @@ namespace BookOrganizer2.DomainTests
         }
 
         [Fact]
-        public void BirthdayCanBeNull()
+        public void Birthday_Can_Be_Null()
         {
             var author = new Author();
             author.SetDateOfBirth(null);
@@ -87,7 +87,7 @@ namespace BookOrganizer2.DomainTests
 
         [Theory]
         [InlineData("")]
-        public void ValidBiography(string bio)
+        public void Valid_Biography(string bio)
         {
             var author = new Author();
             author.SetBiography(bio);
@@ -97,7 +97,7 @@ namespace BookOrganizer2.DomainTests
         }
 
         [Fact]
-        public void AuthorMugshotsAreStoredUnderCurrentUsersProfileInAuthorPicsSubfolder()
+        public void Valid_mugshot_path()
         {
             var author = new Author();
             var pic = @"C:\temp\testingAuthorPicsPath\fake.jpg";
