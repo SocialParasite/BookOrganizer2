@@ -4,14 +4,16 @@ using BookOrganizer2.DA.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookOrganizer2.DA.SqlServer.Migrations
 {
     [DbContext(typeof(BookOrganizer2DbContext))]
-    partial class BookOrganizer2DbContextModelSnapshot : ModelSnapshot
+    [Migration("20201010201313_AuthorLastName")]
+    partial class AuthorLastName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
