@@ -35,5 +35,33 @@ namespace BookOrganizer2.DomainTests
 
             action.Should().Throw<InvalidFirstNameException>();
         }
+
+        [Theory]
+        [InlineData("A")]
+        [InlineData("Wayne")]
+        [InlineData("Duke Wayne")]
+        [InlineData("John-John")]
+        [InlineData("WolfeschlegelsteinhausenbergerdorffWolfeschlegelsteinhausenberge")]
+        public void Valid_last_name(string name)
+        {
+            var sut = new Author();
+            sut.SetLastName(name);
+            sut.LastName.Should().Be(name);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        [InlineData("@")]
+        [InlineData("123")]
+        [InlineData("WolfeschlegelsteinhausenbergerdorffWolfeschlegelsteinhausenberger")]
+        public void InValid_last_name(string name)
+        {
+            var sut = new Author();
+            Action action = () => sut.SetLastName(name);
+
+            action.Should().Throw<InvalidLastNameException>();
+        }
     }
 }
