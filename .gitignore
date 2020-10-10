@@ -10,7 +10,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 connectionString.json
-BookOrganizer.UI.TestConsole
+BookOrganizer2.UI.TestConsole
 appsettings.json
 settings.json
 
