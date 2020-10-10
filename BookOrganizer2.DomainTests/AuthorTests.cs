@@ -11,7 +11,9 @@ namespace BookOrganizer2.DomainTests
         [Theory]
         [InlineData("A")]
         [InlineData("John")]
-        [InlineData("James-John-Harry-Michael-William-David-Richard-Joseph-Thomas-Joe")]
+        [InlineData("John John")]
+        [InlineData("John-John")]
+        [InlineData("JamesJohnHarryMichaelWilliamDavidRichardJosephThomasJoeMarkDerek")]
         public void Valid_first_name(string name)
         {
             var sut = new Author();
@@ -21,8 +23,11 @@ namespace BookOrganizer2.DomainTests
 
         [Theory]
         [InlineData("")]
+        [InlineData(" ")]
         [InlineData(null)]
-        [InlineData("James-John-Harry-Michael-William-David-Richard-Joseph-Thomas-Matt")]
+        [InlineData("@")]
+        [InlineData("123")]
+        [InlineData("JamesJohnHarryMichaelWilliamDavidRichardJosephThomasMattMarkDerek")]
         public void InValid_first_name(string name)
         {
             var sut = new Author();

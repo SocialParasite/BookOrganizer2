@@ -1,4 +1,6 @@
-﻿using BookOrganizer2.Domain.Exceptions;
+﻿using System;
+using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Exceptions;
 
 namespace BookOrganizer2.Domain
 {
@@ -15,11 +17,14 @@ namespace BookOrganizer2.Domain
                 throw new InvalidFirstNameException();
         }
 
-        private bool ValidateName(string name)
+        private static bool ValidateName(string name)
         {
-            return name != null
-                && name.Length <= 64 
-                && name.Length > 0;   
+            if (name == null)
+                throw new InvalidFirstNameException();
+
+            var regexPattern = new Regex("^(?=.{1,64}$)[A-Za-z]+(?:[ '-][A-Za-z]+)?$");
+
+            return regexPattern.IsMatch(name);   
         }
     }
 }
