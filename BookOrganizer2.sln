@@ -11,17 +11,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{76E0C0D7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DA", "DA", "{1388986D-5829-4534-A53F-3E0BAD5C2837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.Domain", "BookOrganizer2.Domain\BookOrganizer2.Domain.csproj", "{A9DD77D7-E88E-4E1E-9C27-DD300B143362}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.Domain", "BookOrganizer2.Domain\BookOrganizer2.Domain.csproj", "{A9DD77D7-E88E-4E1E-9C27-DD300B143362}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{F1ECA72D-6071-4E12-B7EE-E3469E295645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.DomainTests", "BookOrganizer2.DomainTests\BookOrganizer2.DomainTests.csproj", "{2FA5A00D-C3ED-44D1-BF9E-2848758EFDAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.DomainTests", "BookOrganizer2.DomainTests\BookOrganizer2.DomainTests.csproj", "{2FA5A00D-C3ED-44D1-BF9E-2848758EFDAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.UI.TestConsole", "BookOrganizer2.UI.TestConsole\BookOrganizer2.UI.TestConsole.csproj", "{207FF759-BCCB-4152-9603-0C7BED0334CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.UI.TestConsole", "BookOrganizer2.UI.TestConsole\BookOrganizer2.UI.TestConsole.csproj", "{207FF759-BCCB-4152-9603-0C7BED0334CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.DA.SqlServer", "BookOrganizer2.DA.SqlServer\BookOrganizer2.DA.SqlServer.csproj", "{D91DE709-7BFF-4C08-AE3A-B822BBEF8289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.DA.SqlServer", "BookOrganizer2.DA.SqlServer\BookOrganizer2.DA.SqlServer.csproj", "{D91DE709-7BFF-4C08-AE3A-B822BBEF8289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.DA.Repositories", "BookOrganizer2.DA.Repositories\BookOrganizer2.DA.Repositories.csproj", "{16A222F7-FCAA-44A6-B494-FB74094728F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.DA.Repositories", "BookOrganizer2.DA.Repositories\BookOrganizer2.DA.Repositories.csproj", "{16A222F7-FCAA-44A6-B494-FB74094728F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{7DEC0CC5-92CA-4456-9075-2AC545F33D47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,7 @@ Global
 		{207FF759-BCCB-4152-9603-0C7BED0334CA} = {AD365F8C-E384-43F8-8FD5-D1ED0412979F}
 		{D91DE709-7BFF-4C08-AE3A-B822BBEF8289} = {1388986D-5829-4534-A53F-3E0BAD5C2837}
 		{16A222F7-FCAA-44A6-B494-FB74094728F8} = {1388986D-5829-4534-A53F-3E0BAD5C2837}
+		{7DEC0CC5-92CA-4456-9075-2AC545F33D47} = {76E0C0D7-0E5C-496C-BADA-7ADCC8DDDABC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B358AEBA-6F19-4A90-B731-13A00577A035}

@@ -1,0 +1,7 @@
+﻿{
+  "ConnectionStrings": {
+    "DEV": "Server=WIN10FC2020\\SQLEXPRESS;Database=BookOrganizerDb2-DEV;Trusted_Connection=True;",
+    "VALID": "Server=WIN10FC2020\\SQLEXPRESS;Database=BookOrganizerDb2-VALID;Trusted_Connection=True;",
+    "PROD": "Server=WIN10FC2020\\SQLEXPRESS;Database=BookOrganizerDb2-PROD;Trusted_Connection=True;"
+  }
+}
