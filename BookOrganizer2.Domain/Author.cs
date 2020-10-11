@@ -6,12 +6,12 @@ namespace BookOrganizer2.Domain
 {
     public class Author
     {
-        public AuthorId Id { get; private set; }
+        public AuthorId Id { get; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public DateTime? DateOfBirth { get; private set; }
         public string Biography { get; private set; }
-        public string MugshotPath { get; set; }
+        public string MugshotPath { get; private set; }
 
         public void SetFirstName(string name)
         {
@@ -46,10 +46,10 @@ namespace BookOrganizer2.Domain
 
         private static bool ValidateName(string name, Action exception)
         {
-            if (name == null) 
+            if (string.IsNullOrWhiteSpace(name)) 
                 exception.Invoke();
 
-            var regexPattern = new Regex("^(?=.{1,64}$)[A-Za-z]+(?:[ '-][A-Za-z]+)?$");
+            var regexPattern = new Regex("(?=.{1,64}$)^[\\p{L}\\p{M}\\s'-]+?$");
 
             return regexPattern.IsMatch(name ?? string.Empty);   
         }

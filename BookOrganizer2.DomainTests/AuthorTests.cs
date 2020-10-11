@@ -1,8 +1,7 @@
 ﻿using BookOrganizer2.Domain;
+using BookOrganizer2.Domain.Exceptions;
 using FluentAssertions;
 using System;
-using System.Runtime.InteropServices;
-using BookOrganizer2.Domain.Exceptions;
 using Xunit;
 
 namespace BookOrganizer2.DomainTests
@@ -14,6 +13,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("John")]
         [InlineData("John John")]
         [InlineData("John-John")]
+        [InlineData("Åke")]
         [InlineData("JamesJohnHarryMichaelWilliamDavidRichardJosephThomasJoeMarkDerek")]
         public void Valid_first_name(string name)
         {
@@ -42,6 +42,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("Wayne")]
         [InlineData("Duke Wayne")]
         [InlineData("John-John")]
+        [InlineData("Åkerman")]
         [InlineData("WolfeschlegelsteinhausenbergerdorffWolfeschlegelsteinhausenberge")]
         public void Valid_last_name(string name)
         {
