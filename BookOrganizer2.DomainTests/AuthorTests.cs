@@ -97,17 +97,33 @@ namespace BookOrganizer2.DomainTests
             author.Biography.Should().BeEmpty();
         }
 
-        [Fact]
-        public void Valid_mugshot_path()
+        [Theory]
+        [InlineData("fake.jpg")]
+        [InlineData("fake.JPG")]
+        [InlineData("fake.jpeg")]
+        [InlineData("fake.png")]
+        [InlineData("fake.gif")]
+        public void Valid_mugshot_path(string file)
         {
             var author = new Author();
-            var pic = @"C:\temp\testingAuthorPicsPath\fake.jpg";
+            var pic = @$"C:\temp\testingAuthorPicsPath\{file}";
             author.SetMugshotPath(pic);
 
-            //var test = "C:\\Users\\tonij\\Pictures\\BookOrganizer\\AuthorPics\\fake.jpg";
-
-            //author.MugshotPath.Should().Be(test);
             author.MugshotPath.Should().Be(pic);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData(@"C:\secret.doc%00.exe")]
+        [InlineData(@"C:\fake.bmp")]
+        public void Invalid_mugshot_path(string path)
+        {
+            var author = new Author();
+            var pic = path;
+            Action action = () => author.SetMugshotPath(pic);
+
+            action.Should().Throw<Exception>();
         }
     }
 }

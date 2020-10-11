@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using BookOrganizer2.Domain.Exceptions;
 
@@ -41,7 +43,13 @@ namespace BookOrganizer2.Domain
 
         public void SetMugshotPath(string pic)
         {
-            MugshotPath = pic;
+            var path = Path.GetFullPath(pic);
+            string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
+
+            if (formats.Contains(Path.GetExtension(pic), StringComparer.InvariantCultureIgnoreCase))
+                MugshotPath = path;
+            else 
+                throw new Exception();
         }
 
         private static bool ValidateName(string name, Action exception)
