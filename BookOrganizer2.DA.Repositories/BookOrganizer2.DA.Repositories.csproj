@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookOrganizer2.DA.SqlServer\BookOrganizer2.DA.SqlServer.csproj" />
+    <ProjectReference Include="..\BookOrganizer2.Domain\BookOrganizer2.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
