@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.DA.Repositor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{7DEC0CC5-92CA-4456-9075-2AC545F33D47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.IntegrationTests", "BookOrganizer2.IntegrationTests\BookOrganizer2.IntegrationTests.csproj", "{155EC68F-713A-4E18-AA4D-DF15D5F842AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{16A222F7-FCAA-44A6-B494-FB74094728F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A222F7-FCAA-44A6-B494-FB74094728F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A222F7-FCAA-44A6-B494-FB74094728F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{D91DE709-7BFF-4C08-AE3A-B822BBEF8289} = {1388986D-5829-4534-A53F-3E0BAD5C2837}
 		{16A222F7-FCAA-44A6-B494-FB74094728F8} = {1388986D-5829-4534-A53F-3E0BAD5C2837}
 		{7DEC0CC5-92CA-4456-9075-2AC545F33D47} = {76E0C0D7-0E5C-496C-BADA-7ADCC8DDDABC}
+		{155EC68F-713A-4E18-AA4D-DF15D5F842AD} = {7DEC0CC5-92CA-4456-9075-2AC545F33D47}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B358AEBA-6F19-4A90-B731-13A00577A035}

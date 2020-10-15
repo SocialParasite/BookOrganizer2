@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -54,10 +55,14 @@ namespace BookOrganizer2.Domain
 
         private static bool ValidateName(string name, Action exception)
         {
+            const int minLength = 1;
+            const int maxLength = 64;
+            string pattern = "(?=.{" + minLength + "," + maxLength +"}$)^[\\p{L}\\p{M}\\s'-]+?$";
+
             if (string.IsNullOrWhiteSpace(name)) 
                 exception.Invoke();
 
-            var regexPattern = new Regex("(?=.{1,64}$)^[\\p{L}\\p{M}\\s'-]+?$");
+            var regexPattern = new Regex(pattern);
 
             return regexPattern.IsMatch(name ?? string.Empty);   
         }
