@@ -1,20 +1,34 @@
-﻿using System;
-using System.Data.Common;
+﻿using BookOrganizer2.Domain.Exceptions;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.Exceptions;
 
 namespace BookOrganizer2.Domain
 {
     public class Author
     {
-        public AuthorId Id { get; }
+        private Author() { }
+
+        public AuthorId Id { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public DateTime? DateOfBirth { get; private set; }
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
+
+        public static Author Create(AuthorId id)
+        {
+            if (id is null)
+                throw new ArgumentNullException(nameof(id), "Store without unique identifier cannot be created.");
+
+            var author = new Author
+            {
+                Id = id
+            };
+
+            return author;
+        }
 
         public void SetFirstName(string name)
         {
@@ -57,7 +71,7 @@ namespace BookOrganizer2.Domain
         {
             const int minLength = 1;
             const int maxLength = 64;
-            string pattern = "(?=.{" + minLength + "," + maxLength +"}$)^[\\p{L}\\p{M}\\s'-]+?$";
+            var pattern = "(?=.{" + minLength + "," + maxLength +"}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
             if (string.IsNullOrWhiteSpace(name)) 
                 exception.Invoke();

@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.Exceptions;
 using FluentAssertions;
 using System;
+using BookOrganizer2.Domain.Shared;
 using Xunit;
 
 namespace BookOrganizer2.DomainTests
@@ -17,7 +18,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("JamesJohnHarryMichaelWilliamDavidRichardJosephThomasJoeMarkDerek")]
         public void Valid_first_name(string name)
         {
-            var sut = new Author();
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
             sut.SetFirstName(name);
             sut.FirstName.Should().Be(name);
         }
@@ -31,7 +32,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("JamesJohnHarryMichaelWilliamDavidRichardJosephThomasMattMarkDerek")]
         public void InValid_first_name(string name)
         {
-            var sut = new Author();
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
             Action action = () => sut.SetFirstName(name);
 
             action.Should().Throw<InvalidFirstNameException>();
@@ -46,7 +47,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("WolfeschlegelsteinhausenbergerdorffWolfeschlegelsteinhausenberge")]
         public void Valid_last_name(string name)
         {
-            var sut = new Author();
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
             sut.SetLastName(name);
             sut.LastName.Should().Be(name);
         }
@@ -60,7 +61,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData("WolfeschlegelsteinhausenbergerdorffWolfeschlegelsteinhausenberger")]
         public void InValid_last_name(string name)
         {
-            var sut = new Author();
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
             Action action = () => sut.SetLastName(name);
 
             action.Should().Throw<InvalidLastNameException>();
@@ -69,32 +70,32 @@ namespace BookOrganizer2.DomainTests
         [Fact]
         public void Valid_Birthday()
         {
-            var author = new Author();
-            author.SetDateOfBirth(new DateTime(1950, 12, 24));
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
+            sut.SetDateOfBirth(new DateTime(1950, 12, 24));
 
-            author.DateOfBirth.Should().HaveYear(1950);
-            author.DateOfBirth.Should().HaveMonth(12);
-            author.DateOfBirth.Should().HaveDay(24);
+            sut.DateOfBirth.Should().HaveYear(1950);
+            sut.DateOfBirth.Should().HaveMonth(12);
+            sut.DateOfBirth.Should().HaveDay(24);
         }
 
         [Fact]
         public void Birthday_Can_Be_Null()
         {
-            var author = new Author();
-            author.SetDateOfBirth(null);
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
+            sut.SetDateOfBirth(null);
 
-            author.DateOfBirth.Should().BeNull();
+            sut.DateOfBirth.Should().BeNull();
         }
 
         [Theory]
         [InlineData("")]
         public void Valid_Biography(string bio)
         {
-            var author = new Author();
-            author.SetBiography(bio);
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
+            sut.SetBiography(bio);
 
-            author.Biography.Should().BeOfType<string>();
-            author.Biography.Should().BeEmpty();
+            sut.Biography.Should().BeOfType<string>();
+            sut.Biography.Should().BeEmpty();
         }
 
         [Theory]
@@ -105,11 +106,11 @@ namespace BookOrganizer2.DomainTests
         [InlineData("fake.gif")]
         public void Valid_mugshot_path(string file)
         {
-            var author = new Author();
-            var pic = @$"C:\temp\testingAuthorPicsPath\{file}";
-            author.SetMugshotPath(pic);
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
+            var pic = @$"C:\temp\testingsutPicsPath\{file}";
+            sut.SetMugshotPath(pic);
 
-            author.MugshotPath.Should().Be(pic);
+            sut.MugshotPath.Should().Be(pic);
         }
 
         [Theory]
@@ -119,9 +120,9 @@ namespace BookOrganizer2.DomainTests
         [InlineData(@"C:\fake.bmp")]
         public void Invalid_mugshot_path(string path)
         {
-            var author = new Author();
+            var sut = Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()));
             var pic = path;
-            Action action = () => author.SetMugshotPath(pic);
+            Action action = () => sut.SetMugshotPath(pic);
 
             action.Should().Throw<Exception>();
         }
