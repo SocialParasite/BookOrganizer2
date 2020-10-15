@@ -1,20 +1,25 @@
 ﻿using BookOrganizer2.Domain.DA;
 using System;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.Domain.Services
 {
-    public class AuthorService : IDomainService<Author>
+    public class AuthorService : IDomainService<Author, AuthorId>
     {
-        public IRepository<Author> Repository { get; }
+        private readonly IRepository<Author, AuthorId> _repository;
 
-        public AuthorService(IRepository<Author> repository)
+        public AuthorService(IRepository<Author, AuthorId> repository)
         {
-            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        
-        public Author CreateItem()
+
+        public async Task HandleCreate(Author author)
         {
-            return new Author();
+            if (await _repository.ExistsAsync(author.Id))
+                throw new InvalidOperationException($"Entity with id {author.Id} already exists");
+
+            await _repository.AddAsync(author);
+            await _repository.SaveAsync();
         }
     }
 }

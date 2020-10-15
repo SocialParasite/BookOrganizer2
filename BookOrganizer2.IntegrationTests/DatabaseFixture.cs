@@ -7,26 +7,25 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed class DatabaseFixture : IDisposable
     {
-        internal BookOrganizer2DbContext context;
-        internal string connectionString;
+        internal readonly BookOrganizer2DbContext Context;
 
         public DatabaseFixture()
         {
-            connectionString = ConnectivityService.GetConnectionString("TEMP");
-            context = new BookOrganizer2DbContext(connectionString);
-            context.Database.EnsureCreated();
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            Context = new BookOrganizer2DbContext(connectionString);
+            Context.Database.EnsureCreated();
         }
 
         public void Dispose()
         {
-            context.Database.ExecuteSqlRaw("DELETE FROM Authors");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Authors");
         }
     }
 
     [Trait("Integration", "Database")]
     public sealed partial class DatabaseTests : IClassFixture<DatabaseFixture>
     {
-        DatabaseFixture _fixture;
+        readonly DatabaseFixture _fixture;
 
         public DatabaseTests(DatabaseFixture fixture)
         {

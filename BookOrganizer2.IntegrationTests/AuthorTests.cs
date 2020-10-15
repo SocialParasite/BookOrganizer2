@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BookOrganizer2.DA.Repositories;
+using BookOrganizer2.IntegrationTests.Helpers;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain;
 using Xunit;
 
 namespace BookOrganizer2.IntegrationTests
@@ -13,19 +10,10 @@ namespace BookOrganizer2.IntegrationTests
         [Fact]
         public async Task Author_inserted_to_database()
         {
-            Author author = new Author();
-            author.SetFirstName("Patrick");
-            author.SetLastName("Rothfuss");
-            author.SetDateOfBirth(new DateTime(1973, 6, 6));
-            author.SetMugshotPath(@"\\filepath\file.jpg");
-            author.SetBiography("There is no book number three.");
-            //Author author = await CreateValidAuthor();
+            var author = await AuthorHelpers.CreateValidAuthor();
+            var repository = new AuthorRepository(_fixture.Context);
 
-            //var repository = new AuthorRepository(fixture.context);
-            //var sut = await repository.LoadAsync(author.Id);
-
-            //Assert.True(await repository.ExistsAsync(sut.Id));
-            //Assert.True(sut.FirstName.Length > 0);
+            Assert.True(await repository.ExistsAsync(author.Id));
         }
     }
 }

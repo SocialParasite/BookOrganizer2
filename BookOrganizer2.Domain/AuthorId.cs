@@ -8,7 +8,7 @@ namespace BookOrganizer2.Domain
     {
         public Guid Value { get; private set; }
 
-        private AuthorId(Guid id)
+        public AuthorId(Guid id)
         {
             if (id == default)
                 throw new ArgumentException("Invalid id!", nameof(id));
