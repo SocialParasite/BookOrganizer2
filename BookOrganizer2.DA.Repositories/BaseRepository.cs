@@ -32,8 +32,6 @@ namespace BookOrganizer2.DA.Repositories
         public void Update(TEntity entity)
             => _context.Update(entity);
 
-        //public void Delete(TEntity entity)
-        //    => _context.Remove(entity);
         public async Task RemoveAsync(TId id)
         {
             var entity = await _context.Set<TEntity>().FindAsync(id);
