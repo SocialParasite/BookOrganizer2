@@ -1,5 +1,6 @@
 ﻿using BookOrganizer2.DA.SqlServer.EntityConfigurations;
 using BookOrganizer2.Domain;
+using BookOrganizer2.Domain.AuthorProfile;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.SqlServer

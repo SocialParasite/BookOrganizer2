@@ -1,10 +1,10 @@
-﻿using BookOrganizer2.Domain.Exceptions;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Exceptions;
 
-namespace BookOrganizer2.Domain
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public class Author
     {
@@ -157,6 +157,9 @@ namespace BookOrganizer2.Domain
                 case Events.AuthorsNotesChanged e:
                     Id = e.Id;
                     Notes = e.Notes;
+                    break;
+                case Events.AuthorDeleted e:
+                    Id = e.Id;
                     break;
             }
         }

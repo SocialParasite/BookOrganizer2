@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.Exceptions;
 using FluentAssertions;
 using System;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Shared;
 using Xunit;
 

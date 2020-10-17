@@ -1,8 +1,8 @@
-﻿using BookOrganizer2.Domain.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using BookOrganizer2.Domain.Shared;
 
-namespace BookOrganizer2.Domain
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public class AuthorId : ValueObject
     {

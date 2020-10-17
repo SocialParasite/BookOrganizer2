@@ -1,4 +1,5 @@
 ﻿using BookOrganizer2.Domain;
+using BookOrganizer2.Domain.AuthorProfile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

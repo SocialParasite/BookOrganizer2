@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookOrganizer2.Domain
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public static class Commands
     {
@@ -57,9 +57,9 @@ namespace BookOrganizer2.Domain
         //    public Guid NationalityId { get; set; }
         //}
 
-        //public class DeleteAuthor
-        //{
-        //    public Guid Id { get; set; }
-        //}
+        public class DeleteAuthor
+        {
+            public Guid Id { get; set; }
+        }
     }
 }

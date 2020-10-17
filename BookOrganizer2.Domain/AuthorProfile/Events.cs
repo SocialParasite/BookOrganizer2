@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BookOrganizer2.Domain
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public static class Events
     {
@@ -57,9 +57,9 @@ namespace BookOrganizer2.Domain
         //    public Nationality Nationality { get; set; }
         //}
 
-        //public class AuthorDeleted
-        //{
-        //    public Guid Id { get; set; }
-        //}
+        public class AuthorDeleted
+        {
+            public Guid Id { get; set; }
+        }
     }
 }

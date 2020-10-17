@@ -166,20 +166,19 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
-        //[Fact]
-        //public async Task Remove_Author()
-        //{
-        //    var author = await AuthorHelpers.CreateValidAuthor();
+        [Fact]
+        public async Task Remove_Author()
+        {
+            var author = await AuthorHelpers.CreateValidAuthor();
 
-        //    var sut = await CheckIfAuthorExists(author.Id);
+            var repository = new AuthorRepository(_fixture.Context); 
+            (await repository.ExistsAsync(author.Id)).Should().BeTrue();
+            
+            await AuthorHelpers.RemoveAuthor(author.Id);
 
-        //    Assert.True(sut);
-
-        //    await RemoveAuthor(author.Id);
-
-        //    sut = await CheckIfAuthorExists(author.Id);
-
-        //    Assert.False(sut);
-        //}
+            var sut = await repository.GetAsync(author.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+            (await repository.ExistsAsync(author.Id)).Should().BeFalse();
+        }
     }
 }

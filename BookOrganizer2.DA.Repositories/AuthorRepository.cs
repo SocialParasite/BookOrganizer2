@@ -3,6 +3,7 @@ using BookOrganizer2.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile;
 
 namespace BookOrganizer2.DA.Repositories
 {
