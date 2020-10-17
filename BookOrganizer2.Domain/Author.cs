@@ -1,4 +1,4 @@
-﻿using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Exceptions;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace BookOrganizer2.Domain
         public DateTime? DateOfBirth { get; private set; }
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
+        public string Notes { get; private set; }
 
         public static Author Create(AuthorId id)
         {
@@ -54,6 +55,11 @@ namespace BookOrganizer2.Domain
         public void SetBiography(string bio)
         {
             Biography = bio;
+        }
+
+        public void SetNotes(string notes)
+        {
+            Notes = notes;
         }
 
         public void SetMugshotPath(string pic)
