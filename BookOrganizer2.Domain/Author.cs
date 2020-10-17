@@ -1,4 +1,4 @@
-using BookOrganizer2.Domain.Exceptions;
+﻿using BookOrganizer2.Domain.Exceptions;
 using System;
 using System.IO;
 using System.Linq;
@@ -18,17 +18,40 @@ namespace BookOrganizer2.Domain
         public string MugshotPath { get; private set; }
         public string Notes { get; private set; }
 
-        public static Author Create(AuthorId id)
+        public static Author Create(AuthorId id, 
+                                    string firstName, 
+                                    string lastName, 
+                                    DateTime? dob = null, 
+                                    string biography = null, 
+                                    string mugshotPath = null, 
+                                    string notes = null)
         {
-            if (id is null)
-                throw new ArgumentNullException(nameof(id), "Store without unique identifier cannot be created.");
+            ValidateParameters();
 
-            var author = new Author
+            var author = new Author();
+            
+            author.Apply(new Events.AuthorCreated
             {
-                Id = id
-            };
+                Id = id,
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dob,
+                Biography = biography,
+                MugshotPath = mugshotPath,
+                Notes = notes
+            });
 
             return author;
+
+            void ValidateParameters()
+            {
+                if (id is null)
+                    throw new ArgumentNullException(nameof(id), "Author without unique identifier cannot be created.");
+                if (string.IsNullOrWhiteSpace(firstName))
+                    throw new ArgumentNullException(nameof(firstName), "Author without first name cannot be created.");
+                if (string.IsNullOrWhiteSpace(lastName))
+                    throw new ArgumentNullException(nameof(firstName), "Author without last name cannot be created.");
+            }
         }
 
         public void SetFirstName(string name)
@@ -85,6 +108,57 @@ namespace BookOrganizer2.Domain
             var regexPattern = new Regex(pattern);
 
             return regexPattern.IsMatch(name ?? string.Empty);   
+        }
+
+        internal bool EnsureValidState()
+        {
+            return Id.Value != default
+                   && !string.IsNullOrWhiteSpace(FirstName)
+                   && !string.IsNullOrWhiteSpace(LastName);
+        }
+
+        private void Apply(object @event)
+        {
+            When(@event);
+        }
+
+        private void When(object @event)
+        {
+            switch (@event)
+            {
+                case Events.AuthorCreated e:
+                    Id = new AuthorId(e.Id);
+                    FirstName = e.FirstName;
+                    LastName = e.LastName;
+                    DateOfBirth = e.DateOfBirth;
+                    MugshotPath = e.MugshotPath;
+                    Biography = e.Biography;
+                    Notes = e.Notes;
+                    break;
+                case Events.AuthorDateOfBirthChanged e:
+                    DateOfBirth = e.DateOfBirth;
+                    break;
+                case Events.AuthorsFirstNameChanged e:
+                    Id = e.Id;
+                    FirstName = e.FirstName;
+                    break;
+                case Events.AuthorsLastNameChanged e:
+                    Id = e.Id;
+                    LastName = e.LastName;
+                    break;
+                case Events.AuthorsBiographyChanged e:
+                    Id = e.Id;
+                    Biography = e.Biography;
+                    break;
+                case Events.AuthorsMugshotPathChanged e:
+                    Id = e.Id;
+                    MugshotPath = e.MugshotPath;
+                    break;
+                case Events.AuthorsNotesChanged e:
+                    Id = e.Id;
+                    Notes = e.Notes;
+                    break;
+            }
         }
     }
 }
