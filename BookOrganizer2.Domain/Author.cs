@@ -158,6 +158,9 @@ namespace BookOrganizer2.Domain
                     Id = e.Id;
                     Notes = e.Notes;
                     break;
+                case Events.AuthorDeleted e:
+                    Id = e.Id;
+                    break;
             }
         }
     }

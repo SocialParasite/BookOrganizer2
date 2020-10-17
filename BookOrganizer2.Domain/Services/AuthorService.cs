@@ -18,12 +18,13 @@ namespace BookOrganizer2.Domain.Services
             return command switch
             {
                 Create cmd => HandleCreate(cmd),
-                SetAuthorsFirstName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetFirstName(cmd.FirstName)),
-                SetAuthorsLastName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetLastName(cmd.LastName)),
-                SetAuthorDateOfBirth cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth)),
-                SetMugshotPath cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath)),
-                SetBiography cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetBiography(cmd.Biography)),
-                SetNotes cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetNotes(cmd.Notes)),
+                SetAuthorsFirstName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetFirstName(cmd.FirstName), (a) => _repository.Update(a)),
+                SetAuthorsLastName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetLastName(cmd.LastName), (a) => _repository.Update(a)),
+                SetAuthorDateOfBirth cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth), (a) => _repository.Update(a)),
+                SetMugshotPath cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath), (a) => _repository.Update(a)),
+                SetBiography cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetBiography(cmd.Biography), (a) => _repository.Update(a)),
+                SetNotes cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetNotes(cmd.Notes), (a) => _repository.Update(a)),
+                DeleteAuthor cmd => HandleUpdateAsync(cmd.Id, _ => _repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
         }
@@ -53,16 +54,16 @@ namespace BookOrganizer2.Domain.Services
             }
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Author> operation)
+        private async Task HandleUpdateAsync(Guid id, Action<Author> operation, Action <Author> operation2 = null)
         {
             if (await _repository.ExistsAsync(id))
             {
                 var author = await _repository.GetAsync(id);
                 operation(author);
+                operation2?.Invoke(author);
 
                 if (author.EnsureValidState())
                 {
-                    _repository.Update(author);
                     await _repository.SaveAsync();
                 }
             }

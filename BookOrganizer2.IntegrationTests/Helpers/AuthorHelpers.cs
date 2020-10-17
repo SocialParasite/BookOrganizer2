@@ -141,5 +141,21 @@ namespace BookOrganizer2.IntegrationTests.Helpers
 
             await authorService.Handle(command);
         }
+
+        // DELETE
+        public static async Task RemoveAuthor(AuthorId id)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new AuthorRepository(context);
+
+            var authorService = new AuthorService(repository);
+            var command = new Commands.DeleteAuthor
+            {
+                Id = id,
+            };
+
+            await authorService.Handle(command);
+        }
     }
 }

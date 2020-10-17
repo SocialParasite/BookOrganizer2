@@ -33,7 +33,14 @@ namespace BookOrganizer2.DA.Repositories
             => _context.Update(entity);
 
         //public void Delete(TEntity entity)
-        //    => Context.Remove(entity);
+        //    => _context.Remove(entity);
+        public async Task RemoveAsync(TId id)
+        {
+            var entity = await _context.Set<TEntity>().FindAsync(id);
+
+            if (entity != null)
+                _context.Set<TEntity>().Remove(entity);
+        }
 
         //public bool HasChanges()
         //    => Context.ChangeTracker.HasChanges();
