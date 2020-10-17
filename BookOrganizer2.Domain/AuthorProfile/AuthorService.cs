@@ -1,8 +1,10 @@
-﻿using BookOrganizer2.Domain.DA;
-using System;
+﻿using System;
 using System.Threading.Tasks;
-using static BookOrganizer2.Domain.Commands;
-namespace BookOrganizer2.Domain.Services
+using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Services;
+using static BookOrganizer2.Domain.AuthorProfile.Commands;
+
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public class AuthorService : IDomainService<Author, AuthorId>
     {

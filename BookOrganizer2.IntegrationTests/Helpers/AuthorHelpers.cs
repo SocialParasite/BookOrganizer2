@@ -5,6 +5,7 @@ using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile;
 
 namespace BookOrganizer2.IntegrationTests.Helpers
 {

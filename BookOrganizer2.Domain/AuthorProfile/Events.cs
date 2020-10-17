@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace BookOrganizer2.Domain
+namespace BookOrganizer2.Domain.AuthorProfile
 {
-    public static class Commands
+    public static class Events
     {
-        public class Create
+        public class AuthorCreated
         {
             public Guid Id { get; set; }
             public string FirstName { get; set; }
@@ -13,51 +13,51 @@ namespace BookOrganizer2.Domain
             public DateTime? DateOfBirth { get; set; }
             public string Biography { get; set; }
             public string Notes { get; set; }
+
         }
-        
-        public class SetAuthorsFirstName
+
+        public class AuthorsFirstNameChanged
         {
             public Guid Id { get; set; }
             public string FirstName { get; set; }
         }
-
-        public class SetAuthorsLastName
+        public class AuthorsLastNameChanged
         {
             public Guid Id { get; set; }
             public string LastName { get; set; }
         }
 
-        public class SetMugshotPath
+        public class AuthorsMugshotPathChanged
         {
             public Guid Id { get; set; }
             public string MugshotPath { get; set; }
         }
 
-        public class SetAuthorDateOfBirth
+        public class AuthorDateOfBirthChanged
         {
             public Guid Id { get; set; }
-            public DateTime DataOfBirth { get; set; }
+            public DateTime DateOfBirth { get; set; }
         }
 
-        public class SetBiography
+        public class AuthorsBiographyChanged
         {
             public Guid Id { get; set; }
             public string Biography { get; set; }
         }
 
-        public class SetNotes
+        public class AuthorsNotesChanged
         {
             public Guid Id { get; set; }
             public string Notes { get; set; }
         }
 
-        //public class SetAuthorsNationality
+        //public class AuthorsNationalityChanged
         //{
         //    public Guid Id { get; set; }
-        //    public Guid NationalityId { get; set; }
+        //    public Nationality Nationality { get; set; }
         //}
 
-        public class DeleteAuthor
+        public class AuthorDeleted
         {
             public Guid Id { get; set; }
         }
