@@ -34,6 +34,27 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             return await repository.GetAsync(command.Id);
         }
 
+        internal static async Task UpdateAuthor(Author sut)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new AuthorRepository(context);
+
+            var authorService = new AuthorService(repository);
+            var command = new Commands.Update
+            {
+                Id = sut.Id,
+                FirstName = sut.FirstName,
+                LastName = sut.LastName,
+                DateOfBirth = sut.DateOfBirth,
+                MugshotPath = sut.MugshotPath,
+                Biography = sut.Biography,
+                Notes = sut.Notes
+            };
+
+            await authorService.Handle(command);
+        }
+
         public static async Task CreateInvalidAuthor()
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");

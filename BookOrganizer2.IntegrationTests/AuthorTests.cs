@@ -2,6 +2,8 @@
 using BookOrganizer2.IntegrationTests.Helpers;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.Shared;
 using FluentAssertions;
 using Xunit;
 
@@ -23,6 +25,24 @@ namespace BookOrganizer2.IntegrationTests
         {
             Func<Task> action = async () => { await AuthorHelpers.CreateInvalidAuthor(); };
             action.Should().ThrowAsync<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task Update_Author()
+        {
+            var author = await AuthorHelpers.CreateValidAuthor();
+            author.LastName.Should().Be("Rothfuss");
+
+            var sut = Author.Create(author.Id,
+                "Scott", "Lynch",
+                new DateTime(1978, 4, 2),
+                "bio", @"\\pics\scott.jpg", "notes");
+
+            await AuthorHelpers.UpdateAuthor(sut);
+
+            await _fixture.Context.Entry(author).ReloadAsync();
+
+            author.LastName.Should().Be("Lynch");
         }
 
         [Fact]

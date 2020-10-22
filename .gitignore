@@ -11,6 +11,7 @@
 *.userprefs
 connectionStrings.json
 BookOrganizer2.UI.TestConsole
+BookOrganizer2.UI.Wpf/Resources/Images/
 appsettings.json
 settings.json
 
