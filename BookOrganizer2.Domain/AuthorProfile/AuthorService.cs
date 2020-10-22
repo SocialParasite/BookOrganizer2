@@ -8,11 +8,15 @@ namespace BookOrganizer2.Domain.AuthorProfile
 {
     public class AuthorService : IDomainService<Author, AuthorId>
     {
-        private readonly IRepository<Author, AuthorId> _repository;
+        public IRepository<Author, AuthorId> Repository { get; }
+        public Author CreateItem()
+        {
+            return Author.NewAuthor;
+        }
 
         public AuthorService(IRepository<Author, AuthorId> repository)
         {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public Task Handle(object command)
@@ -20,20 +24,21 @@ namespace BookOrganizer2.Domain.AuthorProfile
             return command switch
             {
                 Create cmd => HandleCreate(cmd),
-                SetAuthorsFirstName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetFirstName(cmd.FirstName), (a) => _repository.Update(a)),
-                SetAuthorsLastName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetLastName(cmd.LastName), (a) => _repository.Update(a)),
-                SetAuthorDateOfBirth cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth), (a) => _repository.Update(a)),
-                SetMugshotPath cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath), (a) => _repository.Update(a)),
-                SetBiography cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetBiography(cmd.Biography), (a) => _repository.Update(a)),
-                SetNotes cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetNotes(cmd.Notes), (a) => _repository.Update(a)),
-                DeleteAuthor cmd => HandleUpdateAsync(cmd.Id, _ => _repository.RemoveAsync(cmd.Id)),
+                Update cmd => HandleUpdate(cmd),
+                SetAuthorsFirstName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetFirstName(cmd.FirstName), (a) => Repository.Update(a)),
+                SetAuthorsLastName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetLastName(cmd.LastName), (a) => Repository.Update(a)),
+                SetAuthorDateOfBirth cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth), (a) => Repository.Update(a)),
+                SetMugshotPath cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath), (a) => Repository.Update(a)),
+                SetBiography cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetBiography(cmd.Biography), (a) => Repository.Update(a)),
+                SetNotes cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetNotes(cmd.Notes), (a) => Repository.Update(a)),
+                DeleteAuthor cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
         }
-
+        
         private async Task HandleCreate(Create cmd)
         {
-            if (await _repository.ExistsAsync(cmd.Id))
+            if (await Repository.ExistsAsync(cmd.Id))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
 
             var author = Author.Create(cmd.Id, 
@@ -44,11 +49,37 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                        cmd.MugshotPath,
                                        cmd.Notes);
 
-            await _repository.AddAsync(author);
+            await Repository.AddAsync(author);
 
             if (author.EnsureValidState())
             {
-                await _repository.SaveAsync();
+                await Repository.SaveAsync();
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+        private async Task HandleUpdate(Update cmd)
+        {
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
+
+            var updatableAuthor = await Repository.GetAsync(cmd.Id);
+
+            updatableAuthor.SetFirstName(cmd.FirstName);
+            updatableAuthor.SetLastName(cmd.LastName);
+            updatableAuthor.SetDateOfBirth(cmd.DateOfBirth);
+            updatableAuthor.SetBiography(cmd.Biography);
+            updatableAuthor.SetMugshotPath(cmd.MugshotPath);
+            updatableAuthor.SetNotes(cmd.Notes);
+
+            Repository.Update(updatableAuthor);
+
+            if (updatableAuthor.EnsureValidState())
+            {
+                await Repository.SaveAsync();
             }
             else
             {
@@ -58,15 +89,15 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         private async Task HandleUpdateAsync(Guid id, Action<Author> operation, Action <Author> operation2 = null)
         {
-            if (await _repository.ExistsAsync(id))
+            if (await Repository.ExistsAsync(id))
             {
-                var author = await _repository.GetAsync(id);
+                var author = await Repository.GetAsync(id);
                 operation(author);
                 operation2?.Invoke(author);
 
                 if (author.EnsureValidState())
                 {
-                    await _repository.SaveAsync();
+                    await Repository.SaveAsync();
                 }
             }
             else

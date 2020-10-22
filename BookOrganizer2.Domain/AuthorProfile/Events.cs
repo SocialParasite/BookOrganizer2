@@ -16,6 +16,18 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         }
 
+        public class AuthorUpdated
+        {
+            public Guid Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string MugshotPath { get; set; }
+            public DateTime? DateOfBirth { get; set; }
+            public string Biography { get; set; }
+            public string Notes { get; set; }
+
+        }
+
         public class AuthorsFirstNameChanged
         {
             public Guid Id { get; set; }
