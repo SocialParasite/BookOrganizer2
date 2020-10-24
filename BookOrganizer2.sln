@@ -25,7 +25,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.DA.Repositor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{7DEC0CC5-92CA-4456-9075-2AC545F33D47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookOrganizer2.IntegrationTests", "BookOrganizer2.IntegrationTests\BookOrganizer2.IntegrationTests.csproj", "{155EC68F-713A-4E18-AA4D-DF15D5F842AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.IntegrationTests", "BookOrganizer2.IntegrationTests\BookOrganizer2.IntegrationTests.csproj", "{155EC68F-713A-4E18-AA4D-DF15D5F842AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.UI.Wpf", "BookOrganizer2.UI.Wpf\BookOrganizer2.UI.Wpf.csproj", "{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookOrganizer2.UI.BOThemes", "BookOrganizer2.UI.BOThemes\BookOrganizer2.UI.BOThemes.csproj", "{87ED31C1-AB85-4102-84A1-36EC1469FE15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D8D6BAF0-22E5-4951-BDBC-9C5CDA8552CF}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +68,14 @@ Global
 		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{155EC68F-713A-4E18-AA4D-DF15D5F842AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87ED31C1-AB85-4102-84A1-36EC1469FE15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87ED31C1-AB85-4102-84A1-36EC1469FE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87ED31C1-AB85-4102-84A1-36EC1469FE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87ED31C1-AB85-4102-84A1-36EC1469FE15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +89,8 @@ Global
 		{16A222F7-FCAA-44A6-B494-FB74094728F8} = {1388986D-5829-4534-A53F-3E0BAD5C2837}
 		{7DEC0CC5-92CA-4456-9075-2AC545F33D47} = {76E0C0D7-0E5C-496C-BADA-7ADCC8DDDABC}
 		{155EC68F-713A-4E18-AA4D-DF15D5F842AD} = {7DEC0CC5-92CA-4456-9075-2AC545F33D47}
+		{84C9BBD6-68BA-4BCC-B0CA-7A40FE071EA2} = {AD365F8C-E384-43F8-8FD5-D1ED0412979F}
+		{87ED31C1-AB85-4102-84A1-36EC1469FE15} = {AD365F8C-E384-43F8-8FD5-D1ED0412979F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B358AEBA-6F19-4A90-B731-13A00577A035}
