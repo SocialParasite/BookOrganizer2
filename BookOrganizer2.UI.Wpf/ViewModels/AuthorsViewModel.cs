@@ -1,10 +1,12 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using Prism.Events;
 using Serilog;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -14,9 +16,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public AuthorsViewModel(IEventAggregator eventAggregator,
             IAuthorLookupDataService authorLookupDataService,
-            ILogger logger
-            /*IDialogService dialogService*/)
-            : base(eventAggregator, logger/*, dialogService*/)
+            ILogger logger,
+            IDialogService dialogService)
+            : base(eventAggregator, logger, dialogService)
         {
             this._authorLookupDataService = authorLookupDataService
                                            ?? throw new ArgumentNullException(nameof(authorLookupDataService));
@@ -39,10 +41,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
             catch (Exception ex)
             {
-                //var dialog = new NotificationViewModel("Exception", ex.Message);
-                //dialogService.OpenDialog(dialog);
+                var dialog = new NotificationViewModel("Exception", ex.Message);
+                DialogService.OpenDialog(dialog);
 
-                //logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+                Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
     }

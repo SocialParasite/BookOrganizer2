@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -20,16 +21,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private List<LookupItem> _entityCollection;
         private readonly IEventAggregator _eventAggregator;
 
-        private readonly ILogger _logger;
-        //protected readonly IDialogService dialogService;
+        protected readonly ILogger Logger;
+        protected readonly IDialogService DialogService;
 
         protected BaseViewModel(IEventAggregator eventAggregator,
-                             ILogger logger
-                             /*IDialogService dialogService*/)
+                             ILogger logger,
+                             IDialogService dialogService)
         {
             this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            //this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             //AddNewItemCommand = new DelegateCommand<string>(OnAddNewItemExecute);
 
