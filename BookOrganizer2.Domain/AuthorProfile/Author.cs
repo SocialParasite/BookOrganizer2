@@ -3,10 +3,11 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
-    public class Author
+    public class Author : IIdentifiable<AuthorId>
     {
         private Author() { }
 
@@ -53,6 +54,8 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     throw new ArgumentNullException(nameof(firstName), "Author without last name cannot be created.");
             }
         }
+
+        public static Author NewAuthor => new Author();
 
         public void SetFirstName(string name)
         {
