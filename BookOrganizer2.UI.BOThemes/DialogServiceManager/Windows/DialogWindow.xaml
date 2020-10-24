@@ -1,0 +1,27 @@
+﻿<Window x:Class="BookOrganizer2.UI.BOThemes.DialogServiceManager.Windows.DialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BookOrganizer2.UI.BOThemes.DialogServiceManager.Windows"
+        xmlns:viewModels="clr-namespace:BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels"
+        Background="White"
+        BorderBrush="LightSkyBlue"
+        BorderThickness="1"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType="{x:Type viewModels:NotificationViewModel}">
+                <local:NotificationView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModels:OkCancelViewModel}">
+                <local:OkCancelView />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <ContentControl x:Name="ContentPresenter" Content="{Binding}" />
+</Window>

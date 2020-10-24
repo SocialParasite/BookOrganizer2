@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Autofac.Features.Indexed;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Interfaces;
 using BookOrganizer2.UI.Wpf.Services;
@@ -26,19 +28,19 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private bool isMenuBarVisible;
         private char pinGlyph;
         private readonly ILogger logger;
-        //private readonly IDialogService dialogService;
+        private readonly IDialogService dialogService;
 
         public MainViewModel(IEventAggregator eventAggregator,
                               IIndex<string, IDetailViewModel> detailViewModelCreator,
                               IIndex<string, ISelectedViewModel> viewModelCreator,
-                              ILogger logger
-                              /*IDialogService dialogService*/)
+                              ILogger logger,
+                              IDialogService dialogService)
         {
             this.detailViewModelCreator = detailViewModelCreator ?? throw new ArgumentNullException(nameof(detailViewModelCreator));
             this.viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            //this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             DetailViewModels = new ObservableCollection<IDetailViewModel>();
             TEMP_DetailViewModels = new ObservableCollection<IDetailViewModel>();
@@ -190,8 +192,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    //var dialog = new NotificationViewModel("Exception", ex.Message);
-                    //dialogService.OpenDialog(dialog);
+                    var dialog = new NotificationViewModel("Exception", ex.Message);
+                    dialogService.OpenDialog(dialog);
 
                     logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
                     return;

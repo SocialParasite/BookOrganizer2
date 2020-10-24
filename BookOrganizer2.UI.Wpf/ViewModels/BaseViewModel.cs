@@ -1,4 +1,8 @@
-﻿using Prism.Commands;
+﻿using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.UI.Wpf.Events;
+using BookOrganizer2.UI.Wpf.Extensions;
+using BookOrganizer2.UI.Wpf.Interfaces;
+using Prism.Commands;
 using Prism.Events;
 using Serilog;
 using System;
@@ -6,11 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BookOrganizer2.Domain.DA;
-using BookOrganizer2.Domain.Shared;
-using BookOrganizer2.UI.Wpf.Events;
-using BookOrganizer2.UI.Wpf.Extensions;
-using BookOrganizer2.UI.Wpf.Interfaces;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -18,18 +18,19 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 where T : class, IIdentifiable<TId>
                 where TId : ValueObject
     {
-        private List<LookupItem> entityCollection;
-        public readonly IEventAggregator eventAggregator;
-        protected readonly ILogger logger;
-        //protected readonly IDialogService dialogService;
+        private List<LookupItem> _entityCollection;
+        private readonly IEventAggregator _eventAggregator;
+
+        protected readonly ILogger Logger;
+        protected readonly IDialogService DialogService;
 
         protected BaseViewModel(IEventAggregator eventAggregator,
-                             ILogger logger
-                             /*IDialogService dialogService*/)
+                             ILogger logger,
+                             IDialogService dialogService)
         {
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            //this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             //AddNewItemCommand = new DelegateCommand<string>(OnAddNewItemExecute);
 
@@ -38,8 +39,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                            OnItemNameLabelMouseLeftButtonUpCanExecute);
         }
 
-        public IEnumerable<LookupItem> items;
-        public IRepository<T, TId> repository;
+        protected IEnumerable<LookupItem> Items;
         public ICommand AddNewItemCommand { get; }
         public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
 
@@ -47,35 +47,34 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public List<LookupItem> EntityCollection
         {
-            get => entityCollection;
+            get => _entityCollection;
             set
             {
-                entityCollection = value;
-                FilteredEntityCollection = entityCollection.FromListToList();
+                _entityCollection = value;
+                FilteredEntityCollection = _entityCollection.FromListToList();
                 OnPropertyChanged();
             }
         }
 
-        private List<LookupItem> filteredEntityCollection;
+        private List<LookupItem> _filteredEntityCollection;
 
         public List<LookupItem> FilteredEntityCollection
         {
-            get => filteredEntityCollection;
+            get => _filteredEntityCollection;
             set
             {
-                filteredEntityCollection = value;
+                _filteredEntityCollection = value;
                 OnPropertyChanged();
             }
         }
 
-        private string searchString;
-
+        private string _searchString;
         public string SearchString
         {
-            get => searchString;
+            get => _searchString;
             set
             {
-                searchString = value;
+                _searchString = value;
                 OnPropertyChanged();
                 UpdateFilteredEntityCollection();
             }
@@ -106,7 +105,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnItemNameLabelMouseLeftButtonUpExecute(LookupItem item)
         {
-            eventAggregator.GetEvent<OpenDetailViewEvent>()
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
                            .Publish(new OpenDetailViewEventArgs
                            {
                                Id = item.Id,
