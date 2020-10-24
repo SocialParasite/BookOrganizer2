@@ -1,10 +1,9 @@
 ﻿using BookOrganizer2.DA.Repositories;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.IntegrationTests.Helpers;
+using FluentAssertions;
 using System;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Shared;
-using FluentAssertions;
 using Xunit;
 
 namespace BookOrganizer2.IntegrationTests

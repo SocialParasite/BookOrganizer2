@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using BookOrganizer2.Domain.DA;
+﻿using BookOrganizer2.Domain.DA;
 
 namespace BookOrganizer2.Domain.Services
 {
