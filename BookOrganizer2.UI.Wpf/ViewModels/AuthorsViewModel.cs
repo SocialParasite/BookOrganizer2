@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.DA;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -35,9 +33,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                items = await _authorLookupDataService.GetAuthorLookupAsync(nameof(AuthorDetailViewModel));
+                Items = await _authorLookupDataService.GetAuthorLookupAsync(nameof(AuthorDetailViewModel));
 
-                EntityCollection = items.OrderBy(p => p.DisplayMember).ToList();
+                EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
             }
             catch (Exception ex)
             {
