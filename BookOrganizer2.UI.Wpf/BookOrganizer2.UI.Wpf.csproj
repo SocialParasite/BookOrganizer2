@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\admin-ui%2824px%29.png" />
+    <None Remove="Resources\Images\agency%2824px%29.png" />
+    <None Remove="Resources\Images\analytics%2824px%29.png" />
+    <None Remove="Resources\Images\book %2824px%29.png" />
+    <None Remove="Resources\Images\home%2824px%29.png" />
+    <None Remove="Resources\Images\industry%2824px%29.png" />
+    <None Remove="Resources\Images\placeholder.png" />
+    <None Remove="Resources\Images\professions-and-jobs%2824px%29.png" />
+    <None Remove="Resources\Images\saga%2824px%29.png" />
+    <None Remove="Resources\Images\settings%2824px%29.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Prism.Wpf" Version="8.0.0.1850-pre" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookOrganizer2.DA.Repositories\BookOrganizer2.DA.Repositories.csproj" />
+    <ProjectReference Include="..\BookOrganizer2.DA.SqlServer\BookOrganizer2.DA.SqlServer.csproj" />
+    <ProjectReference Include="..\BookOrganizer2.Domain\BookOrganizer2.Domain.csproj" />
+    <ProjectReference Include="..\BookOrganizer2.UI.BOThemes\BookOrganizer2.UI.BOThemes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Images\admin-ui(24px).png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\agency(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\analytics(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\book (24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\home(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\industry(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\placeholder.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\professions-and-jobs(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\saga(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Images\settings(24px).png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Startup\settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
