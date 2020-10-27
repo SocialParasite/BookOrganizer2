@@ -20,16 +20,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             IDialogService dialogService)
             : base(eventAggregator, logger, dialogService)
         {
-            this._authorLookupDataService = authorLookupDataService
+            _authorLookupDataService = authorLookupDataService
                                            ?? throw new ArgumentNullException(nameof(authorLookupDataService));
 
-            Init();
+            Init().Await();
 
             ViewModelType = nameof(AuthorDetailViewModel);
         }
 
-        private Task Init()
-            => InitializeRepositoryAsync();
+
+        private async Task Init()
+            => await Task.Run(InitializeRepositoryAsync);
 
         public override async Task InitializeRepositoryAsync()
         {
