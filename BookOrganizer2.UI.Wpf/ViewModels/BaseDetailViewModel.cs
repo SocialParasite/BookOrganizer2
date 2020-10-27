@@ -5,8 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager.Enums;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
+using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Interfaces;
 using BookOrganizer2.UI.Wpf.Wrappers;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -21,32 +26,32 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 where T : class, IIdentifiable<TId>
                 where TId : ValueObject
         {
-            protected readonly IEventAggregator eventAggregator;
-            protected readonly ILogger logger;
-            protected readonly IDomainService<T, TId> domainService;
-            //protected readonly IDialogService dialogService;
+            protected readonly IEventAggregator EventAggregator;
+            protected readonly ILogger Logger;
+            protected readonly IDomainService<T, TId> DomainService;
+            protected readonly IDialogService DialogService;
 
             //private Tuple<bool, DetailViewState, SolidColorBrush, bool> userMode;
-            private bool hasChanges;
-            private Guid selectedBookId;
-            private string tabTitle;
-            private Guid id;
+            private bool _hasChanges;
+            private Guid _selectedBookId;
+            private string _tabTitle;
+            private Guid _id;
 
             public BaseDetailViewModel(IEventAggregator eventAggregator, 
                                        ILogger logger, 
-                                       IDomainService<T, TId> domainService
-                                       /*IDialogService dialogService*/)
+                                       IDomainService<T, TId> domainService,
+                                       IDialogService dialogService)
             {
-                this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-                this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-                this.domainService = domainService ?? throw new ArgumentNullException(nameof(domainService));
-            //this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+                EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+                Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+                DomainService = domainService ?? throw new ArgumentNullException(nameof(domainService));
+                DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             //SwitchEditableStateCommand = new DelegateCommand(SwitchEditableStateExecute);
             //SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute);
             //DeleteItemCommand = new DelegateCommand(DeleteItemExecute, DeleteItemCanExecute)
             //    .ObservesProperty(() => UserMode);
-            //CloseDetailViewCommand = new DelegateCommand(CloseDetailViewExecute);
+            CloseDetailViewCommand = new DelegateCommand(CloseDetailViewExecute);
             //ShowSelectedBookCommand = new DelegateCommand<Guid?>(OnShowSelectedBookExecute, OnShowSelectedBookCanExecute);
 
             //UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
@@ -72,12 +77,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             public bool HasChanges
             {
-                get => hasChanges;
+                get => _hasChanges;
                 set
                 {
-                    if (hasChanges != value)
+                    if (_hasChanges != value)
                     {
-                        hasChanges = value;
+                        _hasChanges = value;
                         OnPropertyChanged();
                         ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
                     }
@@ -88,16 +93,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 get
                 {
-                    if (tabTitle is null)
+                    if (_tabTitle is null)
                         return "";
-                    if (tabTitle.Length <= 50)
-                        return tabTitle;
+                    if (_tabTitle.Length <= 50)
+                        return _tabTitle;
                     else
-                        return tabTitle.Substring(0, 50) + "...";
+                        return _tabTitle.Substring(0, 50) + "...";
                 }
                 set
                 {
-                    tabTitle = value;
+                    _tabTitle = value;
                     OnPropertyChanged();
                 }
             }
@@ -119,8 +124,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             public Guid Id
             {
-                get => id;
-                set => id = value;
+                get => _id;
+                set => _id = value;
             }
 
             public abstract Task LoadAsync(Guid id);
@@ -142,26 +147,27 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //        UserMode = (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
         //}
 
-        //private void CloseDetailViewExecute()
-        //{
-        //    if (domainService.Repository.HasChanges())
-        //    {
-        //        var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
-        //        var result = dialogService.OpenDialog(dialog);
+        private void CloseDetailViewExecute()
+        {
+            //if (DomainService.Repository.HasChanges())
+            //{
+                var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
+                var result = DialogService.OpenDialog(dialog);
 
-        //        if (result == DialogResult.No)
-        //        {
-        //            return;
-        //        }
-        //    }
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            //}
 
-        //    eventAggregator.GetEvent<CloseDetailsViewEvent>()
-        //        .Publish(new CloseDetailsViewEventArgs
-        //        {
-        //            Id = SelectedItem.Model.Id,
-        //            ViewModelName = this.GetType().Name
-        //        });
-        //}
+            EventAggregator.GetEvent<CloseDetailsViewEvent>()
+                .Publish(new CloseDetailsViewEventArgs
+                {
+                    // TODO:
+                    Id = (SelectedItem.Model.Id as dynamic).Value,
+                    ViewModelName = GetType().Name
+                });
+        }
 
         private bool OnShowSelectedBookCanExecute(Guid? id)
                 => (!(id is null) && id != Guid.Empty);
@@ -242,6 +248,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //}
 
         private async Task SaveRepository()
-            => await domainService.Repository.SaveAsync();
+            => await DomainService.Repository.SaveAsync();
     }
     }

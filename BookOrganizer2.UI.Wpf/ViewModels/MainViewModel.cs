@@ -36,11 +36,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                               ILogger logger,
                               IDialogService dialogService)
         {
-            this._detailViewModelCreator = detailViewModelCreator ?? throw new ArgumentNullException(nameof(detailViewModelCreator));
-            this._viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
-            this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _detailViewModelCreator = detailViewModelCreator ?? throw new ArgumentNullException(nameof(detailViewModelCreator));
+            _viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             DetailViewModels = new ObservableCollection<IDetailViewModel>();
             TEMP_DetailViewModels = new ObservableCollection<IDetailViewModel>();
@@ -59,10 +59,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            this._eventAggregator.GetEvent<OpenItemViewEvent>()
+            _eventAggregator.GetEvent<OpenItemViewEvent>()
                 .Subscribe(OnOpenSelectedItemView);
 
-            this._eventAggregator.GetEvent<OpenDetailViewEvent>()
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
                 .Subscribe(OnOpenDetailViewMatchingSelectedId);
             //if (eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() != null)
             //{
@@ -83,9 +83,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             //    this.eventAggregator.GetEvent<OpenDetailViewEvent>()
             //        .Subscribe(OnOpenDetailViewMatchingSelectedId);
-
-            //    this.eventAggregator.GetEvent<CloseDetailsViewEvent>()
-            //        .Subscribe(CloseDetailsView);
+            
+            _eventAggregator.GetEvent<CloseDetailsViewEvent>()
+                .Subscribe(CloseDetailsView);
 
             //    this.eventAggregator.GetEvent<ChangeDetailsViewEvent>()
             //        .Subscribe(OnChangeDetailsView);
@@ -254,15 +254,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //        });
         //}
 
-        //private void CloseDetailsView(CloseDetailsViewEventArgs args)
-        //{
-        //    RemoveDetailViewModel(args.Id, args.ViewModelName);
+        private void CloseDetailsView(CloseDetailsViewEventArgs args)
+        {
+            RemoveDetailViewModel(args.Id, args.ViewModelName);
 
-        //    if (DetailViewModels.Count == 0)
-        //    {
-        //        IsViewVisible = true;
-        //    }
-        //}
+            if (DetailViewModels.Count == 0)
+            {
+                IsViewVisible = true;
+            }
+        }
 
         private void RemoveDetailViewModel(Guid id, string viewModelName)
         {

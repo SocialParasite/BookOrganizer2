@@ -8,6 +8,8 @@ using System.Windows.Input;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Wrappers;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Prism.Commands;
@@ -23,9 +25,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public AuthorDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
-                                     IDomainService<Author, AuthorId> domainService
-                                     /*IDialogService dialogService*/)
-            : base(eventAggregator, logger, domainService/*, dialogService*/)
+                                     IDomainService<Author, AuthorId> domainService,
+                                     IDialogService dialogService)
+            : base(eventAggregator, logger, domainService, dialogService)
         {
             AddAuthorPictureCommand = new DelegateCommand(OnAddAuthorPictureExecute);
             //AddNewNationalityCommand = new DelegateCommand(OnAddNewNationalityExecute);
@@ -72,7 +74,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                var author = await domainService.Repository.GetAsync(id) ?? Author.NewAuthor;
+                var author = await DomainService.Repository.GetAsync(id) ?? Author.NewAuthor;
 
                 SelectedItem = CreateWrapper(author);
 
@@ -135,10 +137,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
             catch (Exception ex)
             {
-                //var dialog = new NotificationViewModel("Exception", ex.Message);
-                //dialogService.OpenDialog(dialog);
+                var dialog = new NotificationViewModel("Exception", ex.Message);
+                DialogService.OpenDialog(dialog);
 
-                logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+                Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
 
