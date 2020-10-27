@@ -22,21 +22,19 @@ namespace BookOrganizer2.DA.Repositories.Lookups
 
         public async Task<IEnumerable<LookupItem>> GetAuthorLookupAsync(string viewModelName)
         {
-            using (var ctx = _contextCreator())
-            {
-                return await ctx.Authors
-                    .AsNoTracking()
-                    .OrderBy(a => a.LastName)
-                    .Select(a =>
-                        new LookupItem
-                        {
-                            Id = a.Id,
-                            DisplayMember = $"{a.LastName}, {a.FirstName}",
-                            Picture = a.MugshotPath ?? _placeholderPic,
-                            ViewModelName = viewModelName
-                        })
-                    .ToListAsync();
-            }
+            await using var ctx = _contextCreator();
+            return await ctx.Authors
+                .AsNoTracking()
+                .OrderBy(a => a.LastName)
+                .Select(a =>
+                    new LookupItem
+                    {
+                        Id = a.Id,
+                        DisplayMember = $"{a.LastName}, {a.FirstName}",
+                        Picture = a.MugshotPath ?? _placeholderPic,
+                        ViewModelName = viewModelName
+                    })
+                .ToListAsync();
         }
     }
 }

@@ -19,16 +19,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEventAggregator eventAggregator;
+        private readonly IEventAggregator _eventAggregator;
         private IDetailViewModel _selectedDetailViewModel;
-        private IIndex<string, IDetailViewModel> detailViewModelCreator;
-        private IIndex<string, ISelectedViewModel> viewModelCreator;
-        private ISelectedViewModel selectedVM;
-        private bool isViewVisible;
-        private bool isMenuBarVisible;
-        private char pinGlyph;
-        private readonly ILogger logger;
-        private readonly IDialogService dialogService;
+        private readonly IIndex<string, IDetailViewModel> _detailViewModelCreator;
+        private readonly IIndex<string, ISelectedViewModel> _viewModelCreator;
+        private ISelectedViewModel _selectedVm;
+        private bool _isViewVisible;
+        private bool _isMenuBarVisible;
+        private char _pinGlyph;
+        private readonly ILogger _logger;
+        private readonly IDialogService _dialogService;
 
         public MainViewModel(IEventAggregator eventAggregator,
                               IIndex<string, IDetailViewModel> detailViewModelCreator,
@@ -36,11 +36,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                               ILogger logger,
                               IDialogService dialogService)
         {
-            this.detailViewModelCreator = detailViewModelCreator ?? throw new ArgumentNullException(nameof(detailViewModelCreator));
-            this.viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            this._detailViewModelCreator = detailViewModelCreator ?? throw new ArgumentNullException(nameof(detailViewModelCreator));
+            this._viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
+            this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this._dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             DetailViewModels = new ObservableCollection<IDetailViewModel>();
             TEMP_DetailViewModels = new ObservableCollection<IDetailViewModel>();
@@ -59,10 +59,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void SubscribeToEvents()
         {
-            this.eventAggregator.GetEvent<OpenItemViewEvent>()
+            this._eventAggregator.GetEvent<OpenItemViewEvent>()
                 .Subscribe(OnOpenSelectedItemView);
 
-            this.eventAggregator.GetEvent<OpenDetailViewEvent>()
+            this._eventAggregator.GetEvent<OpenDetailViewEvent>()
                 .Subscribe(OnOpenDetailViewMatchingSelectedId);
             //if (eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() != null)
             //{
@@ -111,20 +111,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public bool IsViewVisible
         {
-            get => isViewVisible;
+            get => _isViewVisible;
             set
             {
-                isViewVisible = value;
+                _isViewVisible = value;
                 OnPropertyChanged();
             }
         }
 
         public bool IsMenuBarVisible
         {
-            get => isMenuBarVisible;
+            get => _isMenuBarVisible;
             set
             {
-                isMenuBarVisible = SwitchMenuVisibility(value);
+                _isMenuBarVisible = SwitchMenuVisibility(value);
                 OnPropertyChanged();
             }
         }
@@ -138,38 +138,38 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public char PinGlyph
         {
-            get => pinGlyph;
+            get => _pinGlyph;
             set
             {
-                pinGlyph = value;
+                _pinGlyph = value;
                 OnPropertyChanged();
             }
         }
 
-        public ISelectedViewModel SelectedVM
+        public ISelectedViewModel SelectedVm
         {
-            get => selectedVM;
+            get => _selectedVm;
             set
             {
-                selectedVM = value;
+                _selectedVm = value;
                 OnPropertyChanged();
             }
         }
 
-        private MessageItem messageItem;
+        private MessageItem _messageItem;
 
         public MessageItem MessageItem
         {
-            get => messageItem;
-            set { messageItem = value; OnPropertyChanged(); }
+            get => _messageItem;
+            set { _messageItem = value; OnPropertyChanged(); }
         }
 
-        private bool shouldAnimate;
+        private bool _shouldAnimate;
 
         public bool ShouldAnimate
         {
-            get => shouldAnimate;
-            set { shouldAnimate = value; OnPropertyChanged(); }
+            get => _shouldAnimate;
+            set { _shouldAnimate = value; OnPropertyChanged(); }
         }
 
         private void OnOpenSelectedItemView(OpenItemViewEventArgs args)
@@ -185,7 +185,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             if (detailViewModel is null)
             {
-                detailViewModel = detailViewModelCreator[args.ViewModelName];
+                detailViewModel = _detailViewModelCreator[args.ViewModelName];
                 try
                 {
                     await detailViewModel.LoadAsync(args.Id);
@@ -193,9 +193,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 catch (Exception ex)
                 {
                     var dialog = new NotificationViewModel("Exception", ex.Message);
-                    dialogService.OpenDialog(dialog);
+                    _dialogService.OpenDialog(dialog);
 
-                    logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+                    _logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
                     return;
                 }
 
@@ -210,7 +210,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnOpenSelectedViewExecute(string viewModel)
         {
-            SelectedVM = viewModelCreator[viewModel];
+            SelectedVm = _viewModelCreator[viewModel];
             IsViewVisible = true;
         }
 

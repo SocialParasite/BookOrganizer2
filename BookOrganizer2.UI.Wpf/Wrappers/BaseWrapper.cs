@@ -1,11 +1,8 @@
-﻿using System;
+﻿using BookOrganizer2.Domain.Shared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {

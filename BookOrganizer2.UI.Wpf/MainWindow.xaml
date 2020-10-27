@@ -192,7 +192,7 @@
 
         <DockPanel Grid.Row="2">
             <Label Visibility="{Binding IsViewVisible, Converter={StaticResource BoolToVis}}">
-                <ContentControl Width="{Binding ElementName=BookOrganizerMainWindow, Path=ActualWidth}" Content="{Binding SelectedVM}" />
+                <ContentControl Width="{Binding ElementName=BookOrganizerMainWindow, Path=ActualWidth}" Content="{Binding SelectedVm}" />
             </Label>
             <TabControl
                 x:Name="SecondaryTabControl"
