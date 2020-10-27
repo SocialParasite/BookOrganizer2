@@ -28,9 +28,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                              ILogger logger,
                              IDialogService dialogService)
         {
-            this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             //AddNewItemCommand = new DelegateCommand<string>(OnAddNewItemExecute);
 
