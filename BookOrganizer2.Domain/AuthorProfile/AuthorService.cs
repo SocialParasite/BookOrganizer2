@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.DA;
+﻿using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Services;
+using System;
+using System.Threading.Tasks;
 using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile
