@@ -10,5 +10,6 @@ namespace BookOrganizer2.Domain.DA
         Task<bool> ExistsAsync(TId id);
         Task AddAsync(T entity);
         Task RemoveAsync(TId id);
+        bool HasChanges();
     }
 }

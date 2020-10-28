@@ -11,10 +11,10 @@ using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.Enums;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
+using BookOrganizer2.UI.Wpf.Enums;
 using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Interfaces;
 using BookOrganizer2.UI.Wpf.Wrappers;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -31,7 +31,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             protected readonly IDomainService<T, TId> DomainService;
             protected readonly IDialogService DialogService;
 
-            //private Tuple<bool, DetailViewState, SolidColorBrush, bool> userMode;
+            private Tuple<bool, DetailViewState, SolidColorBrush, bool> _userMode;
             private bool _hasChanges;
             private Guid _selectedBookId;
             private string _tabTitle;
@@ -47,14 +47,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 DomainService = domainService ?? throw new ArgumentNullException(nameof(domainService));
                 DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
-            //SwitchEditableStateCommand = new DelegateCommand(SwitchEditableStateExecute);
-            //SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute);
-            //DeleteItemCommand = new DelegateCommand(DeleteItemExecute, DeleteItemCanExecute)
-            //    .ObservesProperty(() => UserMode);
+            SwitchEditableStateCommand = new DelegateCommand(SwitchEditableStateExecute);
+            SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute);
+            DeleteItemCommand = new DelegateCommand(DeleteItemExecute, DeleteItemCanExecute)
+                .ObservesProperty(() => UserMode);
             CloseDetailViewCommand = new DelegateCommand(CloseDetailViewExecute);
             //ShowSelectedBookCommand = new DelegateCommand<Guid?>(OnShowSelectedBookExecute, OnShowSelectedBookCanExecute);
 
-            //UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
+            UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
         }
 
             public ICommand SwitchEditableStateCommand { get; }
@@ -65,17 +65,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             public abstract TBase SelectedItem { get; set; }
 
-            //public Tuple<bool, DetailViewState, SolidColorBrush, bool> UserMode
-            //{
-            //    get => userMode;
-            //    set
-            //    {
-            //        userMode = value;
-            //        OnPropertyChanged();
-            //    }
-            //}
+        public Tuple<bool, DetailViewState, SolidColorBrush, bool> UserMode
+        {
+            get => _userMode;
+            set
+            {
+                _userMode = value;
+                OnPropertyChanged();
+            }
+        }
 
-            public bool HasChanges
+        public bool HasChanges
             {
                 get => _hasChanges;
                 set
@@ -139,18 +139,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //    }
         //}
 
-        //public virtual void SwitchEditableStateExecute()
-        //{
-        //    if (UserMode.Item2 == DetailViewState.ViewMode)
-        //        UserMode = (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple();
-        //    else
-        //        UserMode = (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
-        //}
+        public virtual void SwitchEditableStateExecute()
+        {
+            if (UserMode.Item2 == DetailViewState.ViewMode)
+                UserMode = (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple();
+            else
+                UserMode = (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
+        }
 
         private void CloseDetailViewExecute()
         {
-            //if (DomainService.Repository.HasChanges())
-            //{
+            if (DomainService.Repository.HasChanges())
+            {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
                 var result = DialogService.OpenDialog(dialog);
 
@@ -158,7 +158,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     return;
                 }
-            //}
+            }
 
             EventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Publish(new CloseDetailsViewEventArgs
@@ -175,79 +175,81 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //public virtual void OnShowSelectedBookExecute(Guid? id)
         //    => SelectedBookId = (Guid)id;
 
-        //protected virtual bool SaveItemCanExecute()
-        //    => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
+        // TODO:
+        protected virtual bool SaveItemCanExecute()
+            => true; //(!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
 
-        //protected async void SaveItemExecute()
-        //{
-        //    var isNewItem = false;
+        protected async void SaveItemExecute()
+        {
+            var isNewItem = false;
 
-        //    if (SelectedItem.Model.Id != default)
-        //    {
-        //        var dialog = new OkCancelViewModel("Save changes?", "You are about to save your changes. This will overwrite the previous version. Are you sure?");
+            // TODO:
+            if (SelectedItem.Model.Id != default)
+            {
+                var dialog = new OkCancelViewModel("Save changes?", "You are about to save your changes. This will overwrite the previous version. Are you sure?");
 
-        //        var result = dialogService.OpenDialog(dialog);
+                var result = DialogService.OpenDialog(dialog);
 
-        //        if (result == DialogResult.No)
-        //        {
-        //            return;
-        //        }
-        //    }
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
 
-        //    if (SelectedItem.Model.Id == default)
-        //    {
-        //        isNewItem = true;
-        //    }
+            if (SelectedItem.Model.Id == default)
+            {
+                isNewItem = true;
+            }
 
-        //    domainService.Repository.Update(SelectedItem.Model);
-        //    await SaveRepository();
+            DomainService.Repository.Update(SelectedItem.Model);
+            await SaveRepository();
 
-        //    eventAggregator.GetEvent<ChangeDetailsViewEvent>()
-        //        .Publish(new ChangeDetailsViewEventArgs
-        //        {
-        //            Message = CreateChangeMessage(isNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
-        //            MessageBackgroundColor = Brushes.LawnGreen
-        //        });
+            EventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                .Publish(new ChangeDetailsViewEventArgs
+                {
+                    Message = CreateChangeMessage(isNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
+                    MessageBackgroundColor = Brushes.LawnGreen
+                });
 
-        //    if (isNewItem)
-        //    {
-        //        await LoadAsync(SelectedItem.Model.Id);
-        //    }
+            if (isNewItem)
+            {
+                await LoadAsync((SelectedItem.Model.Id as dynamic).Value);
+            }
 
-        //    HasChanges = false;
-        //}
+            HasChanges = false;
+        }
 
-        //protected abstract string CreateChangeMessage(DatabaseOperation operation);
+        protected abstract string CreateChangeMessage(DatabaseOperation operation);
 
-        //private bool DeleteItemCanExecute()
-        //    => SelectedItem.Model.Id != default && UserMode.Item4;
+        private bool DeleteItemCanExecute()
+            => SelectedItem.Model.Id != default && UserMode.Item4;
 
-        //private async void DeleteItemExecute()
-        //{
-        //    var dialog = new OkCancelViewModel("Delete item?", "You are about to delete an item. This operation cannot be undone. Are you sure?");
-        //    var result = dialogService.OpenDialog(dialog);
+        private async void DeleteItemExecute()
+        {
+            var dialog = new OkCancelViewModel("Delete item?", "You are about to delete an item. This operation cannot be undone. Are you sure?");
+            var result = DialogService.OpenDialog(dialog);
 
-        //    if (result == DialogResult.No)
-        //    {
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        domainService.Repository.Delete(SelectedItem.Model);
-        //        await SaveRepository();
+            if (result == DialogResult.No)
+            {
+                return;
+            }
+            else
+            {
+                await DomainService.Repository.RemoveAsync(SelectedItem.Model.Id);
+                await SaveRepository();
 
-        //        CloseDetailViewExecute();
+                CloseDetailViewExecute();
 
-        //        eventAggregator.GetEvent<ChangeDetailsViewEvent>()
-        //            .Publish(new ChangeDetailsViewEventArgs
-        //            {
-        //                Message = CreateChangeMessage(DatabaseOperation.DELETE),
-        //                MessageBackgroundColor = Brushes.DimGray
-        //            });
-        //    }
-        //}
+                EventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                    .Publish(new ChangeDetailsViewEventArgs
+                    {
+                        Message = CreateChangeMessage(DatabaseOperation.DELETE),
+                        MessageBackgroundColor = Brushes.DimGray
+                    });
+            }
+        }
 
         private async Task SaveRepository()
             => await DomainService.Repository.SaveAsync();
     }
-    }
+}

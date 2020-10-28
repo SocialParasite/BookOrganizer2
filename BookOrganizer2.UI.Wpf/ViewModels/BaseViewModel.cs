@@ -32,7 +32,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
-            //AddNewItemCommand = new DelegateCommand<string>(OnAddNewItemExecute);
+            AddNewItemCommand = new DelegateCommand<string>(OnAddNewItemExecute);
 
             ItemNameLabelMouseLeftButtonUpCommand =
                 new DelegateCommand<LookupItem>(OnItemNameLabelMouseLeftButtonUpExecute,
@@ -90,15 +90,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public abstract Task InitializeRepositoryAsync();
 
-        //private void OnAddNewItemExecute(string itemType)
-        //{
-        //    eventAggregator.GetEvent<OpenDetailViewEvent>()
-        //               .Publish(new OpenDetailViewEventArgs
-        //               {
-        //                   Id = new Guid(),
-        //                   ViewModelName = itemType
-        //               });
-        //}
+        private void OnAddNewItemExecute(string itemType)
+        {
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                       .Publish(new OpenDetailViewEventArgs
+                       {
+                           Id = new Guid(),
+                           ViewModelName = itemType
+                       });
+        }
 
         private bool OnItemNameLabelMouseLeftButtonUpCanExecute(LookupItem item)
             => (item.Id != Guid.Empty);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.Shared;
@@ -55,7 +56,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        public static Author NewAuthor => new Author();
+        public static Author NewAuthor => new Author { Id = new AuthorId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetFirstName(string name)
         {

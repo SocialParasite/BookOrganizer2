@@ -10,8 +10,8 @@ using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
+using BookOrganizer2.UI.Wpf.Enums;
 using BookOrganizer2.UI.Wpf.Wrappers;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -20,8 +20,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 {
     public class AuthorDetailViewModel : BaseDetailViewModel<Author, AuthorId, AuthorWrapper>
     {
-        private LookupItem selectedNationality;
-        private AuthorWrapper selectedItem;
+        private LookupItem _selectedNationality;
+        private AuthorWrapper _selectedItem;
 
         public AuthorDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
@@ -32,9 +32,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AddAuthorPictureCommand = new DelegateCommand(OnAddAuthorPictureExecute);
             //AddNewNationalityCommand = new DelegateCommand(OnAddNewNationalityExecute);
             //NationalitySelectionChangedCommand = new DelegateCommand(OnNationalitySelectionChangedExecute);
-            //SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute)
-            //    .ObservesProperty(() => SelectedItem.FirstName)
-            //    .ObservesProperty(() => SelectedItem.LastName);
+            SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute)
+                .ObservesProperty(() => SelectedItem.FirstName)
+                .ObservesProperty(() => SelectedItem.LastName);
             SelectedItem = new AuthorWrapper(domainService.CreateItem());
 
             Nationalities = new ObservableCollection<LookupItem>();
@@ -46,18 +46,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public LookupItem SelectedNationality
         {
-            get => selectedNationality;
-            set { selectedNationality = value; OnPropertyChanged(); }
+            get => _selectedNationality;
+            set { _selectedNationality = value; OnPropertyChanged(); }
         }
 
         public ObservableCollection<LookupItem> Nationalities { get; set; }
 
         public override AuthorWrapper SelectedItem
         {
-            get => selectedItem;
+            get => _selectedItem;
             set
             {
-                selectedItem = value ?? throw new ArgumentNullException(nameof(SelectedItem));
+                _selectedItem = value ?? throw new ArgumentNullException(nameof(SelectedItem));
                 OnPropertyChanged();
             }
         }
@@ -74,27 +74,32 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                var author = await DomainService.Repository.GetAsync(id) ?? Author.NewAuthor;
+                Author author = null;
+
+                if(id == default)
+                    author = Author.NewAuthor;
+                else
+                    author = await DomainService.Repository.GetAsync(id);
 
                 SelectedItem = CreateWrapper(author);
 
-                //SelectedItem.PropertyChanged += (s, e) =>
-                //{
-                //    if (!HasChanges)
-                //    {
-                //        //HasChanges = domainService.Repository.HasChanges();
-                //    }
-                //    if (e.PropertyName == nameof(SelectedItem.HasErrors))
-                //    {
-                //        ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-                //    }
-                //    if (e.PropertyName == nameof(SelectedItem.FirstName)
-                //        || e.PropertyName == nameof(SelectedItem.LastName))
-                //    {
-                //        SetTabTitle();
-                //    }
-                //};
-                //((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
+                SelectedItem.PropertyChanged += (s, e) =>
+                {
+                    if (!HasChanges)
+                    {
+                        HasChanges = DomainService.Repository.HasChanges();
+                    }
+                    if (e.PropertyName == nameof(SelectedItem.HasErrors))
+                    {
+                        ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
+                    }
+                    if (e.PropertyName == nameof(SelectedItem.FirstName)
+                        || e.PropertyName == nameof(SelectedItem.LastName))
+                    {
+                        SetTabTitle();
+                    }
+                };
+                ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
 
                 Id = id;
 
@@ -102,12 +107,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     SetTabTitle();
                 }
-                //else
-                //{
-                //    this.SwitchEditableStateExecute();
-                //    SelectedItem.FirstName = "";
-                //    SelectedItem.LastName = "";
-                //}
+                else
+                {
+                    this.SwitchEditableStateExecute();
+                    SelectedItem.FirstName = "";
+                    SelectedItem.LastName = "";
+                }
 
                 //SetDefaultAuthorPicIfNoneSet();
 
@@ -144,31 +149,31 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        //public override async void SwitchEditableStateExecute()
-        //{
-        //    base.SwitchEditableStateExecute();
+        public override async void SwitchEditableStateExecute()
+        {
+            base.SwitchEditableStateExecute();
 
-        //    await InitializeNationalityCollection();
+            //await InitializeNationalityCollection();
 
-        //    async Task InitializeNationalityCollection()
-        //    {
-        //        if (!Nationalities.Any())
-        //        {
-        //            Nationalities.Clear();
+            //async Task InitializeNationalityCollection()
+            //{
+            //    if (!Nationalities.Any())
+            //    {
+            //        Nationalities.Clear();
 
-        //            foreach (var item in await GetNationalityList())
-        //            {
-        //                Nationalities.Add(item);
-        //            }
+            //        foreach (var item in await GetNationalityList())
+            //        {
+            //            Nationalities.Add(item);
+            //        }
 
-        //            if (SelectedItem.Model.Nationality != null)
-        //                SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
-        //        }
-        //    }
-        //}
+            //        if (SelectedItem.Model.Nationality != null)
+            //            SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
+            //    }
+            //}
+        }
 
-        //protected override string CreateChangeMessage(DatabaseOperation operation)
-        //    => $"{operation.ToString()}: {SelectedItem.LastName}, {SelectedItem.FirstName}.";
+        protected override string CreateChangeMessage(DatabaseOperation operation)
+            => $"{operation.ToString()}: {SelectedItem.LastName}, {SelectedItem.FirstName}.";
 
         //private async Task<IEnumerable<LookupItem>> GetNationalityList()
         //    => await (domainService as AuthorService).NationalityLookupDataService

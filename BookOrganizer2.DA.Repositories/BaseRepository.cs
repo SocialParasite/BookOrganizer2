@@ -40,8 +40,8 @@ namespace BookOrganizer2.DA.Repositories
                 _context.Set<TEntity>().Remove(entity);
         }
 
-        //public bool HasChanges()
-        //    => Context.ChangeTracker.HasChanges();
+        public bool HasChanges()
+            => _context.ChangeTracker.HasChanges();
 
         //public void ResetTracking(TEntity entity) 
         //    => Context.Entry(entity).State = EntityState.Unchanged;
