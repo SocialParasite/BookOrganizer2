@@ -13,7 +13,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 {
     public class MainPageViewModel : ISelectedViewModel
     {
-        private readonly IEventAggregator eventAggregator;
+        private readonly IEventAggregator _eventAggregator;
         //private readonly ILanguageLookupDataService languageLookup;
         //private readonly INationalityLookupDataService nationalityLookupDataService;
         //private readonly IFormatLookupDataService formatLookupDataService;
@@ -21,11 +21,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public MainPageViewModel(IEventAggregator eventAggregator)
         {
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
         
             ShowItemsCommand = new DelegateCommand<Type>(OnShowItemsExecute);
 
-            //AddNewItemCommand = new DelegateCommand<Type>(OnAddNewItemExecute);
+            AddNewItemCommand = new DelegateCommand<Type>(OnAddNewItemExecute);
             //EditLanguagesCommand = new DelegateCommand(OnEditLanguagesExecute);
             //EditNationalitiesCommand = new DelegateCommand(OnEditNationalitiesExecute);
             //EditBookFormatsCommand = new DelegateCommand(OnEditBookFormatsExecute);
@@ -41,22 +41,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnShowItemsExecute(Type itemType)
         {
-            eventAggregator.GetEvent<OpenItemViewEvent>()
+            _eventAggregator.GetEvent<OpenItemViewEvent>()
                            .Publish(new OpenItemViewEventArgs
                            {
                                ViewModelName = Type.GetType(itemType.FullName).Name
                            });
         }
 
-        //private void OnAddNewItemExecute(Type itemType)
-        //{
-        //    eventAggregator.GetEvent<OpenDetailViewEvent>()
-        //               .Publish(new OpenDetailViewEventArgs
-        //               {
-        //                   Id = new Guid(),
-        //                   ViewModelName = Type.GetType(itemType.FullName).Name
-        //               });
-        //}
+        private void OnAddNewItemExecute(Type itemType)
+        {
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                       .Publish(new OpenDetailViewEventArgs
+                       {
+                           Id = new Guid(),
+                           ViewModelName = Type.GetType(itemType.FullName).Name
+                       });
+        }
 
         //private async void OnEditLanguagesExecute()
         //{

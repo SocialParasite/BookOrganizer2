@@ -47,7 +47,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             OpenSelectedViewCommand = new DelegateCommand<string>(OnOpenSelectedViewExecute);
 
-            //CreateNewItemCommand = new DelegateCommand<Type>(OnCreateNewItemExecute);
+            CreateNewItemCommand = new DelegateCommand<Type>(OnCreateNewItemExecute);
 
             IsMenuBarVisible = true;
 
@@ -81,9 +81,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
             //        .Subscribe(OnOpenSeriesMatchingSelectedId);
 
-            //    this.eventAggregator.GetEvent<OpenDetailViewEvent>()
-            //        .Subscribe(OnOpenDetailViewMatchingSelectedId);
-            
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                .Subscribe(OnOpenDetailViewMatchingSelectedId);
+
             _eventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Subscribe(CloseDetailsView);
 
@@ -276,29 +276,29 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        //private void OnChangeDetailsView(ChangeDetailsViewEventArgs args)
-        //{
-        //    ShouldAnimate = false;
+        private void OnChangeDetailsView(ChangeDetailsViewEventArgs args)
+        {
+            ShouldAnimate = false;
 
-        //    (SelectedVM as IItemLists)?.InitializeRepositoryAsync();
+            (SelectedVm as IItemLists)?.InitializeRepositoryAsync();
 
-        //    MessageItem = new MessageItem { Message = args.Message, MessageBackgroundColor = args.MessageBackgroundColor };
+            MessageItem = new MessageItem { Message = args.Message, MessageBackgroundColor = args.MessageBackgroundColor };
 
-        //    ShouldAnimate = true;
-        //}
+            ShouldAnimate = true;
+        }
 
-        //private void OnCreateNewItemExecute(Type itemType)
-        //{
-        //    if (itemType != null)
-        //    {
-        //        eventAggregator.GetEvent<OpenDetailViewEvent>()
-        //                       .Publish(new OpenDetailViewEventArgs
-        //                       {
-        //                           Id = new Guid(),
-        //                           ViewModelName = Type.GetType(itemType.FullName).Name
-        //                       });
-        //    }
+        private void OnCreateNewItemExecute(Type itemType)
+        {
+            if (itemType != null)
+            {
+                _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                               .Publish(new OpenDetailViewEventArgs
+                               {
+                                   Id = new Guid(),
+                                   ViewModelName = Type.GetType(itemType.FullName).Name
+                               });
+            }
 
-        //}
+        }
     }
 }
