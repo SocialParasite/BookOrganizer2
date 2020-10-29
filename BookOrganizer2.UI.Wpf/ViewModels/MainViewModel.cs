@@ -81,9 +81,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
             //        .Subscribe(OnOpenSeriesMatchingSelectedId);
 
-            _eventAggregator.GetEvent<OpenDetailViewEvent>()
-                .Subscribe(OnOpenDetailViewMatchingSelectedId);
-
             _eventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Subscribe(CloseDetailsView);
 
