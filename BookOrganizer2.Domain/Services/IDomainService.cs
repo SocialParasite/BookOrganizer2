@@ -1,4 +1,6 @@
 ﻿using BookOrganizer2.Domain.DA;
+using System;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.Domain.Services
 {
@@ -6,5 +8,7 @@ namespace BookOrganizer2.Domain.Services
     {
         IRepository<T, TId> Repository { get; }
         T CreateItem();
+        Task<T> AddNew(T selectedItemModel);
+        Guid GetId(TId authorId);
     }
 }

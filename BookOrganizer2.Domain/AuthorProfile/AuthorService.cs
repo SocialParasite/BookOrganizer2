@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.Services;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.Shared;
 using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile
@@ -103,5 +104,25 @@ namespace BookOrganizer2.Domain.AuthorProfile
             else
                 throw new ArgumentException();
         }
+
+        public async Task<Author> AddNew(Author selectedItemModel)
+        {
+            var command = new Create
+            {
+                Id = new AuthorId(SequentialGuid.NewSequentialGuid()),
+                FirstName = selectedItemModel.FirstName,
+                LastName = selectedItemModel.LastName,
+                DateOfBirth = selectedItemModel.DateOfBirth,
+                MugshotPath = selectedItemModel.MugshotPath,
+                Biography = selectedItemModel.Biography,
+                Notes = selectedItemModel.Notes
+            };
+
+            await Handle(command);
+
+            return await Repository.GetAsync(command.Id);
+        }
+
+        public Guid GetId(AuthorId authorId) => authorId.Value;
     }
 }

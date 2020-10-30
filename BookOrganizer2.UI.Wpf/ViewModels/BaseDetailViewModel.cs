@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using BookOrganizer2.Domain.AuthorProfile;
+//using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
@@ -163,8 +163,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             EventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Publish(new CloseDetailsViewEventArgs
                 {
-                    // TODO:
-                    Id = (SelectedItem.Model.Id as dynamic).Value,
+                    Id = DomainService.GetId(SelectedItem.Model.Id), 
                     ViewModelName = GetType().Name
                 });
         }
@@ -183,7 +182,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             var isNewItem = false;
 
-            // TODO:
             if (SelectedItem.Model.Id != default)
             {
                 var dialog = new OkCancelViewModel("Save changes?", "You are about to save your changes. This will overwrite the previous version. Are you sure?");
@@ -199,22 +197,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (SelectedItem.Model.Id == default)
             {
                 isNewItem = true;
+                var author = await DomainService.AddNew(SelectedItem.Model);
+
+                await LoadAsync(DomainService.GetId(author.Id));
             }
-
-            DomainService.Repository.Update(SelectedItem.Model);
-            await SaveRepository();
-
+            else
+            {
+                DomainService.Repository.Update(SelectedItem.Model);
+                await SaveRepository();
+            }
+            
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Publish(new ChangeDetailsViewEventArgs
                 {
                     Message = CreateChangeMessage(isNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
                     MessageBackgroundColor = Brushes.LawnGreen
                 });
-
-            if (isNewItem)
-            {
-                await LoadAsync((SelectedItem.Model.Id as dynamic).Value);
-            }
 
             HasChanges = false;
         }

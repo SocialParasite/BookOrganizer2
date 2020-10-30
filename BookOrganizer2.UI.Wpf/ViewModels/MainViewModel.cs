@@ -84,8 +84,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _eventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Subscribe(CloseDetailsView);
 
-            //    this.eventAggregator.GetEvent<ChangeDetailsViewEvent>()
-            //        .Subscribe(OnChangeDetailsView);
+            _eventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                .Subscribe(OnChangeDetailsView);
             //}
         }
 

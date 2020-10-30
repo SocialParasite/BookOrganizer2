@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -56,7 +56,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        public static Author NewAuthor => new Author { Id = new AuthorId(SequentialGuid.NewSequentialGuid()) };
+        public static Author NewAuthor => new Author();
 
         public void SetFirstName(string name)
         {
