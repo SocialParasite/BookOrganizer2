@@ -163,8 +163,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             EventAggregator.GetEvent<CloseDetailsViewEvent>()
                 .Publish(new CloseDetailsViewEventArgs
                 {
-                    // TODO:
-                    Id = (SelectedItem.Model.Id as dynamic).Value,
+                    Id = DomainService.GetId(SelectedItem.Model.Id), 
                     ViewModelName = GetType().Name
                 });
         }
@@ -183,7 +182,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             var isNewItem = false;
 
-            // TODO:
             if (SelectedItem.Model.Id != default)
             {
                 var dialog = new OkCancelViewModel("Save changes?", "You are about to save your changes. This will overwrite the previous version. Are you sure?");
@@ -200,7 +198,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 isNewItem = true;
                 var author = await DomainService.AddNew(SelectedItem.Model);
-                await LoadAsync((author.Id as dynamic).Value);
+
+                await LoadAsync(DomainService.GetId(author.Id));
             }
             else
             {

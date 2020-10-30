@@ -122,5 +122,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
             return await Repository.GetAsync(command.Id);
         }
+
+        public Guid GetId(AuthorId authorId) => authorId.Value;
     }
 }
