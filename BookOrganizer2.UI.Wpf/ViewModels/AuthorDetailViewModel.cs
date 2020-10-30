@@ -12,6 +12,7 @@ using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Enums;
 using BookOrganizer2.UI.Wpf.Wrappers;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -76,10 +77,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 Author author = null;
 
-                if(id == default)
-                    author = Author.NewAuthor;
-                else
+                if (id != default)
+                {
                     author = await DomainService.Repository.GetAsync(id);
+                }
+                else
+                {
+                    author = Author.NewAuthor;
+                }
+                
 
                 SelectedItem = CreateWrapper(author);
 

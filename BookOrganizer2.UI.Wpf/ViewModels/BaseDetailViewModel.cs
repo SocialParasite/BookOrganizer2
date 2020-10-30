@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using BookOrganizer2.Domain.AuthorProfile;
+//using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
@@ -199,22 +199,21 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (SelectedItem.Model.Id == default)
             {
                 isNewItem = true;
+                var author = await DomainService.AddNew(SelectedItem.Model);
+                await LoadAsync((author.Id as dynamic).Value);
             }
-
-            DomainService.Repository.Update(SelectedItem.Model);
-            await SaveRepository();
-
+            else
+            {
+                DomainService.Repository.Update(SelectedItem.Model);
+                await SaveRepository();
+            }
+            
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Publish(new ChangeDetailsViewEventArgs
                 {
                     Message = CreateChangeMessage(isNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
                     MessageBackgroundColor = Brushes.LawnGreen
                 });
-
-            if (isNewItem)
-            {
-                await LoadAsync((SelectedItem.Model.Id as dynamic).Value);
-            }
 
             HasChanges = false;
         }

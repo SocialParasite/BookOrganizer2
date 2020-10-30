@@ -1,4 +1,4 @@
-﻿using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -1,11 +1,9 @@
 ﻿using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.SqlServer;
-using BookOrganizer2.Domain;
-using BookOrganizer2.Domain.Services;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
 
 namespace BookOrganizer2.IntegrationTests.Helpers
 {
