@@ -120,6 +120,6 @@ namespace BookOrganizer2.Domain.AuthorProfile
             return await Repository.GetAsync(command.Id);
         }
 
-        public Guid GetId(AuthorId id) => id.Value;
+        public Guid GetId(AuthorId id) => id?.Value ?? Guid.Empty;
     }
 }
