@@ -176,7 +176,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         // TODO:
         protected virtual bool SaveItemCanExecute()
-            => true; //(!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
+            => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
 
         protected async void SaveItemExecute()
         {

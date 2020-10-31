@@ -1,9 +1,10 @@
-﻿using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,10 +32,20 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     {
                         Id = a.Id,
                         DisplayMember = $"{a.LastName}, {a.FirstName}",
-                        Picture = a.MugshotPath ?? _placeholderPic,
+                        Picture = GetPictureThumbnail(a.MugshotPath) ?? _placeholderPic,
                         ViewModelName = viewModelName
                     })
                 .ToListAsync();
+        }
+
+        private static string GetPictureThumbnail(string picturePath)
+        {
+            var extension = Path.GetExtension(picturePath);
+            var fileName = Path.GetFileNameWithoutExtension(picturePath);
+            var thumbnail = $"{fileName}_thumb{extension}";
+            var filePath = Path.GetDirectoryName(picturePath);
+            var thumbPath = $@"{filePath}\{thumbnail}";
+            return thumbPath;
         }
     }
 }

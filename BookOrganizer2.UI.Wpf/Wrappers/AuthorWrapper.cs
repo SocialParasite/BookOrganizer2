@@ -1,5 +1,6 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile;
 using System;
+using BookOrganizer2.Domain.Services;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {
@@ -28,10 +29,7 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
         public string MugshotPath
         {
             get => GetValue<string>();
-            set
-            {
-                //SetValue(DomainHelpers.SetPicturePath(value, "AuthorPics"));
-            }
+            set => SetValue(DomainHelpers.SetPicturePath(value, "AuthorPics"));
         }
 
         public string Biography

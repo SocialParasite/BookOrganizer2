@@ -1,10 +1,9 @@
+using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.Exceptions;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
