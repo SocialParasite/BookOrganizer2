@@ -10,15 +10,12 @@ namespace BookOrganizer2.Domain.AuthorProfile
     public class AuthorService : IDomainService<Author, AuthorId>
     {
         public IRepository<Author, AuthorId> Repository { get; }
-        public Author CreateItem()
-        {
-            return Author.NewAuthor;
-        }
 
-        public AuthorService(IRepository<Author, AuthorId> repository)
-        {
-            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        }
+        public AuthorService(IRepository<Author, AuthorId> repository) 
+            => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+
+        public Author CreateItem() 
+            => Author.NewAuthor;
 
         public Task Handle(object command)
         {
@@ -105,17 +102,17 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 throw new ArgumentException();
         }
 
-        public async Task<Author> AddNew(Author selectedItemModel)
+        public async Task<Author> AddNew(Author model)
         {
             var command = new Create
             {
                 Id = new AuthorId(SequentialGuid.NewSequentialGuid()),
-                FirstName = selectedItemModel.FirstName,
-                LastName = selectedItemModel.LastName,
-                DateOfBirth = selectedItemModel.DateOfBirth,
-                MugshotPath = selectedItemModel.MugshotPath,
-                Biography = selectedItemModel.Biography,
-                Notes = selectedItemModel.Notes
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                DateOfBirth = model.DateOfBirth,
+                MugshotPath = model.MugshotPath,
+                Biography = model.Biography,
+                Notes = model.Notes
             };
 
             await Handle(command);
@@ -123,6 +120,6 @@ namespace BookOrganizer2.Domain.AuthorProfile
             return await Repository.GetAsync(command.Id);
         }
 
-        public Guid GetId(AuthorId authorId) => authorId.Value;
+        public Guid GetId(AuthorId id) => id?.Value ?? Guid.Empty;
     }
 }

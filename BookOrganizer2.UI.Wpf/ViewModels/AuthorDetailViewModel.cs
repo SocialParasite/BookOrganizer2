@@ -11,8 +11,8 @@ using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Enums;
+using BookOrganizer2.UI.Wpf.Services;
 using BookOrganizer2.UI.Wpf.Wrappers;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -68,7 +68,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnAddAuthorPictureExecute()
         {
-            //SelectedItem.MugShotPath = FileExplorerService.BrowsePicture() ?? SelectedItem.MugShotPath;
+            //SelectedItem.MugshotPath = FileExplorerService.BrowsePicture() ?? SelectedItem.MugshotPath;
+            var temp = SelectedItem.MugshotPath;
+            SelectedItem.MugshotPath = FileExplorerService.BrowsePicture() ?? SelectedItem.MugshotPath;
+            if (!string.IsNullOrEmpty(SelectedItem.MugshotPath)
+                && SelectedItem.MugshotPath != temp)
+            {
+                FileExplorerService.CreateThumbnail(SelectedItem.MugshotPath);
+            }
+        }
+
+        protected override bool SaveItemCanExecute()
+        {
+            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default)
+                && (SelectedItem.FirstName != string.Empty && SelectedItem.LastName != string.Empty);
         }
 
         public override async Task LoadAsync(Guid id)
@@ -120,15 +133,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     SelectedItem.LastName = "";
                 }
 
-                //SetDefaultAuthorPicIfNoneSet();
+                SetDefaultAuthorPicIfNoneSet();
 
                 //InitiliazeSelectedNationalityIfNoneSet();
 
-                //void SetDefaultAuthorPicIfNoneSet()
-                //{
-                //    if (SelectedItem.MugshotPath is null)
-                //        SelectedItem.MugshotPath = FileExplorerService.GetImagePath();
-                //}
+                void SetDefaultAuthorPicIfNoneSet()
+                {
+                    SelectedItem.MugshotPath ??= FileExplorerService.GetImagePath();
+                }
 
                 //void InitiliazeSelectedNationalityIfNoneSet()
                 //{

@@ -8,7 +8,7 @@ namespace BookOrganizer2.Domain.Services
     {
         IRepository<T, TId> Repository { get; }
         T CreateItem();
-        Task<T> AddNew(T selectedItemModel);
-        Guid GetId(TId authorId);
+        Task<T> AddNew(T model);
+        Guid GetId(TId id);
     }
 }

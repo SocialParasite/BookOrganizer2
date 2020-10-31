@@ -62,7 +62,7 @@
                     IsEnabled="{Binding UserMode.Item4}">
                     <Button.Template>
                         <ControlTemplate>
-                            <Image x:Name="authorImage" Source="{Binding SelectedItem.MugShotPath}" />
+                            <Image x:Name="authorImage" Source="{Binding SelectedItem.MugshotPath}" />
                         </ControlTemplate>
                     </Button.Template>
                 </Button>

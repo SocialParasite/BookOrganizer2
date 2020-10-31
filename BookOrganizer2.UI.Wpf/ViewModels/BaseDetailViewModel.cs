@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media;
-//using BookOrganizer2.Domain.AuthorProfile;
+﻿//using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
@@ -18,6 +11,10 @@ using BookOrganizer2.UI.Wpf.Wrappers;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -25,27 +22,27 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 where TBase : BaseWrapper<T, TId>
                 where T : class, IIdentifiable<TId>
                 where TId : ValueObject
+    {
+        protected readonly IEventAggregator EventAggregator;
+        protected readonly ILogger Logger;
+        protected readonly IDomainService<T, TId> DomainService;
+        protected readonly IDialogService DialogService;
+
+        private Tuple<bool, DetailViewState, SolidColorBrush, bool> _userMode;
+        private bool _hasChanges;
+        private Guid _selectedBookId;
+        private string _tabTitle;
+        private Guid _id;
+
+        public BaseDetailViewModel(IEventAggregator eventAggregator,
+                                   ILogger logger,
+                                   IDomainService<T, TId> domainService,
+                                   IDialogService dialogService)
         {
-            protected readonly IEventAggregator EventAggregator;
-            protected readonly ILogger Logger;
-            protected readonly IDomainService<T, TId> DomainService;
-            protected readonly IDialogService DialogService;
-
-            private Tuple<bool, DetailViewState, SolidColorBrush, bool> _userMode;
-            private bool _hasChanges;
-            private Guid _selectedBookId;
-            private string _tabTitle;
-            private Guid _id;
-
-            public BaseDetailViewModel(IEventAggregator eventAggregator, 
-                                       ILogger logger, 
-                                       IDomainService<T, TId> domainService,
-                                       IDialogService dialogService)
-            {
-                EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-                Logger = logger ?? throw new ArgumentNullException(nameof(logger));
-                DomainService = domainService ?? throw new ArgumentNullException(nameof(domainService));
-                DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            EventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            DomainService = domainService ?? throw new ArgumentNullException(nameof(domainService));
+            DialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             SwitchEditableStateCommand = new DelegateCommand(SwitchEditableStateExecute);
             SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute);
@@ -57,13 +54,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
         }
 
-            public ICommand SwitchEditableStateCommand { get; }
-            public ICommand SaveItemCommand { get; protected set; }
-            public ICommand DeleteItemCommand { get; }
-            public ICommand CloseDetailViewCommand { get; }
-            public ICommand ShowSelectedBookCommand { get; }
+        public ICommand SwitchEditableStateCommand { get; }
+        public ICommand SaveItemCommand { get; protected set; }
+        public ICommand DeleteItemCommand { get; }
+        public ICommand CloseDetailViewCommand { get; }
+        public ICommand ShowSelectedBookCommand { get; }
 
-            public abstract TBase SelectedItem { get; set; }
+        public abstract TBase SelectedItem { get; set; }
 
         public Tuple<bool, DetailViewState, SolidColorBrush, bool> UserMode
         {
@@ -76,60 +73,60 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         public bool HasChanges
+        {
+            get => _hasChanges;
+            set
             {
-                get => _hasChanges;
-                set
+                if (_hasChanges != value)
                 {
-                    if (_hasChanges != value)
-                    {
-                        _hasChanges = value;
-                        OnPropertyChanged();
-                        ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-                    }
-                }
-            }
-
-            public virtual string TabTitle
-            {
-                get
-                {
-                    if (_tabTitle is null)
-                        return "";
-                    if (_tabTitle.Length <= 50)
-                        return _tabTitle;
-                    else
-                        return _tabTitle.Substring(0, 50) + "...";
-                }
-                set
-                {
-                    _tabTitle = value;
+                    _hasChanges = value;
                     OnPropertyChanged();
+                    ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
                 }
             }
+        }
 
-            //public Guid SelectedBookId
-            //{
-            //    get => selectedBookId;
-            //    set
-            //    {
-            //        selectedBookId = value;
-            //        OnPropertyChanged();
-            //        if (selectedBookId != Guid.Empty)
-            //        {
-            //            eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
-            //                           .Publish(selectedBookId);
-            //        }
-            //    }
-            //}
-
-            public Guid Id
+        public virtual string TabTitle
+        {
+            get
             {
-                get => _id;
-                set => _id = value;
+                if (_tabTitle is null)
+                    return "";
+                if (_tabTitle.Length <= 50)
+                    return _tabTitle;
+                else
+                    return _tabTitle.Substring(0, 50) + "...";
             }
+            set
+            {
+                _tabTitle = value;
+                OnPropertyChanged();
+            }
+        }
 
-            public abstract Task LoadAsync(Guid id);
-            public abstract TBase CreateWrapper(T entity);
+        //public Guid SelectedBookId
+        //{
+        //    get => selectedBookId;
+        //    set
+        //    {
+        //        selectedBookId = value;
+        //        OnPropertyChanged();
+        //        if (selectedBookId != Guid.Empty)
+        //        {
+        //            eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
+        //                           .Publish(selectedBookId);
+        //        }
+        //    }
+        //}
+
+        public Guid Id
+        {
+            get => _id;
+            set => _id = value;
+        }
+
+        public abstract Task LoadAsync(Guid id);
+        public abstract TBase CreateWrapper(T entity);
 
         //protected void SetChangeTracker()
         //{
@@ -141,10 +138,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public virtual void SwitchEditableStateExecute()
         {
-            if (UserMode.Item2 == DetailViewState.ViewMode)
-                UserMode = (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple();
-            else
-                UserMode = (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
+            UserMode = UserMode.Item2 == DetailViewState.ViewMode
+                ? (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple()
+                : (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
         }
 
         private void CloseDetailViewExecute()
@@ -161,11 +157,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
 
             EventAggregator.GetEvent<CloseDetailsViewEvent>()
-                .Publish(new CloseDetailsViewEventArgs
-                {
-                    Id = DomainService.GetId(SelectedItem.Model.Id), 
-                    ViewModelName = GetType().Name
-                });
+                    .Publish(new CloseDetailsViewEventArgs
+                    {
+                        Id = DomainService.GetId(SelectedItem.Model.Id),
+                        ViewModelName = GetType().Name
+                    });
         }
 
         private bool OnShowSelectedBookCanExecute(Guid? id)
@@ -176,7 +172,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         // TODO:
         protected virtual bool SaveItemCanExecute()
-            => true; //(!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
+            => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
 
         protected async void SaveItemExecute()
         {
@@ -206,7 +202,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 DomainService.Repository.Update(SelectedItem.Model);
                 await SaveRepository();
             }
-            
+
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Publish(new ChangeDetailsViewEventArgs
                 {
