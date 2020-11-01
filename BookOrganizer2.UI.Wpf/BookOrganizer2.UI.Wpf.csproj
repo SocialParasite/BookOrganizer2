@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
     <PackageReference Include="NetVips" Version="1.2.4" />
     <PackageReference Include="NetVips.Native.win-x64" Version="8.10.1" />

@@ -67,10 +67,10 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetLastName(string name)
         {
-            if (ValidateName(name, () => throw new InvalidLastNameException()))
+            if (ValidateName(name, () => throw new InvalidLastNameException(null)))
                 LastName = name;
             else
-                throw new InvalidLastNameException();
+                throw new InvalidLastNameException("Invalid last name. Name may not contain non alphabet characters.");
         }
 
         public void SetDateOfBirth(DateTime? dob)

@@ -11,12 +11,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
+using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
-    public abstract class BaseViewModel<T, TId> : ViewModelBase, IItemLists
-                where T : class, IIdentifiable<TId>
-                where TId : ValueObject
+    public abstract class BaseViewModel : ViewModelBase, IItemLists
     {
         private List<LookupItem> _entityCollection;
         private readonly IEventAggregator _eventAggregator;
@@ -40,12 +39,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         protected IEnumerable<LookupItem> Items;
+        [UsedImplicitly]
         public ICommand AddNewItemCommand { get; }
+        [UsedImplicitly]
         public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
 
-        public string ViewModelType { get; set; }
-
-        public List<LookupItem> EntityCollection
+        protected List<LookupItem> EntityCollection
         {
             get => _entityCollection;
             set
@@ -58,6 +57,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private List<LookupItem> _filteredEntityCollection;
 
+        [UsedImplicitly]
         public List<LookupItem> FilteredEntityCollection
         {
             get => _filteredEntityCollection;
@@ -69,6 +69,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private string _searchString;
+        [UsedImplicitly]
         public string SearchString
         {
             get => _searchString;
