@@ -1,5 +1,4 @@
-﻿using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.DA;
+﻿using BookOrganizer2.Domain.DA;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using Prism.Events;
 using Serilog;
@@ -10,7 +9,7 @@ using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
-    public class AuthorsViewModel : BaseViewModel<Author, AuthorId>
+    public class AuthorsViewModel : BaseViewModel
     {
         private readonly IAuthorLookupDataService _authorLookupDataService;
 
@@ -24,8 +23,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                            ?? throw new ArgumentNullException(nameof(authorLookupDataService));
 
             Init().Await();
-
-            ViewModelType = nameof(AuthorDetailViewModel);
         }
 
 
