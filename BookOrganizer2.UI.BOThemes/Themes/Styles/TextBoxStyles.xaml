@@ -46,8 +46,9 @@
                 <ControlTemplate>
                     <StackPanel>
                         <AdornedElementPlaceholder x:Name="placeholder" />
-                        <TextBlock
-                            FontSize="14"
+                        <TextBlock Padding="5"
+                            FontSize="12"
+                            Background="Black"
                             Foreground="Red"
                             Text="{Binding ElementName=placeholder, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}" />
                     </StackPanel>

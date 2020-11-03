@@ -1,8 +1,8 @@
 using BookOrganizer2.Domain.Shared;
+using JetBrains.Annotations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {
@@ -10,7 +10,7 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             where T : IIdentifiable<TId>
             where TId : ValueObject
     {
-        public BaseWrapper(T model)
+        protected BaseWrapper(T model)
         {
             Model = model;
         }
@@ -19,62 +19,36 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
 
         public T Model { get; }
 
-        protected virtual void SetValue<TValue>(TValue value, [CallerMemberName] string propertyName = null)
+        protected virtual async Task SetValue<TValue>(TValue value, [CallerMemberName] string propertyName = null)
         {
-            typeof(T).GetProperty(propertyName).SetValue(Model, value);
+            string errorMessage = string.Empty;
+            try
+            {
+                typeof(T).GetMethod($"Set{propertyName}")?.Invoke(Model, new object[] { value });
+            }
+            catch (Exception ex)
+            {
+                errorMessage =ex.InnerException?.Message;
+            }
             OnPropertyChanged(propertyName);
-            ValidatePropertyInternal(propertyName, value);
+            await ValidatePropertyInternal(propertyName, value, errorMessage);
         }
 
-        protected virtual TValue GetValue<TValue>([CallerMemberName] string propertyName = null)
-            => (TValue)typeof(T).GetProperty(propertyName).GetValue(Model);
+        protected virtual TValue GetValue<TValue>([CallerMemberName] [NotNull] string propertyName = null)
+            => (TValue)typeof(T).GetProperty(propertyName!)?.GetValue(Model);
 
-        public dynamic ValidateDataAnnotations(string propertyName, object currentValue)
+        private async Task SetErrorElement(string propertyName, string error)
         {
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(Model) { MemberName = propertyName };
-            Validator.TryValidateProperty(currentValue, context, results);
-
-            foreach (var result in results)
-            {
-                AddError(propertyName, result.ErrorMessage);
-            }
-
-            switch (Type.GetTypeCode(GetType().GetProperty(propertyName).PropertyType))
-            {
-                case TypeCode.Int32:
-                    return (int)currentValue;
-                case TypeCode.String:
-                    return (string)currentValue;
-                default:
-                    return currentValue;
-            }
+            AddError(propertyName, error);
+            
+            await Task.Delay(5_000);
+            ClearErrors(propertyName);
         }
-
-        public void ValidatePropertyInternal(string propertyName, object currentValue)
+        private async Task ValidatePropertyInternal(string propertyName, object currentValue, string error)
         {
             ClearErrors(propertyName);
 
-            ValidateDataAnnotations(propertyName, currentValue);
-
-            ValidateCustomErrors(propertyName);
-        }
-
-        public void ValidateCustomErrors(string propertyName)
-        {
-            var errors = ValidateProperty(propertyName);
-            if (errors != null)
-            {
-                foreach (var error in errors)
-                {
-                    AddError(propertyName, error);
-                }
-            }
-        }
-
-        protected virtual IEnumerable<string> ValidateProperty(string propertyName)
-        {
-            return null;
+            await SetErrorElement(propertyName, error);
         }
     }
 }

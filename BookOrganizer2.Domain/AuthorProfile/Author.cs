@@ -59,18 +59,20 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetFirstName(string name)
         {
-            if(ValidateName(name, () => throw new InvalidFirstNameException()))
+            const string msg = "Invalid first name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            if (ValidateName(name, () => throw new InvalidFirstNameException(msg)))
                 FirstName = name;
             else 
-                throw new InvalidFirstNameException();
+                throw new InvalidFirstNameException(msg);
         }
 
         public void SetLastName(string name)
         {
-            if (ValidateName(name, () => throw new InvalidLastNameException(null)))
+            const string msg = "Invalid last name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            if (ValidateName(name, () => throw new InvalidLastNameException(msg)))
                 LastName = name;
             else
-                throw new InvalidLastNameException("Invalid last name. Name may not contain non alphabet characters.");
+                throw new InvalidLastNameException(msg);
         }
 
         public void SetDateOfBirth(DateTime? dob)
