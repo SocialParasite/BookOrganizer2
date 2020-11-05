@@ -18,6 +18,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
         public string Notes { get; private set; }
+        public Nationality Nationality { get; set; }
 
         public static Author Create(AuthorId id, 
                                     string firstName, 
@@ -59,18 +60,20 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetFirstName(string name)
         {
-            if(ValidateName(name, () => throw new InvalidFirstNameException()))
+            const string msg = "Invalid first name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            if (ValidateName(name, () => throw new InvalidFirstNameException(msg)))
                 FirstName = name;
             else 
-                throw new InvalidFirstNameException();
+                throw new InvalidFirstNameException(msg);
         }
 
         public void SetLastName(string name)
         {
-            if (ValidateName(name, () => throw new InvalidLastNameException(null)))
+            const string msg = "Invalid last name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            if (ValidateName(name, () => throw new InvalidLastNameException(msg)))
                 LastName = name;
             else
-                throw new InvalidLastNameException("Invalid last name. Name may not contain non alphabet characters.");
+                throw new InvalidLastNameException(msg);
         }
 
         public void SetDateOfBirth(DateTime? dob)
@@ -90,6 +93,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetMugshotPath(string pic)
         {
+            if (pic.Length > 256)
+                throw new ArgumentException();
+
             var path = Path.GetFullPath(pic);
             string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
 

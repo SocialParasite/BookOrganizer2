@@ -1,6 +1,6 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile;
-using System;
 using BookOrganizer2.Domain.Services;
+using System;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {

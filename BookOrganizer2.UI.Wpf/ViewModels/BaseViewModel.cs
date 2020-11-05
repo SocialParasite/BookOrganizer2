@@ -38,6 +38,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                            OnItemNameLabelMouseLeftButtonUpCanExecute);
         }
 
+        public string ViewModelType { get; set; }
+
         protected IEnumerable<LookupItem> Items;
         [UsedImplicitly]
         public ICommand AddNewItemCommand { get; }

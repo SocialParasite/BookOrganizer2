@@ -80,8 +80,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         protected override bool SaveItemCanExecute()
         {
-            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default)
-                && (SelectedItem.FirstName != string.Empty && SelectedItem.LastName != string.Empty);
+            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
         }
 
         public override async Task LoadAsync(Guid id)

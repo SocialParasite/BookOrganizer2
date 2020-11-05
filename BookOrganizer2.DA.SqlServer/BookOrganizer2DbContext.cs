@@ -17,12 +17,14 @@ namespace BookOrganizer2.DA.SqlServer
         }
 
         public DbSet<Author> Authors { get; set; }
+        public DbSet<Nationality> Nationalities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new AuthorConfig());
+            modelBuilder.ApplyConfiguration(new NationalityConfig());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
