@@ -135,6 +135,7 @@ namespace BookOrganizer2.DomainTests
         [InlineData(null)]
         [InlineData(@"C:\secret.doc%00.exe")]
         [InlineData(@"C:\fake.bmp")]
+        [InlineData(@"C:\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long_path\is_too_long\too_long123\real.jpg")]
         public void Invalid_mugshot_path(string path)
         {
             var sut = CreateAuthor();
