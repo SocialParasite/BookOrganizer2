@@ -61,7 +61,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public void SetFirstName(string name)
         {
             const string msg = "Invalid first name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
-            if (ValidateName(name, () => throw new InvalidFirstNameException(msg)))
+            if (ValidateName(name))
                 FirstName = name;
             else 
                 throw new InvalidFirstNameException(msg);
@@ -70,7 +70,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public void SetLastName(string name)
         {
             const string msg = "Invalid last name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
-            if (ValidateName(name, () => throw new InvalidLastNameException(msg)))
+            if (ValidateName(name))
                 LastName = name;
             else
                 throw new InvalidLastNameException(msg);
@@ -105,14 +105,14 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 throw new Exception();
         }
 
-        private static bool ValidateName(string name, Action exception)
+        private static bool ValidateName(string name)
         {
             const int minLength = 1;
             const int maxLength = 64;
             var pattern = "(?=.{" + minLength + "," + maxLength +"}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
-            if (string.IsNullOrWhiteSpace(name)) 
-                exception.Invoke();
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
 
             var regexPattern = new Regex(pattern);
 
