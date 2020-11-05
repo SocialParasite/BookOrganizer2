@@ -18,6 +18,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
         public string Notes { get; private set; }
+        public Nationality Nationality { get; set; }
 
         public static Author Create(AuthorId id, 
                                     string firstName, 
