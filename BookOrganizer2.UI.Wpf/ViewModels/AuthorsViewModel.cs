@@ -23,6 +23,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                            ?? throw new ArgumentNullException(nameof(authorLookupDataService));
 
             Init().Await();
+
+            ViewModelType = nameof(AuthorDetailViewModel);
         }
 
 

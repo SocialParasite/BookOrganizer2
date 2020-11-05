@@ -92,6 +92,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetMugshotPath(string pic)
         {
+            if (pic.Length > 256)
+                throw new ArgumentException();
+
             var path = Path.GetFullPath(pic);
             string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
 

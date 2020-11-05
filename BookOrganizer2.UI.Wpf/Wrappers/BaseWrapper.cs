@@ -1,14 +1,13 @@
 using BookOrganizer2.Domain.Shared;
-using JetBrains.Annotations;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {
     public class BaseWrapper<T, TId> : NotifyDataErrorInfo
-            where T : IIdentifiable<TId>
-            where TId : ValueObject
+        where T : IIdentifiable<TId>
+        where TId : ValueObject
     {
         protected BaseWrapper(T model)
         {
@@ -19,36 +18,38 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
 
         public T Model { get; }
 
-        protected virtual async Task SetValue<TValue>(TValue value, [CallerMemberName] string propertyName = null)
+        protected virtual void SetValue<TValue>(TValue value, [CallerMemberName] string propertyName = null)
         {
-            string errorMessage = string.Empty;
+            string errorMessage = null;
             try
             {
-                typeof(T).GetMethod($"Set{propertyName}")?.Invoke(Model, new object[] { value });
+                typeof(T).GetMethod($"Set{propertyName}")?.Invoke(Model, new object[] {value});
             }
             catch (Exception ex)
             {
-                errorMessage =ex.InnerException?.Message;
+                errorMessage = ex.InnerException?.Message;
+                typeof(T).GetProperty(propertyName).SetValue(Model, value);
             }
+
             OnPropertyChanged(propertyName);
-            await ValidatePropertyInternal(propertyName, value, errorMessage);
+            ValidatePropertyInternal(propertyName, value, errorMessage);
         }
 
         protected virtual TValue GetValue<TValue>([CallerMemberName] [NotNull] string propertyName = null)
-            => (TValue)typeof(T).GetProperty(propertyName!)?.GetValue(Model);
+            => (TValue) typeof(T).GetProperty(propertyName!)?.GetValue(Model);
 
-        private async Task SetErrorElement(string propertyName, string error)
+        private void SetErrorElement(string propertyName, string error, object value)
         {
             AddError(propertyName, error);
-            
-            await Task.Delay(5_000);
-            ClearErrors(propertyName);
         }
-        private async Task ValidatePropertyInternal(string propertyName, object currentValue, string error)
+
+        private void ValidatePropertyInternal(string propertyName, object currentValue, string error)
         {
             ClearErrors(propertyName);
-
-            await SetErrorElement(propertyName, error);
+            if (error is not null)
+            {
+                SetErrorElement(propertyName, error, currentValue);
+            }
         }
     }
 }
