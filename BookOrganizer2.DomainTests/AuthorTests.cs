@@ -10,10 +10,8 @@ namespace BookOrganizer2.DomainTests
 {
     public class AuthorTests
     {
-        public Author CreateAuthor()
-        {
-            return Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()), "Name", "Less");
-        }
+        private Author CreateAuthor()
+            => Author.Create(new AuthorId(SequentialGuid.NewSequentialGuid()), "Name", "Less");
 
         [Theory]
         [InlineData("A")]

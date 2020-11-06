@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
