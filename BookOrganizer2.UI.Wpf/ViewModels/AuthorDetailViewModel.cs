@@ -220,7 +220,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             if (SelectedNationality is not null && Nationalities.Any())
             {
-                NationalityIsDirty = SelectedItem.Model.Nationality.Id != SelectedNationality.Id;
+                NationalityIsDirty = SelectedItem.Model.Nationality is null ||
+                                     SelectedItem.Model.Nationality?.Id != SelectedNationality.Id;
             }
         }
 
