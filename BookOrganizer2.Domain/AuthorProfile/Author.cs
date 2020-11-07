@@ -30,7 +30,6 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                     string notes = null,
                                     Nationality nationality = null)
         {
-            // TODO: Nationality
             ValidateParameters();
 
             var author = new Author();
@@ -60,7 +59,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        public static Author NewAuthor => new Author();
+        public static Author NewAuthor => new Author { Id = new AuthorId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetFirstName(string name)
         {
@@ -127,7 +126,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 Apply(new Events.AuthorsMugshotPathChanged
                 {
                     Id = Id,
-                    MugshotPath = pic
+                    MugshotPath = path
                 });
             else
                 throw new Exception();

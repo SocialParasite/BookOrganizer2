@@ -1,11 +1,11 @@
-﻿using BookOrganizer2.Domain.DA;
-using BookOrganizer2.Domain.Services;
-using BookOrganizer2.Domain.Shared;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Shared;
 using static BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
-namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
+namespace BookOrganizer2.Domain.Services
 {
     public class NationalityService : IDomainService<Nationality, NationalityId>
     {
