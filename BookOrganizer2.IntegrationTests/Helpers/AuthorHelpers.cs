@@ -4,6 +4,8 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using Commands = BookOrganizer2.Domain.AuthorProfile.Commands;
 
 namespace BookOrganizer2.IntegrationTests.Helpers
 {
@@ -25,7 +27,32 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 DateOfBirth = new DateTime(1973, 6, 6),
                 MugshotPath = @"\\filepath\file.jpg",
                 Biography = "There is no book number three.",
-                Notes = "..."
+                Notes = "...",
+            };
+
+            await authorService.Handle(command);
+            return await repository.GetAsync(command.Id);
+        }
+
+        public static async Task<Author> CreateValidAuthorWithNationality()
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new AuthorRepository(context);
+
+            var authorService = new AuthorService(repository);
+
+            var nationality = await NationalityHelpers.CreateValidNationality();
+            var command = new Commands.Create
+            {
+                Id = new AuthorId(SequentialGuid.NewSequentialGuid()),
+                FirstName = "Patrick",
+                LastName = "Rothfuss",
+                DateOfBirth = new DateTime(1973, 6, 6),
+                MugshotPath = @"\\filepath\file.jpg",
+                Biography = "There is no book number three.",
+                Notes = "...",
+                Nationality = nationality
             };
 
             await authorService.Handle(command);
@@ -173,6 +200,22 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var command = new Commands.DeleteAuthor
             {
                 Id = id,
+            };
+
+            await authorService.Handle(command);
+        }
+
+        public static async Task UpdateAuthorNationality(AuthorId authorId, NationalityId nationalityId)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new AuthorRepository(context);
+
+            var authorService = new AuthorService(repository);
+            var command = new Commands.SetNationality
+            {
+                Id = authorId,
+                NationalityId = nationalityId
             };
 
             await authorService.Handle(command);

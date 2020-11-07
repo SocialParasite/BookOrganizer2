@@ -1,10 +1,9 @@
 ﻿using BookOrganizer2.DA.Repositories;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.IntegrationTests.Helpers;
+using FluentAssertions;
 using System;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Shared;
-using FluentAssertions;
 using Xunit;
 
 namespace BookOrganizer2.IntegrationTests
@@ -18,6 +17,24 @@ namespace BookOrganizer2.IntegrationTests
             var repository = new AuthorRepository(_fixture.Context);
 
             (await repository.ExistsAsync(author.Id)).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Author_with_all_properties_inserted_to_database()
+        {
+            var author = await AuthorHelpers.CreateValidAuthorWithNationality();
+            var repository = new AuthorRepository(_fixture.Context);
+
+            (await repository.ExistsAsync(author.Id)).Should().BeTrue();
+            author = await repository.LoadAsync(author.Id);
+
+            author.FirstName.Should().Be("Patrick");
+            author.LastName.Should().Be("Rothfuss");
+            author.DateOfBirth.Should().Be(new DateTime(1973, 6, 6));
+            author.MugshotPath.Should().Be(@"\\filepath\file.jpg");
+            author.Biography.Should().Be("There is no book number three.");
+            author.Notes.Should().Be("...");
+            author.Nationality.Name.Should().Be("american");
         }
 
         [Fact]
@@ -183,6 +200,32 @@ namespace BookOrganizer2.IntegrationTests
             await _fixture.Context.Entry(sut).ReloadAsync();
 
             sut.Notes.Should().Contain("Could I please");
+            sut.Id.Should().Be(authorId);
+        }
+
+        [Fact]
+        public async Task Update_Author_Nationality()
+        {
+            var author = await AuthorHelpers.CreateValidAuthor();
+
+            var repository = new AuthorRepository(_fixture.Context);
+            (await repository.ExistsAsync(author.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(author.Id);
+
+            var authorId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Nationality.Should().BeNull();
+
+            var nationality = await NationalityHelpers.CreateValidNationality();
+            await AuthorHelpers.UpdateAuthorNationality(sut.Id, nationality.Id);
+
+            sut = await repository.LoadAsync(author.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+
+            sut.Nationality.Id.Should().Be(nationality.Id);
+            sut.Nationality.Name.Should().Be(nationality.Name);
             sut.Id.Should().Be(authorId);
         }
 

@@ -1,17 +1,16 @@
-﻿using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Exceptions;
+﻿using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Shared;
 using FluentAssertions;
 using System;
-using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.Exceptions;
 using Xunit;
 
 namespace BookOrganizer2.DomainTests
 {
-    class NationalityTests
+    public class NationalityTests
     {
-        private Nationality CreateAuthor()
-            => Nationality.Create(new AuthorId(SequentialGuid.NewSequentialGuid()), "Name", "Less");
+        private Nationality CreateNationality()
+            => Nationality.Create(new NationalityId(SequentialGuid.NewSequentialGuid()), "Nameless");
 
         [Theory]
         [InlineData("A")]
@@ -37,8 +36,7 @@ namespace BookOrganizer2.DomainTests
             var sut = CreateNationality();
             Action action = () => sut.SetName(name);
 
-            //action.Should().Throw<InvalidNameException>();
-            action.Should().Throw<Exception>();
+            action.Should().Throw<InvalidNameException>();
         }
     }
 }
