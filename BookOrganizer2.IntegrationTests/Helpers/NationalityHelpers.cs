@@ -4,6 +4,7 @@ using BookOrganizer2.Domain.Shared;
 using System;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.Services;
 using Commands = BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
 namespace BookOrganizer2.IntegrationTests.Helpers

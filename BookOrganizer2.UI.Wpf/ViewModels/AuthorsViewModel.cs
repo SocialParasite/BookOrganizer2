@@ -26,8 +26,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             ViewModelType = nameof(AuthorDetailViewModel);
         }
-
-
+        
         private async Task Init()
             => await Task.Run(InitializeRepositoryAsync);
 

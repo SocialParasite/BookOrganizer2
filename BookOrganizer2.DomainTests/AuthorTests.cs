@@ -1,9 +1,9 @@
-﻿using BookOrganizer2.Domain;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
 using FluentAssertions;
 using System;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using Xunit;
 
 namespace BookOrganizer2.DomainTests
@@ -141,6 +141,17 @@ namespace BookOrganizer2.DomainTests
             Action action = () => sut.SetMugshotPath(pic);
 
             action.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void Valid_Nationality()
+        {
+            var sut = CreateAuthor();
+            sut.Nationality.Should().BeNull();
+            var nationality = Nationality.NewNationality;
+            sut.SetNationality(nationality);
+
+            sut.Nationality.Should().NotBeNull();
         }
     }
 }

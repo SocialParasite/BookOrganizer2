@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             catch (Exception ex)
             {
                 errorMessage = ex.InnerException?.Message;
-                typeof(T).GetProperty(propertyName)?.SetValue(Model, value);
+                typeof(T).GetProperty(propertyName!)?.SetValue(Model, value);
             }
 
             OnPropertyChanged(propertyName);

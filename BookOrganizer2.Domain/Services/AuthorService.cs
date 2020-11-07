@@ -1,19 +1,24 @@
-﻿using BookOrganizer2.Domain.DA;
-using BookOrganizer2.Domain.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Shared;
 using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
-namespace BookOrganizer2.Domain.AuthorProfile
+namespace BookOrganizer2.Domain.Services
 {
     public class AuthorService : IDomainService<Author, AuthorId>
     {
+        public readonly INationalityLookupDataService NationalityLookupDataService;
         public IRepository<Author, AuthorId> Repository { get; }
 
-        public AuthorService(IRepository<Author, AuthorId> repository) 
-            => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        public AuthorService(IRepository<Author, AuthorId> repository,
+            INationalityLookupDataService nationalityLookupDataService = null)
+        {
+            NationalityLookupDataService = nationalityLookupDataService;
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
 
         public Author CreateItem() 
             => Author.NewAuthor;

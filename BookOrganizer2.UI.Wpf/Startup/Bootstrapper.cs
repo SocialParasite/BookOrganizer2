@@ -36,8 +36,10 @@ namespace BookOrganizer2.UI.Wpf.Startup
                 .Where(type => type.Name.EndsWith("DetailViewModel"))
                 .Keyed<IDetailViewModel>(c => c.Name);
 
-            builder.RegisterType<AuthorLookupDataService>().AsImplementedInterfaces()
-                .WithParameter("imagePath", ""); 
+            builder.RegisterAssemblyTypes(typeof(AuthorLookupDataService).Assembly)
+                .Where(type => type.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .WithParameter("imagePath", "");
 
             //builder.RegisterType<ReportLookupDataService>().AsImplementedInterfaces();
             //builder.RegisterAssemblyTypes(typeof(AnnualBookStatisticsReportViewModel).Assembly)

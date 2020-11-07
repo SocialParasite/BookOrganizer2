@@ -128,13 +128,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
 
-        //protected void SetChangeTracker()
-        //{
-        //    if (!HasChanges)
-        //    {
-        //        HasChanges = domainService.Repository.HasChanges();
-        //    }
-        //}
+        protected void SetChangeTracker()
+        {
+            if (!HasChanges)
+            {
+                HasChanges = DomainService.Repository.HasChanges();
+            }
+        }
 
         public virtual void SwitchEditableStateExecute()
         {
@@ -174,7 +174,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
 
-        protected async void SaveItemExecute()
+        protected virtual async void SaveItemExecute()
         {
             var isNewItem = false;
 
@@ -193,9 +193,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (SelectedItem.Model.Id == default)
             {
                 isNewItem = true;
-                var author = await DomainService.AddNew(SelectedItem.Model);
+                var item = await DomainService.AddNew(SelectedItem.Model);
 
-                await LoadAsync(DomainService.GetId(author.Id));
+                await LoadAsync(DomainService.GetId(item.Id));
             }
             else
             {

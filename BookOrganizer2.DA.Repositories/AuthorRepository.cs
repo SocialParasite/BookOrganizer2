@@ -1,11 +1,9 @@
 ﻿using BookOrganizer2.DA.SqlServer;
-using BookOrganizer2.Domain;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.DA;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.DA.Repositories
 {

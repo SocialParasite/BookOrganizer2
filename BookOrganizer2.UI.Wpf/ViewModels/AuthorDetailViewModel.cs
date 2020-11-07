@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Enums;
+using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Services;
 using BookOrganizer2.UI.Wpf.Wrappers;
 using Prism.Commands;
@@ -23,6 +26,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
     {
         private LookupItem _selectedNationality;
         private AuthorWrapper _selectedItem;
+        private bool _nationalityIsDirty;
+
+        public bool NationalityIsDirty
+        {
+            get => _nationalityIsDirty;
+            set { _nationalityIsDirty = value; OnPropertyChanged(); }
+        }
 
         public AuthorDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
@@ -32,10 +42,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             AddAuthorPictureCommand = new DelegateCommand(OnAddAuthorPictureExecute);
             //AddNewNationalityCommand = new DelegateCommand(OnAddNewNationalityExecute);
-            //NationalitySelectionChangedCommand = new DelegateCommand(OnNationalitySelectionChangedExecute);
+            NationalitySelectionChangedCommand = new DelegateCommand(OnNationalitySelectionChangedExecute);
+
             SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute)
                 .ObservesProperty(() => SelectedItem.FirstName)
-                .ObservesProperty(() => SelectedItem.LastName);
+                .ObservesProperty(() => SelectedItem.LastName)
+                .ObservesProperty(() => NationalityIsDirty);
             SelectedItem = new AuthorWrapper(domainService.CreateItem());
 
             Nationalities = new ObservableCollection<LookupItem>();
@@ -80,7 +92,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         protected override bool SaveItemCanExecute()
         {
-            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
+            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default || NationalityIsDirty);
+        }
+
+        protected override async void SaveItemExecute()
+        {
+            if (_nationalityIsDirty)
+            {
+                var currentNationality =
+                    await ((AuthorRepository) DomainService.Repository).GetNationalityAsync(SelectedNationality.Id);
+                SelectedItem.Model.SetNationality(currentNationality);
+            }
+            base.SaveItemExecute();
         }
 
         public override async Task LoadAsync(Guid id)
@@ -91,7 +114,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    author = await DomainService.Repository.GetAsync(id);
+                    author = await ((AuthorRepository) DomainService.Repository).LoadAsync(id);
                 }
                 else
                 {
@@ -134,28 +157,25 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 SetDefaultAuthorPicIfNoneSet();
 
-                //InitiliazeSelectedNationalityIfNoneSet();
+                InitiliazeSelectedNationalityIfNoneSet();
 
                 void SetDefaultAuthorPicIfNoneSet()
                 {
                     SelectedItem.MugshotPath ??= FileExplorerService.GetImagePath();
                 }
 
-                //void InitiliazeSelectedNationalityIfNoneSet()
-                //{
-                //    if (SelectedNationality is null && SelectedItem.Model.Nationality != null)
-                //    {
-                //        SelectedNationality =
-                //            new LookupItem
-                //            {
-                //                Id = SelectedItem.Model.Nationality.Id,
-                //                DisplayMember = SelectedItem.Model.Nationality is null
-                //                ? new Nationality().Name = ""
-                //                : SelectedItem.Model.Nationality.Name
-                //            };
-                //    }
-                //}
-
+                void InitiliazeSelectedNationalityIfNoneSet()
+                {
+                    if (SelectedNationality is null && SelectedItem.Model.Nationality is not null)
+                    {
+                        SelectedNationality =
+                            new LookupItem
+                            {
+                                Id = SelectedItem.Model.Nationality.Id,
+                                DisplayMember = SelectedItem.Model.Nationality.Name
+                            };
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -170,51 +190,51 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             base.SwitchEditableStateExecute();
 
-            //await InitializeNationalityCollection();
+            await InitializeNationalityCollection();
 
-            //async Task InitializeNationalityCollection()
-            //{
-            //    if (!Nationalities.Any())
-            //    {
-            //        Nationalities.Clear();
+            async Task InitializeNationalityCollection()
+            {
+                if (!Nationalities.Any())
+                {
+                    Nationalities.Clear();
 
-            //        foreach (var item in await GetNationalityList())
-            //        {
-            //            Nationalities.Add(item);
-            //        }
+                    foreach (var item in await GetNationalityList())
+                    {
+                        Nationalities.Add(item);
+                    }
 
-            //        if (SelectedItem.Model.Nationality != null)
-            //            SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
-            //    }
-            //}
+                    if (SelectedItem.Model.Nationality != null)
+                        SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
+                }
+            }
         }
 
         protected override string CreateChangeMessage(DatabaseOperation operation)
-            => $"{operation.ToString()}: {SelectedItem.LastName}, {SelectedItem.FirstName}.";
+            => $"{operation}: {SelectedItem.LastName}, {SelectedItem.FirstName}.";
 
-        //private async Task<IEnumerable<LookupItem>> GetNationalityList()
-        //    => await (domainService as AuthorService).NationalityLookupDataService
-        //                                             .GetNationalityLookupAsync(nameof(NationalityDetailViewModel));
+        private async Task<IEnumerable<LookupItem>> GetNationalityList()
+            => await ((AuthorService)DomainService).NationalityLookupDataService
+                                                     .GetNationalityLookupAsync(nameof(NationalityDetailViewModel));
 
-        //private void OnNationalitySelectionChangedExecute()
-        //{
-        //    if (SelectedNationality != null && Nationalities.Any())
-        //    {
-        //        SelectedItem.Model.NationalityId = SelectedNationality.Id;
-        //        SetChangeTracker();
-        //    }
-        //}
+        private void OnNationalitySelectionChangedExecute()
+        {
+            if (SelectedNationality is not null && Nationalities.Any())
+            {
+                NationalityIsDirty = SelectedItem.Model.Nationality is null ||
+                                     SelectedItem.Model.Nationality?.Id != SelectedNationality.Id;
+            }
+        }
 
 
-        //private void OnAddNewNationalityExecute()
-        //{
-        //    eventAggregator.GetEvent<OpenDetailViewEvent>()
-        //                   .Publish(new OpenDetailViewEventArgs
-        //                   {
-        //                       Id = new Guid(),
-        //                       ViewModelName = nameof(NationalityDetailViewModel)
-        //                   });
-        //}
+        private void OnAddNewNationalityExecute()
+        {
+            EventAggregator.GetEvent<OpenDetailViewEvent>()
+                           .Publish(new OpenDetailViewEventArgs
+                           {
+                               Id = new Guid(),
+                               ViewModelName = nameof(NationalityDetailViewModel)
+                           });
+        }
 
         public override AuthorWrapper CreateWrapper(Author entity)
         {
