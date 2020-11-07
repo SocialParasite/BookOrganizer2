@@ -1,3 +1,4 @@
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.Shared;
 using System;
@@ -18,20 +19,22 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
         public string Notes { get; private set; }
-        public Nationality Nationality { get; set; }
+        public Nationality Nationality { get; private set; }
 
-        public static Author Create(AuthorId id, 
-                                    string firstName, 
-                                    string lastName, 
-                                    DateTime? dob = null, 
-                                    string biography = null, 
-                                    string mugshotPath = null, 
-                                    string notes = null)
+        public static Author Create(AuthorId id,
+                                    string firstName,
+                                    string lastName,
+                                    DateTime? dob = null,
+                                    string biography = null,
+                                    string mugshotPath = null,
+                                    string notes = null,
+                                    Nationality nationality = null)
         {
+            // TODO: Nationality
             ValidateParameters();
 
             var author = new Author();
-            
+
             author.Apply(new Events.AuthorCreated
             {
                 Id = id,
@@ -40,7 +43,8 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 DateOfBirth = dob,
                 Biography = biography,
                 MugshotPath = mugshotPath,
-                Notes = notes
+                Notes = notes,
+                Nationality = nationality
             });
 
             return author;
@@ -61,34 +65,54 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public void SetFirstName(string name)
         {
             const string msg = "Invalid first name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
-            if (ValidateName(name, () => throw new InvalidFirstNameException(msg)))
-                FirstName = name;
-            else 
+            if (ValidateName(name))
+                Apply(new Events.AuthorsFirstNameChanged
+                {
+                    Id = Id,
+                    FirstName = name
+                });
+            else
                 throw new InvalidFirstNameException(msg);
         }
 
         public void SetLastName(string name)
         {
             const string msg = "Invalid last name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
-            if (ValidateName(name, () => throw new InvalidLastNameException(msg)))
-                LastName = name;
+            if (ValidateName(name))
+                Apply(new Events.AuthorsLastNameChanged
+                {
+                    Id = Id,
+                    LastName = name
+                });
             else
                 throw new InvalidLastNameException(msg);
         }
 
         public void SetDateOfBirth(DateTime? dob)
         {
-            DateOfBirth = dob;
+            Apply(new Events.AuthorDateOfBirthChanged
+            {
+                Id = Id,
+                DateOfBirth = dob
+            });
         }
 
         public void SetBiography(string bio)
         {
-            Biography = bio;
+            Apply(new Events.AuthorsBiographyChanged
+            {
+                Id = Id,
+                Biography = bio
+            });
         }
 
         public void SetNotes(string notes)
         {
-            Notes = notes;
+            Apply(new Events.AuthorsNotesChanged
+            {
+                Id = Id,
+                Notes = notes
+            });
         }
 
         public void SetMugshotPath(string pic)
@@ -100,23 +124,36 @@ namespace BookOrganizer2.Domain.AuthorProfile
             string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
 
             if (formats.Contains(Path.GetExtension(pic), StringComparer.InvariantCultureIgnoreCase))
-                MugshotPath = path;
-            else 
+                Apply(new Events.AuthorsMugshotPathChanged
+                {
+                    Id = Id,
+                    MugshotPath = pic
+                });
+            else
                 throw new Exception();
         }
 
-        private static bool ValidateName(string name, Action exception)
+        public void SetNationality(Nationality nationality)
+        {
+            Apply(new Events.NationalityChanged
+            {
+                Id = Id,
+                Nationality = nationality
+            });
+        }
+
+        private static bool ValidateName(string name)
         {
             const int minLength = 1;
             const int maxLength = 64;
-            var pattern = "(?=.{" + minLength + "," + maxLength +"}$)^[\\p{L}\\p{M}\\s'-]+?$";
+            var pattern = "(?=.{" + minLength + "," + maxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
-            if (string.IsNullOrWhiteSpace(name)) 
-                exception.Invoke();
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
 
             var regexPattern = new Regex(pattern);
 
-            return regexPattern.IsMatch(name ?? string.Empty);   
+            return regexPattern.IsMatch(name);
         }
 
         internal bool EnsureValidState()
@@ -143,6 +180,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     MugshotPath = e.MugshotPath;
                     Biography = e.Biography;
                     Notes = e.Notes;
+                    Nationality = e.Nationality;
                     break;
                 case Events.AuthorDateOfBirthChanged e:
                     DateOfBirth = e.DateOfBirth;
@@ -166,6 +204,10 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 case Events.AuthorsNotesChanged e:
                     Id = e.Id;
                     Notes = e.Notes;
+                    break;
+                case Events.NationalityChanged e:
+                    Id = e.Id;
+                    Nationality = e.Nationality;
                     break;
                 case Events.AuthorDeleted e:
                     Id = e.Id;

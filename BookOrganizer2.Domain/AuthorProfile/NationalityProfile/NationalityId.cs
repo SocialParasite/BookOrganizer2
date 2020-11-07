@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using BookOrganizer2.Domain.Shared;
 
-namespace BookOrganizer2.Domain.AuthorProfile
+namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
     public class NationalityId : ValueObject
     {

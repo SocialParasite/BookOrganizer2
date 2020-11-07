@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.Services;
 using System;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Shared;
 using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
@@ -22,18 +23,47 @@ namespace BookOrganizer2.Domain.AuthorProfile
             return command switch
             {
                 Create cmd => HandleCreate(cmd),
-                Update cmd => HandleUpdate(cmd),
-                SetAuthorsFirstName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetFirstName(cmd.FirstName), (a) => Repository.Update(a)),
-                SetAuthorsLastName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetLastName(cmd.LastName), (a) => Repository.Update(a)),
-                SetAuthorDateOfBirth cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth), (a) => Repository.Update(a)),
-                SetMugshotPath cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath), (a) => Repository.Update(a)),
-                SetBiography cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetBiography(cmd.Biography), (a) => Repository.Update(a)),
-                SetNotes cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetNotes(cmd.Notes), (a) => Repository.Update(a)),
-                DeleteAuthor cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Update cmd => HandleFullUpdate(cmd),
+                SetAuthorsFirstName cmd => HandleUpdate(cmd.Id, (a) => a.SetFirstName(cmd.FirstName), 
+                    (a) => Repository.Update(a)),
+                SetAuthorsLastName cmd => HandleUpdate(cmd.Id, (a) => a.SetLastName(cmd.LastName), 
+                    (a) => Repository.Update(a)),
+                SetAuthorDateOfBirth cmd => HandleUpdate(cmd.Id, (a) => a.SetDateOfBirth(cmd.DataOfBirth), 
+                    (a) => Repository.Update(a)),
+                SetMugshotPath cmd => HandleUpdate(cmd.Id, (a) => a.SetMugshotPath(cmd.MugshotPath), 
+                    (a) => Repository.Update(a)),
+                SetBiography cmd => HandleUpdate(cmd.Id, (a) => a.SetBiography(cmd.Biography), 
+                    (a) => Repository.Update(a)),
+                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotes(cmd.Notes), 
+                    (a) => Repository.Update(a)),
+                SetNationality cmd => HandleUpdateAsync(cmd.Id, 
+                        async a => await UpdateNationalityAsync(a, cmd.NationalityId)),
+                DeleteAuthor cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
         }
-        
+
+        public Guid GetId(AuthorId id) => id?.Value ?? Guid.Empty;
+
+        public async Task<Author> AddNew(Author model)
+        {
+            var command = new Create
+            {
+                Id = new AuthorId(SequentialGuid.NewSequentialGuid()),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                DateOfBirth = model.DateOfBirth,
+                MugshotPath = model.MugshotPath,
+                Biography = model.Biography,
+                Notes = model.Notes,
+                Nationality = model.Nationality
+            };
+
+            await Handle(command);
+
+            return await Repository.GetAsync(command.Id);
+        }
+
         private async Task HandleCreate(Create cmd)
         {
             if (await Repository.ExistsAsync(cmd.Id))
@@ -49,6 +79,11 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
             await Repository.AddAsync(author);
 
+            if (cmd.Nationality is not null)
+            {
+                await UpdateNationalityAsync(author, cmd.Nationality.Id);
+            }
+
             if (author.EnsureValidState())
             {
                 await Repository.SaveAsync();
@@ -59,7 +94,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        private async Task HandleUpdate(Update cmd)
+        private async Task HandleFullUpdate(Update cmd)
         {
             if (!await Repository.ExistsAsync(cmd.Id))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
@@ -85,7 +120,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Author> operation, Action <Author> operation2 = null)
+        private async Task HandleUpdate(Guid id, Action<Author> operation, Action <Author> operation2 = null)
         {
             if (await Repository.ExistsAsync(id))
             {
@@ -102,24 +137,29 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 throw new ArgumentException();
         }
 
-        public async Task<Author> AddNew(Author model)
+        private async Task HandleUpdateAsync(Guid authorId, Func<Author, Task> operation)
         {
-            var command = new Create
+            if (await Repository.ExistsAsync(authorId))
             {
-                Id = new AuthorId(SequentialGuid.NewSequentialGuid()),
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                DateOfBirth = model.DateOfBirth,
-                MugshotPath = model.MugshotPath,
-                Biography = model.Biography,
-                Notes = model.Notes
-            };
+                var author = await Repository.GetAsync(authorId);
 
-            await Handle(command);
+                if (author is null)
+                    throw new InvalidOperationException($"Entity with id {authorId} cannot be found");
 
-            return await Repository.GetAsync(command.Id);
+                await operation(author);
+
+                if (author.EnsureValidState())
+                {
+                    await Repository.SaveAsync();
+                }
+            }
+            else
+                throw new ArgumentException();
         }
 
-        public Guid GetId(AuthorId id) => id?.Value ?? Guid.Empty;
+        private async Task UpdateNationalityAsync(Author author, NationalityId nationalityId)
+        {
+            await ((IAuthorRepository) Repository).ChangeNationality(author, nationalityId);
+        }
     }
 }

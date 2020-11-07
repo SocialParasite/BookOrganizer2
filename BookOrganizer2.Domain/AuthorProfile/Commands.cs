@@ -1,4 +1,5 @@
 ﻿using System;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
@@ -13,6 +14,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public DateTime? DateOfBirth { get; set; }
             public string Biography { get; set; }
             public string Notes { get; set; }
+            public Nationality Nationality { get; set; }
         }
 
         public class Update
@@ -24,7 +26,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public DateTime? DateOfBirth { get; set; }
             public string Biography { get; set; }
             public string Notes { get; set; }
-
+            public Nationality Nationality { get; set; }
         }
 
         public class SetAuthorsFirstName
@@ -63,11 +65,11 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public string Notes { get; set; }
         }
 
-        //public class SetAuthorsNationality
-        //{
-        //    public Guid Id { get; set; }
-        //    public Guid NationalityId { get; set; }
-        //}
+        public class SetNationality
+        {
+            public Guid Id { get; set; }
+            public Guid NationalityId { get; set; }
+        }
 
         public class DeleteAuthor
         {

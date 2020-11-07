@@ -9,39 +9,39 @@ namespace BookOrganizer2.DA.Repositories
         where TEntity : class
         where TContext : BookOrganizer2DbContext
     {
-        private readonly TContext _context;
+        protected readonly TContext Context;
 
         protected BaseRepository(TContext context)
-            => _context = context ?? throw new ArgumentNullException(nameof(context));
+            => Context = context ?? throw new ArgumentNullException(nameof(context));
 
         //public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         //    => await Context.Set<TEntity>().ToListAsync();
 
-        public async Task<TEntity> GetAsync(TId id)
-            => await _context.Set<TEntity>().FindAsync(id);
+        public virtual async Task<TEntity> GetAsync(TId id)
+            => await Context.Set<TEntity>().FindAsync(id);
 
         public async Task SaveAsync()
-            => await _context.SaveChangesAsync();
+            => await Context.SaveChangesAsync();
 
         public async Task<bool> ExistsAsync(TId id) 
-            => await _context.Set<TEntity>().FindAsync(id) != null;
+            => await Context.Set<TEntity>().FindAsync(id) != null;
 
         public async Task AddAsync(TEntity entity) 
-            => await _context.Set<TEntity>().AddAsync(entity);
+            => await Context.Set<TEntity>().AddAsync(entity);
 
         public void Update(TEntity entity)
-            => _context.Update(entity);
+            => Context.Update(entity);
 
         public async Task RemoveAsync(TId id)
         {
-            var entity = await _context.Set<TEntity>().FindAsync(id);
+            var entity = await Context.Set<TEntity>().FindAsync(id);
 
             if (entity != null)
-                _context.Set<TEntity>().Remove(entity);
+                Context.Set<TEntity>().Remove(entity);
         }
 
         public bool HasChanges()
-            => _context.ChangeTracker.HasChanges();
+            => Context.ChangeTracker.HasChanges();
 
         //public void ResetTracking(TEntity entity) 
         //    => Context.Entry(entity).State = EntityState.Unchanged;
