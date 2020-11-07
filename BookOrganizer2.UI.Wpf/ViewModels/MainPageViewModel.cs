@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.Domain.DA;
 using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Interfaces;
 using Prism.Commands;
@@ -15,19 +16,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
     {
         private readonly IEventAggregator _eventAggregator;
         //private readonly ILanguageLookupDataService languageLookup;
-        //private readonly INationalityLookupDataService nationalityLookupDataService;
+        private readonly INationalityLookupDataService nationalityLookupDataService;
         //private readonly IFormatLookupDataService formatLookupDataService;
         //private readonly IGenreLookupDataService genreLookupDataService;
 
-        public MainPageViewModel(IEventAggregator eventAggregator)
+        public MainPageViewModel(IEventAggregator eventAggregator,
+            INationalityLookupDataService nationalityLookupDataService)
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-        
+            this.nationalityLookupDataService = nationalityLookupDataService 
+                                                ?? throw new ArgumentNullException(nameof(nationalityLookupDataService));
+
             ShowItemsCommand = new DelegateCommand<Type>(OnShowItemsExecute);
 
             AddNewItemCommand = new DelegateCommand<Type>(OnAddNewItemExecute);
             //EditLanguagesCommand = new DelegateCommand(OnEditLanguagesExecute);
-            //EditNationalitiesCommand = new DelegateCommand(OnEditNationalitiesExecute);
+            EditNationalitiesCommand = new DelegateCommand(OnEditNationalitiesExecute);
             //EditBookFormatsCommand = new DelegateCommand(OnEditBookFormatsExecute);
             //EditBookGenresCommand = new DelegateCommand(OnEditBookGenresExecute);
         }
@@ -67,15 +71,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //                       ViewModelName = nameof(LanguageDetailViewModel)
         //                   });
         //}
-        //private async void OnEditNationalitiesExecute()
-        //{
-        //    eventAggregator.GetEvent<OpenDetailViewEvent>()
-        //                .Publish(new OpenDetailViewEventArgs
-        //                {
-        //                    Id = await nationalityLookupDataService.GetNationalityId(),
-        //                    ViewModelName = nameof(NationalityDetailViewModel)
-        //                });
-        //}
+        private async void OnEditNationalitiesExecute()
+        {
+            _eventAggregator.GetEvent<OpenDetailViewEvent>()
+                        .Publish(new OpenDetailViewEventArgs
+                        {
+                            Id = await nationalityLookupDataService.GetNationalityId(),
+                            ViewModelName = nameof(NationalityDetailViewModel)
+                        });
+        }
 
         //private async void OnEditBookFormatsExecute()
         //{

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.Exceptions;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
@@ -39,7 +39,8 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             }
         }
 
-        public static Nationality NewNationality => new Nationality();
+        public static Nationality NewNationality
+            => new Nationality { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

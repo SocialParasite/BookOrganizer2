@@ -77,12 +77,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             get => _hasChanges;
             set
             {
-                if (_hasChanges != value)
-                {
-                    _hasChanges = value;
-                    OnPropertyChanged();
-                    ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-                }
+                if (_hasChanges == value) return;
+                _hasChanges = value;
+                OnPropertyChanged();
+                ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -128,13 +126,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
 
-        protected void SetChangeTracker()
-        {
-            if (!HasChanges)
-            {
-                HasChanges = DomainService.Repository.HasChanges();
-            }
-        }
+        //protected void SetChangeTracker()
+        //{
+        //    if (!HasChanges)
+        //    {
+        //        HasChanges = DomainService.Repository.HasChanges();
+        //    }
+        //}
 
         public virtual void SwitchEditableStateExecute()
         {
@@ -170,7 +168,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //public virtual void OnShowSelectedBookExecute(Guid? id)
         //    => SelectedBookId = (Guid)id;
 
-        // TODO:
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
 

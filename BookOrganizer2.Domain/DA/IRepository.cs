@@ -11,7 +11,7 @@ namespace BookOrganizer2.Domain.DA
         void Update(T entity);
         Task RemoveAsync(TId id);
         Task SaveAsync();
-
+        void ResetTracking(T entity);
         bool HasChanges();
     }
 }
