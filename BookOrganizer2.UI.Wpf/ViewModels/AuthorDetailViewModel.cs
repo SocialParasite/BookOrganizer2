@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using BookOrganizer2.DA.Repositories;
+﻿using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
@@ -19,6 +11,12 @@ using BookOrganizer2.UI.Wpf.Wrappers;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
