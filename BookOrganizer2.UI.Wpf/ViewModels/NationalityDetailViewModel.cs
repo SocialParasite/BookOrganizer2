@@ -47,7 +47,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public ICommand ChangeEditedNationalityCommand { get; }
 
-        public override NationalityWrapper SelectedItem
+        public sealed override NationalityWrapper SelectedItem
         {
             get => _selectedItem;
             set
@@ -62,61 +62,83 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         protected override string CreateChangeMessage(DatabaseOperation operation) 
             => $"{operation}: {SelectedItem.Name}.";
 
+        public sealed override NationalityWrapper CreateWrapper(Nationality entity) => new NationalityWrapper(entity);
+
+        public override async Task LoadAsync(Guid id)
+        {
+            try
+            {
+                Nationality nationality = null;
+
+                if (id != default)
+                {
+                    nationality = await DomainService.Repository.GetAsync(id) ?? Nationality.NewNationality;
+                }
+                else
+                {
+                    nationality = Nationality.NewNationality;
+                    IsNewItem = true;
+                }
+
+                SelectedItem = CreateWrapper(nationality);
+
+                SelectedItem.PropertyChanged += (s, e) =>
+                {
+                    if (!HasChanges)
+                    {
+                        HasChanges = DomainService.Repository.HasChanges();
+                    }
+                    if (e.PropertyName == nameof(SelectedItem.HasErrors))
+                    {
+                        ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
+                    }
+                    if (e.PropertyName == nameof(SelectedItem.Name)
+                        || e.PropertyName == nameof(SelectedItem.Name))
+                    {
+                        TabTitle = SelectedItem.Name;
+                    }
+                };
+                ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
+
+                Id = id;
+
+                if (Id != default)
+                {
+                    TabTitle = SelectedItem.Name;
+                }
+                else
+                {
+                    SelectedItem.Name = SelectedItem.Model.Name;
+                }
+
+                await InitializeFormatCollection();
+
+                async Task InitializeFormatCollection()
+                {
+                    if (!Nations.Any() || HasChanges)
+                    {
+                        Nations.Clear();
+
+                        foreach (var item in await GetNationalityList())
+                        {
+                            Nations.Add(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var dialog = new NotificationViewModel("Exception", ex.Message);
+                DialogService.OpenDialog(dialog);
+
+                Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+            }
+        }
+
         protected override async void SaveItemExecute()
         {
             base.SaveItemExecute();
             await LoadAsync(SelectedItem.Id);
-        }
-
-        public override async Task LoadAsync(Guid id)
-        {
-            var nationality = await DomainService.Repository.GetAsync(id) ?? Nationality.NewNationality;
-
-            SelectedItem = CreateWrapper(nationality);
-
-            SelectedItem.PropertyChanged += (s, e) =>
-            {
-                if (!HasChanges)
-                {
-                    HasChanges = DomainService.Repository.HasChanges();
-                }
-                if (e.PropertyName == nameof(SelectedItem.HasErrors))
-                {
-                    ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-                }
-                if (e.PropertyName == nameof(SelectedItem.Name)
-                    || e.PropertyName == nameof(SelectedItem.Name))
-                {
-                    TabTitle = SelectedItem.Name;
-                }
-            };
-            ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-
-            Id = nationality.Id;
-
-            if (Id != default)
-            {
-                TabTitle = SelectedItem.Name;
-            }
-            else
-            {
-                SelectedItem.Name = SelectedItem.Model.Name;
-            }
-
-            await InitializeFormatCollection();
-
-            async Task InitializeFormatCollection()
-            {
-                if (!Nations.Any() || HasChanges)
-                {
-                    Nations.Clear();
-
-                    foreach (var item in await GetNationalityList())
-                    {
-                        Nations.Add(item);
-                    }
-                }
-            }
         }
 
         private async Task<IEnumerable<LookupItem>> GetNationalityList()
@@ -139,12 +161,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             HasChanges = DomainService.Repository.HasChanges();
 
             if (nationalityId is not null) await LoadAsync((Guid) nationalityId);
-        }
-
-        public override NationalityWrapper CreateWrapper(Nationality entity)
-        {
-            var wrapper = new NationalityWrapper(entity);
-            return wrapper;
         }
     }
 }
