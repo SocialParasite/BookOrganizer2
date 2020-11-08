@@ -61,6 +61,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand ShowSelectedBookCommand { get; }
 
         public abstract TBase SelectedItem { get; set; }
+        public bool IsNewItem { get; set; }
 
         public Tuple<bool, DetailViewState, SolidColorBrush, bool> UserMode
         {
@@ -77,12 +78,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             get => _hasChanges;
             set
             {
-                if (_hasChanges != value)
-                {
-                    _hasChanges = value;
-                    OnPropertyChanged();
-                    ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
-                }
+                if (_hasChanges == value) return;
+                _hasChanges = value;
+                OnPropertyChanged();
+                ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -128,13 +127,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
 
-        protected void SetChangeTracker()
-        {
-            if (!HasChanges)
-            {
-                HasChanges = DomainService.Repository.HasChanges();
-            }
-        }
+        //protected void SetChangeTracker()
+        //{
+        //    if (!HasChanges)
+        //    {
+        //        HasChanges = DomainService.Repository.HasChanges();
+        //    }
+        //}
 
         public virtual void SwitchEditableStateExecute()
         {
@@ -170,15 +169,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //public virtual void OnShowSelectedBookExecute(Guid? id)
         //    => SelectedBookId = (Guid)id;
 
-        // TODO:
         protected virtual bool SaveItemCanExecute()
-            => (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default);
+            => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem);
 
         protected virtual async void SaveItemExecute()
         {
-            var isNewItem = false;
-
-            if (SelectedItem.Model.Id != default)
+            if(!IsNewItem)
             {
                 var dialog = new OkCancelViewModel("Save changes?", "You are about to save your changes. This will overwrite the previous version. Are you sure?");
 
@@ -190,9 +186,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            if (SelectedItem.Model.Id == default)
+            if (IsNewItem)
             {
-                isNewItem = true;
                 var item = await DomainService.AddNew(SelectedItem.Model);
 
                 await LoadAsync(DomainService.GetId(item.Id));
@@ -206,11 +201,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Publish(new ChangeDetailsViewEventArgs
                 {
-                    Message = CreateChangeMessage(isNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
+                    Message = CreateChangeMessage(IsNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
                     MessageBackgroundColor = Brushes.LawnGreen
                 });
 
             HasChanges = false;
+            IsNewItem = false;
         }
 
         protected abstract string CreateChangeMessage(DatabaseOperation operation);

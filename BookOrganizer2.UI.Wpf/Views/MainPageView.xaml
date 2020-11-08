@@ -85,13 +85,13 @@
                         x:Name="AddLanguageButton"
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:LanguageDetailViewModel}"
-                        Content="Add a new language" />
+                        Content="Add a new language" /> -->
                     <Button
                         x:Name="AddNationalityButton"
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:NationalityDetailViewModel}"
                         Content="Add a new nationality" />
-                    <Button
+                    <!--<Button
                         x:Name="AddPublisherButton"
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:PublisherDetailViewModel}"

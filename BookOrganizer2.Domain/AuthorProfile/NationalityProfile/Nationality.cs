@@ -1,18 +1,15 @@
-﻿using System;
+﻿using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.Exceptions;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
     public class Nationality : IIdentifiable<NationalityId>
     {
         public NationalityId Id { get; set; }
-
         public string Name { get; set; }
-
-        // Navigational properties
         public ICollection<Author> Authors { get; set; }
 
         public static Nationality Create(NationalityId id, string name)
@@ -39,7 +36,8 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             }
         }
 
-        public static Nationality NewNationality => new Nationality();
+        public static Nationality NewNationality
+            => new Nationality { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

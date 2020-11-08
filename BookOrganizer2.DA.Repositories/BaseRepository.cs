@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.DA;
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.Repositories
 {
@@ -43,7 +44,7 @@ namespace BookOrganizer2.DA.Repositories
         public bool HasChanges()
             => Context.ChangeTracker.HasChanges();
 
-        //public void ResetTracking(TEntity entity) 
-        //    => Context.Entry(entity).State = EntityState.Unchanged;
+        public void ResetTracking(TEntity entity)
+            => Context.Entry(entity).State = EntityState.Unchanged;
     }
 }

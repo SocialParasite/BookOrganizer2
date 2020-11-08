@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
-namespace BookOrganizer2.Domain.Services
+namespace BookOrganizer2.Domain.AuthorProfile
 {
     public class AuthorService : IDomainService<Author, AuthorId>
     {
