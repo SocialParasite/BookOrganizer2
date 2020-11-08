@@ -1,5 +1,4 @@
-﻿//using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Services;
+﻿using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.Enums;
@@ -126,7 +125,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
-
+        
+        //public virtual void OnShowSelectedBookExecute(Guid? id)
+        //    => SelectedBookId = (Guid)id;
+        
+        public virtual void SwitchEditableStateExecute()
+        {
+            UserMode = UserMode.Item2 == DetailViewState.ViewMode
+                ? (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple()
+                : (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
+        }
+        
         //protected void SetChangeTracker()
         //{
         //    if (!HasChanges)
@@ -134,41 +143,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //        HasChanges = DomainService.Repository.HasChanges();
         //    }
         //}
-
-        public virtual void SwitchEditableStateExecute()
-        {
-            UserMode = UserMode.Item2 == DetailViewState.ViewMode
-                ? (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple()
-                : (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
-        }
-
-        private void CloseDetailViewExecute()
-        {
-            if (DomainService.Repository.HasChanges())
-            {
-                var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
-                var result = DialogService.OpenDialog(dialog);
-
-                if (result == DialogResult.No)
-                {
-                    return;
-                }
-            }
-
-            EventAggregator.GetEvent<CloseDetailsViewEvent>()
-                    .Publish(new CloseDetailsViewEventArgs
-                    {
-                        Id = DomainService.GetId(SelectedItem.Model.Id),
-                        ViewModelName = GetType().Name
-                    });
-        }
-
-        private bool OnShowSelectedBookCanExecute(Guid? id)
-                => (!(id is null) && id != Guid.Empty);
-
-        //public virtual void OnShowSelectedBookExecute(Guid? id)
-        //    => SelectedBookId = (Guid)id;
-
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem);
 
@@ -210,6 +184,30 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         protected abstract string CreateChangeMessage(DatabaseOperation operation);
+
+        private void CloseDetailViewExecute()
+        {
+            if (DomainService.Repository.HasChanges())
+            {
+                var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
+                var result = DialogService.OpenDialog(dialog);
+
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            EventAggregator.GetEvent<CloseDetailsViewEvent>()
+                    .Publish(new CloseDetailsViewEventArgs
+                    {
+                        Id = DomainService.GetId(SelectedItem.Model.Id),
+                        ViewModelName = GetType().Name
+                    });
+        }
+
+        private bool OnShowSelectedBookCanExecute(Guid? id)
+                => (!(id is null) && id != Guid.Empty);
 
         private bool DeleteItemCanExecute()
             => SelectedItem.Model.Id != default && UserMode.Item4;

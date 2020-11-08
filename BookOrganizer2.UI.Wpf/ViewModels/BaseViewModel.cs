@@ -71,6 +71,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private string _searchString;
+
         [UsedImplicitly]
         public string SearchString
         {
@@ -83,6 +84,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        public abstract Task InitializeRepositoryAsync();
+
         private void UpdateFilteredEntityCollection()
         {
             FilteredEntityCollection?.Clear();
@@ -90,8 +93,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                                        .IndexOf(SearchString, StringComparison.OrdinalIgnoreCase) != -1)
                                                        .ToList();
         }
-
-        public abstract Task InitializeRepositoryAsync();
 
         private void OnAddNewItemExecute(string itemType)
         {

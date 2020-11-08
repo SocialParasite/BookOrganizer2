@@ -57,7 +57,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public ObservableCollection<LookupItem> Nations { get; set; }
+        public ObservableCollection<LookupItem> Nations { get; }
 
         protected override string CreateChangeMessage(DatabaseOperation operation) 
             => $"{operation}: {SelectedItem.Name}.";
