@@ -17,7 +17,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -50,7 +49,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             SelectedItem = new AuthorWrapper(domainService.CreateItem());
 
             Nationalities = new ObservableCollection<LookupItem>();
+
+            eventAggregator.GetEvent<NewItemEvent>()
+                .Subscribe(OnNewNationalityAdded);
         }
+
+        private async void OnNewNationalityAdded(NewItemEventArgs obj) 
+            => await InitializeNationalityCollection(true);
 
         public ICommand AddAuthorPictureCommand { get; }
         public ICommand NationalitySelectionChangedCommand { get; }
@@ -83,14 +88,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    author = await ((AuthorRepository) DomainService.Repository).LoadAsync(id);
+                    author = await ((AuthorRepository)DomainService.Repository).LoadAsync(id);
                 }
                 else
                 {
                     author = Author.NewAuthor;
                     IsNewItem = true;
                 }
-                
+
 
                 SelectedItem = CreateWrapper(author);
 
@@ -120,7 +125,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
                 else
                 {
-                    this.SwitchEditableStateExecute();
+                    SwitchEditableStateExecute();
                     SelectedItem.FirstName = "";
                     SelectedItem.LastName = "";
                 }
@@ -161,21 +166,29 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             base.SwitchEditableStateExecute();
 
             await InitializeNationalityCollection();
+        }
 
-            async Task InitializeNationalityCollection()
+        private async Task InitializeNationalityCollection(bool reset = false)
+        {
+            if (!Nationalities.Any() || reset)
             {
-                if (!Nationalities.Any())
+                if (reset)
                 {
-                    Nationalities.Clear();
-
-                    foreach (var item in await GetNationalityList())
+                    while (await ((AuthorService)DomainService).NationalityLookupDataService.GetNationalityCount() 
+                           == Nationalities.Count)
                     {
-                        Nationalities.Add(item);
                     }
-
-                    if (SelectedItem.Model.Nationality != null)
-                        SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
                 }
+
+                Nationalities.Clear();
+
+                foreach (var item in await GetNationalityList())
+                {
+                    Nationalities.Add(item);
+                }
+
+                if (SelectedItem.Model.Nationality != null)
+                    SelectedNationality = Nationalities.FirstOrDefault(n => n.Id == SelectedItem.Model.Nationality.Id);
             }
         }
 
@@ -189,7 +202,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (_nationalityIsDirty)
             {
                 var currentNationality =
-                    await ((AuthorRepository) DomainService.Repository).GetNationalityAsync(SelectedNationality.Id);
+                    await ((AuthorRepository)DomainService.Repository).GetNationalityAsync(SelectedNationality.Id);
                 SelectedItem.Model.SetNationality(currentNationality);
             }
             base.SaveItemExecute();
@@ -230,7 +243,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             EventAggregator.GetEvent<OpenDetailViewEvent>()
                            .Publish(new OpenDetailViewEventArgs
                            {
-                               Id = new NationalityId(SequentialGuid.NewSequentialGuid()),
+                               Id = Guid.Empty,
                                ViewModelName = nameof(NationalityDetailViewModel)
                            });
         }

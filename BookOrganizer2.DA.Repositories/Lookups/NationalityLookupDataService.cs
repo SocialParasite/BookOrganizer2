@@ -44,5 +44,11 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 .Select(n => n.Id)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<int> GetNationalityCount()
+        {
+            await using var ctx = _contextCreator();
+            return ctx.Nationalities.Count();
+        }
     }
 }

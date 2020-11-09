@@ -9,7 +9,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
     public class Nationality : IIdentifiable<NationalityId>
     {
         public NationalityId Id { get; private set; }
-        public string Name { get; private set; }
+        public string Name { get; set; }
         public ICollection<Author> Authors { get; set; }
 
         public static Nationality Create(NationalityId id, string name)
