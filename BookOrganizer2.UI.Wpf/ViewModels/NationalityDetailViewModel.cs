@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using BookOrganizer2.UI.Wpf.Events;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -57,7 +58,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public ObservableCollection<LookupItem> Nations { get; set; }
+        public ObservableCollection<LookupItem> Nations { get; }
 
         protected override string CreateChangeMessage(DatabaseOperation operation) 
             => $"{operation}: {SelectedItem.Name}.";
@@ -139,6 +140,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             base.SaveItemExecute();
             await LoadAsync(SelectedItem.Id);
+            NewItemAdded();
         }
 
         private async Task<IEnumerable<LookupItem>> GetNationalityList()
@@ -161,6 +163,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             HasChanges = DomainService.Repository.HasChanges();
 
             if (nationalityId is not null) await LoadAsync((Guid) nationalityId);
+        }
+
+        private void NewItemAdded()
+        {
+            EventAggregator.GetEvent<NewItemEvent>()
+                .Publish(new NewItemEventArgs
+                {
+                    //ItemType = "nationality"
+                });
         }
     }
 }

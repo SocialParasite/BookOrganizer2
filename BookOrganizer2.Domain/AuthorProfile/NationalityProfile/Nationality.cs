@@ -8,7 +8,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
     public class Nationality : IIdentifiable<NationalityId>
     {
-        public NationalityId Id { get; set; }
+        public NationalityId Id { get; private set; }
         public string Name { get; set; }
         public ICollection<Author> Authors { get; set; }
 
@@ -49,6 +49,12 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
                 throw new InvalidNameException(msg);
         }
 
+        internal bool EnsureValidState()
+        {
+            return Id.Value != default
+                   && !string.IsNullOrWhiteSpace(Name);
+        }
+
         private static bool ValidateName(string name)
         {
             const int minLength = 1;
@@ -61,12 +67,6 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             var regexPattern = new Regex(pattern);
 
             return regexPattern.IsMatch(name);
-        }
-
-        internal bool EnsureValidState()
-        {
-            return Id.Value != default
-                   && !string.IsNullOrWhiteSpace(Name);
         }
 
         private void Apply(object @event)
