@@ -217,10 +217,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             var dialog = new OkCancelViewModel("Delete item?", "You are about to delete an item. This operation cannot be undone. Are you sure?");
             var result = DialogService.OpenDialog(dialog);
 
-            if (result == DialogResult.No)
-            {
-                return;
-            }
+            if (result == DialogResult.No) { }
             else
             {
                 await DomainService.Repository.RemoveAsync(SelectedItem.Model.Id);

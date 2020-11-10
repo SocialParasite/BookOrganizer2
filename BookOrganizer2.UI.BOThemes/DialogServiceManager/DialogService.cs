@@ -8,8 +8,7 @@ namespace BookOrganizer2.UI.BOThemes.DialogServiceManager
     {
         public T OpenDialog<T>(BaseDialog<T> viewModel)
         {
-            var window = new DialogWindow();
-            window.Owner = Application.Current.MainWindow;
+            var window = new DialogWindow {Owner = Application.Current.MainWindow};
             if (Application.Current.MainWindow != null)
             {
                 window.Left = Application.Current.MainWindow.Left;

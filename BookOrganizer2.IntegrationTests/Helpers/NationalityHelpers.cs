@@ -1,10 +1,8 @@
 ﻿using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.SqlServer;
-using BookOrganizer2.Domain.Shared;
-using System;
-using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
-using BookOrganizer2.Domain.Services;
+using BookOrganizer2.Domain.Shared;
+using System.Threading.Tasks;
 using Commands = BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
 namespace BookOrganizer2.IntegrationTests.Helpers
