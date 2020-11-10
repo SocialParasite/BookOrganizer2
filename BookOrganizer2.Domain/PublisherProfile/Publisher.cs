@@ -74,7 +74,7 @@ namespace BookOrganizer2.Domain.PublisherProfile
             });
         }
 
-        public void SetLogohotPath(string pic)
+        public void SetLogoPath(string pic)
         {
             if (pic.Length > 256)
                 throw new ArgumentException();
