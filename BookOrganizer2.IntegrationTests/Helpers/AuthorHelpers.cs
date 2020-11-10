@@ -59,7 +59,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             return await repository.GetAsync(command.Id);
         }
 
-        internal static async Task UpdateAuthor(Author sut)
+        internal static Task UpdateAuthor(Author sut)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -77,10 +77,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Notes = sut.Notes
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task CreateInvalidAuthor()
+        public static Task CreateInvalidAuthor()
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -90,10 +90,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var authorId = new AuthorId(SequentialGuid.NewSequentialGuid());
             var command = new Commands.Create { Id = authorId };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorFirstName(AuthorId id, string firstName)
+        public static Task UpdateAuthorFirstName(AuthorId id, string firstName)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -106,10 +106,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 FirstName = firstName
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorLastName(AuthorId id, string lastName)
+        public static Task UpdateAuthorLastName(AuthorId id, string lastName)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -122,10 +122,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 LastName = lastName
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorDateOfBirth(AuthorId id, DateTime dob)
+        public static Task UpdateAuthorDateOfBirth(AuthorId id, DateTime dob)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -138,10 +138,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 DataOfBirth = dob
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorMugshotPath(AuthorId id, string path)
+        public static Task UpdateAuthorMugshotPath(AuthorId id, string path)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -154,10 +154,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 MugshotPath = path
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorBiography(AuthorId id, string bio)
+        public static Task UpdateAuthorBiography(AuthorId id, string bio)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -170,10 +170,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Biography = bio
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorNotes(AuthorId id, string notes)
+        public static Task UpdateAuthorNotes(AuthorId id, string notes)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -186,11 +186,11 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Notes = notes
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
         // DELETE
-        public static async Task RemoveAuthor(AuthorId id)
+        public static Task RemoveAuthor(AuthorId id)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -202,10 +202,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Id = id,
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
 
-        public static async Task UpdateAuthorNationality(AuthorId authorId, NationalityId nationalityId)
+        public static Task UpdateAuthorNationality(AuthorId authorId, NationalityId nationalityId)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -218,7 +218,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 NationalityId = nationalityId
             };
 
-            await authorService.Handle(command);
+            return authorService.Handle(command);
         }
     }
 }

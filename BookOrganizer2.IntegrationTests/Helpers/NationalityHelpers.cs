@@ -27,7 +27,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             return await repository.GetAsync(command.Id);
         }
 
-        internal static async Task UpdateNationality(Nationality sut)
+        internal static Task UpdateNationality(Nationality sut)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -40,10 +40,10 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Name = sut.Name
             };
 
-            await nationalityService.Handle(command);
+            return nationalityService.Handle(command);
         }
 
-        public static async Task CreateInvalidNationality()
+        public static Task CreateInvalidNationality()
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -53,11 +53,11 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var nationalityId = new NationalityId(SequentialGuid.NewSequentialGuid());
             var command = new Commands.Create { Id = nationalityId };
 
-            await nationalityService.Handle(command);
+            return nationalityService.Handle(command);
         }
 
         // DELETE
-        public static async Task RemoveNationality(NationalityId id)
+        public static Task RemoveNationality(NationalityId id)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -69,7 +69,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Id = id,
             };
 
-            await nationalityService.Handle(command);
+            return nationalityService.Handle(command);
         }
     }
 }
