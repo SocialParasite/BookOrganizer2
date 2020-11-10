@@ -2,6 +2,7 @@
 using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.Repositories.Lookups;
 using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.Wpf.Interfaces;
@@ -12,7 +13,6 @@ using Prism.Events;
 using Serilog;
 using System.IO;
 using System.Linq;
-using BookOrganizer2.Domain.AuthorProfile;
 
 namespace BookOrganizer2.UI.Wpf.Startup
 {

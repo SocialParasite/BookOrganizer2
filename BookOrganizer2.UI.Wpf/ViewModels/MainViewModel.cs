@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Autofac.Features.Indexed;
+﻿using Autofac.Features.Indexed;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Events;
@@ -14,6 +7,10 @@ using BookOrganizer2.UI.Wpf.Services;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {

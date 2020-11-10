@@ -11,7 +11,7 @@ namespace BookOrganizer2.UI.BOThemes.Converters
         {
             switch (value)
             {
-                case BookStatus _:
+                case BookStatus:
                     return value switch
                     {
                         BookStatus.Read | BookStatus.Owned => new SolidColorBrush(Colors.PaleGreen),
@@ -19,7 +19,7 @@ namespace BookOrganizer2.UI.BOThemes.Converters
                         BookStatus.Owned => new SolidColorBrush(Colors.LightSkyBlue),
                         _ => new SolidColorBrush(Colors.WhiteSmoke),
                     };
-                case SeriesStatus _:
+                case SeriesStatus:
                     return value switch
                     {
                         SeriesStatus.NoneOwnedNoneRead => new SolidColorBrush(Colors.Red),

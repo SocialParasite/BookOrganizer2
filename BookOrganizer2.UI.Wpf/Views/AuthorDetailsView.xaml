@@ -149,7 +149,7 @@
                     Grid.Column="2"
                     BorderThickness="0"
                     IsReadOnly="True"
-                    Text="{Binding SelectedItem.Model.Nationality.Name}"
+                    Text="{Binding SelectedItem.Model.Nationality.Name, Mode=OneWay}"
                     Visibility="{Binding UserMode.Item1, Converter={StaticResource BoolToVis}}" />
                 <ComboBox
                     x:Name="nationalityComboBox"
