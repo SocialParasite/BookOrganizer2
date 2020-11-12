@@ -28,6 +28,15 @@
             <DataTemplate DataType="{x:Type viewModel:AuthorDetailViewModel}">
                 <views:AuthorDetailsView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:FormatDetailViewModel}">
+                <views:FormatDetailView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:GenreDetailViewModel}">
+                <views:GenreDetailView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:LanguageDetailViewModel}">
+                <views:LanguageDetailView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:NationalityDetailViewModel}">
                 <views:NationalityDetailView />
             </DataTemplate>
