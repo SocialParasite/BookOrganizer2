@@ -21,7 +21,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<IEnumerable<LookupItem>> GetGenreLookupAsync(string viewModelName)
         {
             await using var ctx = _contextCreator();
-            return await ctx.Nationalities
+            return await ctx.Genres
                 .AsNoTracking()
                 .OrderBy(n => n.Name)
                 .Select(n =>
@@ -38,7 +38,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<Guid> GetGenreId()
         {
             await using var ctx = _contextCreator();
-            return await ctx.Nationalities
+            return await ctx.Genres
                 .AsNoTracking()
                 .OrderBy(n => n.Name)
                 .Select(n => n.Id)
@@ -48,7 +48,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<int> GetGenreCount()
         {
             await using var ctx = _contextCreator();
-            return ctx.Nationalities.Count();
+            return ctx.Genres.Count();
         }
     }
 }
