@@ -4,14 +4,16 @@ using BookOrganizer2.DA.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookOrganizer2.DA.SqlServer.Migrations
 {
     [DbContext(typeof(BookOrganizer2DbContext))]
-    partial class BookOrganizer2DbContextModelSnapshot : ModelSnapshot
+    [Migration("20201112155915_Language")]
+    partial class Language
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,36 +72,6 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Nationalities");
-                });
-
-            modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.FormatProfile.Format", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Formats");
-                });
-
-            modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.GenreProfile.Genre", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.LanguageProfile.Language", b =>

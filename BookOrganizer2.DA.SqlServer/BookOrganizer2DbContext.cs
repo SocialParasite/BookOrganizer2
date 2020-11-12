@@ -1,6 +1,9 @@
 ﻿using BookOrganizer2.DA.SqlServer.EntityConfigurations;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.BookProfile.FormatProfile;
+using BookOrganizer2.Domain.BookProfile.GenreProfile;
+using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.PublisherProfile;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +23,10 @@ namespace BookOrganizer2.DA.SqlServer
         public DbSet<Author> Authors { get; set; }
         public DbSet<Nationality> Nationalities { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<Format> Formats { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -27,6 +34,9 @@ namespace BookOrganizer2.DA.SqlServer
             modelBuilder.ApplyConfiguration(new AuthorConfig());
             modelBuilder.ApplyConfiguration(new NationalityConfig());
             modelBuilder.ApplyConfiguration(new PublisherConfig());
+            modelBuilder.ApplyConfiguration(new LanguageConfig());
+            modelBuilder.ApplyConfiguration(new GenreConfig());
+            modelBuilder.ApplyConfiguration(new FormatConfig());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
