@@ -165,7 +165,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             base.SwitchEditableStateExecute();
 
-            await InitializeNationalityCollection();
+            await InitializeNationalityCollection().ConfigureAwait(false);
         }
 
         private async Task InitializeNationalityCollection(bool reset = false)
