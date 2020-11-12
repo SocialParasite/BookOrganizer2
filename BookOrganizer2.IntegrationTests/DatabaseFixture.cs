@@ -21,6 +21,9 @@ namespace BookOrganizer2.IntegrationTests
             Context.Database.ExecuteSqlRaw("DELETE FROM Authors");
             Context.Database.ExecuteSqlRaw("DELETE FROM Nationalities");
             Context.Database.ExecuteSqlRaw("DELETE FROM Publishers");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Formats");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Genres");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Languages");
         }
     }
 
