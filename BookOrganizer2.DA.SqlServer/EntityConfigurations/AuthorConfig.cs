@@ -25,6 +25,8 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
 
             builder.Property(x => x.MugshotPath)
                 .HasMaxLength(256);
+
+            builder.HasMany(x => x.Books);
         }
     }
 }

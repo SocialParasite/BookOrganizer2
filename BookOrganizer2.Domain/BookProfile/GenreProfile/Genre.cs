@@ -1,6 +1,7 @@
 ﻿using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.Shared;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace BookOrganizer2.Domain.BookProfile.GenreProfile
@@ -9,7 +10,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
     {
         public GenreId Id { get; private set; }
         public string Name { get; private set; }
-
+        public ICollection<Book> Books { get; set; }
         public static Genre Create(GenreId id, string name)
         {
             ValidateParameters();

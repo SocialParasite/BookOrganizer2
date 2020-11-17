@@ -15,6 +15,8 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
             builder.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(32);
+
+            builder.HasMany(x => x.Books);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.Shared;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace BookOrganizer2.Domain.BookProfile.FormatProfile
@@ -9,7 +10,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
     {
         public FormatId Id { get; private set; }
         public string Name { get; private set; }
-
+        public ICollection<Book> Books { get; set; }
         public static Format Create(FormatId id, string name)
         {
             ValidateParameters();
