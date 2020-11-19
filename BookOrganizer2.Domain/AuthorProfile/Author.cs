@@ -1,12 +1,12 @@
-using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
-using BookOrganizer2.Domain.Exceptions;
-using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
