@@ -18,7 +18,12 @@ namespace BookOrganizer2.IntegrationTests
 
         public void Dispose()
         {
+            Context.Database.ExecuteSqlRaw("DELETE FROM BookReadDate");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Books");
             Context.Database.ExecuteSqlRaw("DELETE FROM Authors");
+            Context.Database.ExecuteSqlRaw("DELETE FROM AuthorBook");
+            Context.Database.ExecuteSqlRaw("DELETE FROM BookFormat");
+            Context.Database.ExecuteSqlRaw("DELETE FROM BookGenre");
             Context.Database.ExecuteSqlRaw("DELETE FROM Nationalities");
             Context.Database.ExecuteSqlRaw("DELETE FROM Publishers");
             Context.Database.ExecuteSqlRaw("DELETE FROM Formats");

@@ -112,7 +112,6 @@ namespace BookOrganizer2.DomainTests
         }
 
 
-        public int PageCount { get; private set; }
         [Theory]
         [InlineData(1)]
         [InlineData(99_999)]
@@ -130,6 +129,27 @@ namespace BookOrganizer2.DomainTests
         {
             var sut = CreateBook();
             Action action = () => sut.SetPageCount(pageCount);
+
+            action.Should().Throw<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(1_000_000)]
+        public void Valid_WordCount(int wordCount)
+        {
+            var sut = CreateBook();
+            sut.SetWordCount(wordCount);
+            sut.WordCount.Should().Be(wordCount);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void Invalid_WordCount(int wordCount)
+        {
+            var sut = CreateBook();
+            Action action = () => sut.SetWordCount(wordCount);
 
             action.Should().Throw<ArgumentException>();
         }
