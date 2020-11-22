@@ -140,8 +140,8 @@ namespace BookOrganizer2.Domain.BookProfile
 
         public void SetWordCount(int wordCount)
         {
-            const string msg = "Invalid year. \nRelease year should be between 1 and 2500.";
-            if (wordCount < 1)
+            const string msg = "Word count should be more than 1.";
+            if (wordCount > 1)
                 Apply(new Events.WordCountChanged
                 {
                     Id = Id,

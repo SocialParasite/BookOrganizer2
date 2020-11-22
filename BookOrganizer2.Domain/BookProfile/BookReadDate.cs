@@ -1,4 +1,5 @@
 ﻿using System;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
@@ -6,5 +7,12 @@ namespace BookOrganizer2.Domain.BookProfile
     {
         public ReadDateId Id { get; set; }
         public DateTime ReadDate { get; set; }
+
+        public BookReadDate() { }
+        public BookReadDate(DateTime date)
+        {
+            Id = new ReadDateId(SequentialGuid.NewSequentialGuid());
+            ReadDate = date;
+        }
     }
 }
