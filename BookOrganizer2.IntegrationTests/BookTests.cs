@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookOrganizer2.DA.Repositories;
+using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.BookProfile.FormatProfile;
+using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.IntegrationTests.Helpers;
 using FluentAssertions;
 using Xunit;
@@ -328,13 +333,118 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
-        // TODO: Collections
+        [Fact]
+        public async Task Update_Book_Authors()
+        {
+            var book = await BookHelpers.CreateValidBookWithAllProperties();
 
+            var repository = new BookRepository(_fixture.Context);
+            (await repository.ExistsAsync(book.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(book.Id);
+
+            var bookId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Authors.Count.Should().Be(2);
+
+            var author1 = await AuthorHelpers.CreateValidAuthor();
+            var author2 = await AuthorHelpers.CreateValidAuthor();
+            var authors = new List<Author> {author1, author2};
+            await BookHelpers.UpdateAuthors(sut.Id, authors);
+
+            sut = await repository.LoadAsync(book.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+
+            sut.Authors.Count.Should().Be(4);
+            sut.Id.Should().Be(bookId);
+        }
+
+        [Fact]
+        public async Task Update_Book_Formats()
+        {
+            var book = await BookHelpers.CreateValidBookWithAllProperties();
+
+            var repository = new BookRepository(_fixture.Context);
+            (await repository.ExistsAsync(book.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(book.Id);
+
+            var bookId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Formats.Count.Should().Be(2);
+
+            var format1 = await FormatHelpers.CreateValidFormat();
+            var format2 = await FormatHelpers.CreateValidFormat();
+            var formats = new List<Format> { format1, format2 };
+            await BookHelpers.UpdateFormats(sut.Id, formats);
+
+            sut = await repository.LoadAsync(book.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+
+            sut.Formats.Count.Should().Be(4);
+            sut.Id.Should().Be(bookId);
+        }
+
+        [Fact]
+        public async Task Update_Book_Genres()
+        {
+            var book = await BookHelpers.CreateValidBookWithAllProperties();
+
+            var repository = new BookRepository(_fixture.Context);
+            (await repository.ExistsAsync(book.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(book.Id);
+
+            var bookId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Genres.Count.Should().Be(2);
+
+            var genre1 = await GenreHelpers.CreateValidGenre();
+            var genre2 = await GenreHelpers.CreateValidGenre();
+            var genres = new List<Genre> { genre1, genre2 };
+            await BookHelpers.UpdateGenres(sut.Id, genres);
+
+            sut = await repository.LoadAsync(book.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+
+            sut.Genres.Count.Should().Be(4);
+            sut.Id.Should().Be(bookId);
+        }
+
+        [Fact]
+        public async Task Update_Book_Read_Dates()
+        {
+            var book = await BookHelpers.CreateValidBookWithAllProperties();
+
+            var repository = new BookRepository(_fixture.Context);
+            (await repository.ExistsAsync(book.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(book.Id);
+
+            var bookId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.ReadDates.Count.Should().Be(2);
+
+            var readDate1 = new BookReadDate(DateTime.Now);
+            var readDate2 = new BookReadDate(DateTime.Now);
+            var readDates = new List<BookReadDate> { readDate1, readDate2 };
+            await BookHelpers.UpdateReadDates(sut.Id, readDates);
+
+            sut = await repository.LoadAsync(book.Id);
+            await _fixture.Context.Entry(sut).ReloadAsync();
+
+            sut.ReadDates.Count.Should().Be(4);
+            sut.Id.Should().Be(bookId);
+        }
+        
         [Fact]
         public async Task Remove_Book()
         {
-            // TODO: Book with all props filled removal
-            var book = await BookHelpers.CreateValidBook();
+            var book = await BookHelpers.CreateValidBookWithAllProperties();
 
             var repository = new BookRepository(_fixture.Context);
             (await repository.ExistsAsync(book.Id)).Should().BeTrue();

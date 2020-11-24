@@ -33,7 +33,7 @@ namespace BookOrganizer2.DA.Repositories
         public void Update(TEntity entity)
             => Context.Update(entity);
 
-        public async Task RemoveAsync(TId id)
+        public virtual async Task RemoveAsync(TId id)
         {
             var entity = await Context.Set<TEntity>().FindAsync(id);
 

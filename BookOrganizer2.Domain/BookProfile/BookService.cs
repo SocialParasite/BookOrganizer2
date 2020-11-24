@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
@@ -74,16 +71,16 @@ namespace BookOrganizer2.Domain.BookProfile
                 SetPublisher cmd => HandleUpdateAsync(cmd.Id,
                     async a => await UpdatePublisherAsync(a, cmd.Publisher.Id)),
 
-                //SetAuthors cmd => HandleUpdateAsync(cmd.Id,
-                //    async a => await UpdateAuthorsAsync(a, cmd.Authors)),
-                //SetBookReadDates cmd => HandleUpdateAsync(cmd.Id,
-                //    async a => await UpdateBookReadDatesAsync(a, cmd.BookReadDates)),
-                //SetFormats cmd => HandleUpdateAsync(cmd.Id,
-                //    async a => await UpdateFormatsAsync(a, cmd.Formats)),
-                //SetGenres cmd => HandleUpdateAsync(cmd.Id,
-                //    async a => await UpdateGenresAsync(a, cmd.Genres)),
+                SetAuthors cmd => HandleUpdateAsync(cmd.Id,
+                    async a => await UpdateBookAuthorsAsync(a, cmd.Authors)),
+                SetFormats cmd => HandleUpdateAsync(cmd.Id,
+                    async a => await UpdateBookFormatsAsync(a, cmd.Formats)),
+                SetGenres cmd => HandleUpdateAsync(cmd.Id,
+                    async a => await UpdateBookGenresAsync(a, cmd.Genres)),
+                SetBookReadDates cmd => HandleUpdateAsync(cmd.Id,
+                    async a => await UpdateBookReadDatesAsync(a, cmd.BookReadDates)),
 
-                Commands.DeleteBook cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                DeleteBook cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
         }
@@ -165,6 +162,26 @@ namespace BookOrganizer2.Domain.BookProfile
                 await UpdateBookGenresAsync(book, cmd.Genres).ConfigureAwait(false);
             }
 
+            if (cmd.Authors is not null && cmd.Authors.Count > 0)
+            {
+                await UpdateBookAuthorsAsync(book, cmd.Authors).ConfigureAwait(false);
+            }
+
+            if (cmd.Formats is not null && cmd.Formats.Count > 0)
+            {
+                await UpdateBookFormatsAsync(book, cmd.Formats).ConfigureAwait(false);
+            }
+
+            if (cmd.Genres is not null && cmd.Genres.Count > 0)
+            {
+                await UpdateBookGenresAsync(book, cmd.Genres).ConfigureAwait(false);
+            }
+
+            if (cmd.BookReadDates is not null && cmd.BookReadDates.Count > 0)
+            {
+                await UpdateBookReadDatesAsync(book, cmd.BookReadDates).ConfigureAwait(false);
+            }
+
             if (book.EnsureValidState())
             {
                 await Repository.SaveAsync().ConfigureAwait(false);
@@ -215,7 +232,9 @@ namespace BookOrganizer2.Domain.BookProfile
                 }
             }
             else
+            {
                 throw new ArgumentException();
+            }
         }
 
         private async Task HandleUpdateAsync(Guid bookId, Func<Book, Task> operation)
@@ -235,7 +254,9 @@ namespace BookOrganizer2.Domain.BookProfile
                 }
             }
             else
+            {
                 throw new ArgumentException();
+            }
         }
 
         private Task UpdateLanguageAsync(Book book, LanguageId languageId) 

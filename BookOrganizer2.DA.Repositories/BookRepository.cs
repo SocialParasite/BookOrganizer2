@@ -22,6 +22,7 @@ namespace BookOrganizer2.DA.Repositories
         public async Task<Book> LoadAsync(BookId id)
         {
             if (id != default)
+            {
                 return await Context.Books
                     .Include(b => b.Language)
                     .Include(b => b.Publisher)
@@ -29,29 +30,31 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.Formats)
                     .Include(b => b.Genres)
                     .Include(b => b.ReadDates)
-                    .FirstOrDefaultAsync(b => b.Id == id);
+                    .FirstOrDefaultAsync(b => b.Id == id)
+                    .ConfigureAwait(false);
+            }
 
             return Book.NewBook;
         }
         public async Task ChangeLanguage(Book a, LanguageId languageId)
         {
-            var book = await Context.Books.FindAsync(a.Id);
+            var book = await Context.Books.FindAsync(a.Id).ConfigureAwait(false);
             var language = await GetLanguageAsync(languageId).ConfigureAwait(false);
             book.SetLanguage(language);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task ChangePublisher(Book a, PublisherId publisherId)
         {
-            var book = await Context.Books.FindAsync(a.Id);
+            var book = await Context.Books.FindAsync(a.Id).ConfigureAwait(false);
             var publisher = await GetPublisherAsync(publisherId).ConfigureAwait(false);
             book.SetPublisher(publisher);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task ChangeAuthors(Book book, ICollection<Author> authors)
         {
-            var b = await Context.Books.FindAsync(book.Id);
+            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
 
             var newAuthors = new List<Author>();
             foreach (var author in authors)
@@ -61,12 +64,12 @@ namespace BookOrganizer2.DA.Repositories
             }
             
             b.SetAuthors(newAuthors);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task ChangeGenres(Book book, ICollection<Genre> genres)
         {
-            var b = await Context.Books.FindAsync(book.Id);
+            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
 
             var newGenres = new List<Genre>();
             foreach (var genre in genres)
@@ -76,12 +79,12 @@ namespace BookOrganizer2.DA.Repositories
             }
 
             b.SetGenres(newGenres);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task ChangeFormats(Book book, ICollection<Format> formats)
         {
-            var b = await Context.Books.FindAsync(book.Id);
+            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
 
             var newFormats = new List<Format>();
             foreach (var format in formats)
@@ -92,31 +95,39 @@ namespace BookOrganizer2.DA.Repositories
 
 
             b.SetFormats(newFormats);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task ChangeReadDates(Book book, ICollection<BookReadDate> bookReadDates)
         {
-            var b = await Context.Books.FindAsync(book.Id);
+            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
 
             b.SetReadDates(bookReadDates);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public override async Task RemoveAsync(BookId id)
+        {
+            var entity = await LoadAsync(id).ConfigureAwait(false);
+
+            if (entity != null)
+                Context.Remove(entity);
         }
 
         private async Task<Language> GetLanguageAsync(LanguageId languageId) 
-            => await Context.Languages.FindAsync(languageId);
+            => await Context.Languages.FindAsync(languageId).ConfigureAwait(false);
 
         private async Task<Publisher> GetPublisherAsync(PublisherId publisherId)
-            => await Context.Publishers.FindAsync(publisherId);
+            => await Context.Publishers.FindAsync(publisherId).ConfigureAwait(false);
 
         private async Task<Author> GetAuthorAsync(AuthorId authorId)
-            => await Context.Authors.FindAsync(authorId);
+            => await Context.Authors.FindAsync(authorId).ConfigureAwait(false);
 
         private async Task<Format> GetFormatAsync(FormatId formatId)
-            => await Context.Formats.FindAsync(formatId);
+            => await Context.Formats.FindAsync(formatId).ConfigureAwait(false);
 
         private async Task<Genre> GetGenreAsync(GenreId genreId)
-            => await Context.Genres.FindAsync(genreId);
+            => await Context.Genres.FindAsync(genreId).ConfigureAwait(false);
 
     }
 }
