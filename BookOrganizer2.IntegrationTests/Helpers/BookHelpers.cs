@@ -291,6 +291,69 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             return bookService.Handle(command);
         }
 
+        public static Task UpdateAuthors(BookId bookId, List<Author> authors)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new BookRepository(context);
+
+            var bookService = new BookService(repository);
+            var command = new Commands.SetAuthors
+            {
+                Id = bookId,
+                Authors = authors
+            };
+
+            return bookService.Handle(command);
+        }
+
+        public static Task UpdateFormats(BookId bookId, List<Format> formats)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new BookRepository(context);
+
+            var bookService = new BookService(repository);
+            var command = new Commands.SetFormats
+            {
+                Id = bookId,
+                Formats = formats
+            };
+
+            return bookService.Handle(command);
+        }
+
+        public static Task UpdateGenres(BookId bookId, List<Genre> genres)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new BookRepository(context);
+
+            var bookService = new BookService(repository);
+            var command = new Commands.SetGenres
+            {
+                Id = bookId,
+                Genres = genres
+            };
+
+            return bookService.Handle(command);
+        }
+
+        public static Task UpdateReadDates(BookId bookId, List<BookReadDate> readDates)
+        {
+            var connectionString = ConnectivityService.GetConnectionString("TEMP");
+            var context = new BookOrganizer2DbContext(connectionString);
+            var repository = new BookRepository(context);
+
+            var bookService = new BookService(repository);
+            var command = new Commands.SetBookReadDates
+            {
+                Id = bookId,
+                BookReadDates = readDates
+            };
+
+            return bookService.Handle(command);
+        }
         // DELETE
         public static Task RemoveBook(BookId id)
         {
