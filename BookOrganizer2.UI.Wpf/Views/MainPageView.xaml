@@ -33,11 +33,11 @@
                         Command="{Binding ShowItemsCommand}"
                         CommandParameter="{x:Type viewModel:AuthorsViewModel}"
                         Content="Authors" />
-                    <!--<Button
+                    <Button
                         x:Name="ShowBookButton"
                         Command="{Binding ShowItemsCommand}"
                         CommandParameter="{x:Type viewModel:BooksViewModel}"
-                        Content="Books" />-->
+                        Content="Books" />
                     <Button
                         x:Name="ShowPublisherButton"
                         Command="{Binding ShowItemsCommand}"
@@ -67,11 +67,11 @@
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:AuthorDetailViewModel}"
                         Content="Add a new author" />
-                    <!--<Button
+                    <Button
                         x:Name="AddBookButton"
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:BookDetailViewModel}"
-                        Content="Add a new book" />-->
+                        Content="Add a new book" />
                     <Button
                         x:Name="AddFormatButton"
                         Command="{Binding AddNewItemCommand}"

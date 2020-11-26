@@ -57,23 +57,22 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
-        //[Fact]
-        //public async Task Update_Book()
-        //{
-        //    var book = await BookHelpers.CreateValidBook();
-        //    book.LastName.Should().Be("Rothfuss");
+        [Fact]
+        public async Task Update_Book()
+        {
+            var book = await BookHelpers.CreateValidBook();
+            book.Title.Should().Be("Book 1");
 
-        //    var sut = Book.Create(book.Id,
-        //        "Scott", "Lynch",
-        //        new DateTime(1978, 4, 2),
-        //        "bio", @"\\pics\scott.jpg", "notes");
+            // TODO: Test collections
 
-        //    await BookHelpers.UpdateBook(sut);
+            // TODO: Update all props, replace collections
+            // TODO: Test that collections count is not higher than previously, but items are not the same
+            //await BookHelpers.UpdateBook(sut);
 
-        //    await _fixture.Context.Entry(book).ReloadAsync();
+            //await _fixture.Context.Entry(book).ReloadAsync();
 
-        //    book.LastName.Should().Be("Lynch");
-        //}
+            //book.Title.Should().Be("Lynch");
+        }
 
         [Fact]
         public async Task Update_Book_Title()

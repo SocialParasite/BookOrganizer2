@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System.IO;
+//using System.Linq;
+using Autofac;
 using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.Repositories.Lookups;
 using BookOrganizer2.DA.SqlServer;
@@ -11,8 +13,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Events;
 using Serilog;
-using System.IO;
-using System.Linq;
 
 namespace BookOrganizer2.UI.Wpf.Startup
 {
