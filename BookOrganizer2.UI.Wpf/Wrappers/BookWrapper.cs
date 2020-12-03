@@ -1,6 +1,7 @@
 ﻿using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.Services;
 using System;
+using System.Collections.Generic;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {
@@ -71,6 +72,24 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
         public Guid PublisherId
         {
             get => GetValue<Guid>();
+            set => SetValue(value);
+        }
+
+        public List<Guid> AuthorIds
+        {
+            get => GetValue<List<Guid>>();
+            set => SetValue(value);
+        }
+
+        public List<Guid> FormatIds
+        {
+            get => GetValue<List<Guid>>();
+            set => SetValue(value);
+        }
+
+        public List<Guid> GenreIds
+        {
+            get => GetValue<List<Guid>>();
             set => SetValue(value);
         }
     }

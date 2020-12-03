@@ -8,10 +8,8 @@ namespace BookOrganizer2.Domain.BookProfile
     {
         public Guid Value { get; private set; }
 
-        public BookId()
-        {
-            
-        }
+        public BookId() { }
+
         public BookId(Guid id)
         {
             if (id == default)

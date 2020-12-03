@@ -2,6 +2,7 @@
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.PublisherProfile;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<BookReadDate> BookReadDates { get; set; }
             public ICollection<Format> Formats { get; set; }
             public ICollection<Genre> Genres { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class Update
@@ -48,6 +50,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<BookReadDate> BookReadDates { get; set; }
             public ICollection<Format> Formats { get; set; }
             public ICollection<Genre> Genres { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class SetTitle
@@ -137,6 +140,12 @@ namespace BookOrganizer2.Domain.BookProfile
         {
             public Guid Id { get; set; }
             public ICollection<Genre> Genres { get; set; }
+        }
+
+        public class SetSeries
+        {
+            public Guid Id { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class DeleteBook
