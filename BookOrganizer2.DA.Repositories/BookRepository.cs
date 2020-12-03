@@ -6,6 +6,7 @@ using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using Microsoft.EntityFrameworkCore;
@@ -106,6 +107,22 @@ namespace BookOrganizer2.DA.Repositories
             await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        public async Task ChangeSeries(Book book, ICollection<Series> series)
+        {
+            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
+
+            var newSeries = new List<Series>();
+            foreach (var s in series)
+            {
+                var srs = await GetSeriesAsync(s.Id).ConfigureAwait(false);
+                newSeries.Add(srs);
+            }
+
+
+            b.SetSeries(newSeries);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
         public override async Task RemoveAsync(BookId id)
         {
             var entity = await LoadAsync(id).ConfigureAwait(false);
@@ -128,6 +145,9 @@ namespace BookOrganizer2.DA.Repositories
 
         private async Task<Genre> GetGenreAsync(GenreId genreId)
             => await Context.Genres.FindAsync(genreId).ConfigureAwait(false);
+
+        private async Task<Series> GetSeriesAsync(SeriesId seriesId)
+            => await Context.Series.FindAsync(seriesId).ConfigureAwait(false);
 
     }
 }
