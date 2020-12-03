@@ -7,6 +7,7 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Shared;
@@ -36,6 +37,7 @@ namespace BookOrganizer2.Domain.BookProfile
         public ICollection<BookReadDate> ReadDates { get; private set; }
         public ICollection<Format> Formats { get; private set; }
         public ICollection<Genre> Genres { get; private set; }
+        public ICollection<Series> Series { get; private set; }
 
         public static Book Create(BookId id,
                                     string title,
@@ -52,7 +54,8 @@ namespace BookOrganizer2.Domain.BookProfile
                                     ICollection<Author> authors = null,
                                     ICollection<BookReadDate> bookReadDates = null,
                                     ICollection<Format> formats = null,
-                                    ICollection<Genre> genres = null)
+                                    ICollection<Genre> genres = null, 
+                                    ICollection<Series> series = null)
         {
             ValidateParameters();
 
@@ -75,7 +78,8 @@ namespace BookOrganizer2.Domain.BookProfile
                 Authors = authors ?? new List<Author>(),
                 BookReadDates = bookReadDates ?? new List<BookReadDate>(),
                 Formats = formats ?? new List<Format>(),
-                Genres = genres ?? new List<Genre>()
+                Genres = genres ?? new List<Genre>(),
+                Series = series ?? new List<Series>()
             });
 
             return book;
@@ -272,6 +276,15 @@ namespace BookOrganizer2.Domain.BookProfile
             });
         }
 
+        public void SetSeries(ICollection<Series> series)
+        {
+            Apply(new Events.SeriesChanged
+            {
+                Id = Id,
+                Series = series
+            });
+        }
+
         internal bool EnsureValidState()
         {
             return Id.Value != default
@@ -304,6 +317,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     ReadDates = e.BookReadDates;
                     Formats = e.Formats;
                     Genres = e.Genres;
+                    Series = e.Series;
                     break;
                 case Events.TitleChanged e:
                     Id = e.Id;
@@ -364,6 +378,10 @@ namespace BookOrganizer2.Domain.BookProfile
                 case Events.GenresChanged e:
                     Id = e.Id;
                     Genres = e.Genres;
+                    break;
+                case Events.SeriesChanged e:
+                    Id = e.Id;
+                    Series = e.Series;
                     break;
                 case Events.BookDeleted e:
                     Id = e.Id;

@@ -5,6 +5,7 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
@@ -77,6 +78,8 @@ namespace BookOrganizer2.Domain.BookProfile
                     async a => await UpdateBookFormatsAsync(a, cmd.Formats)),
                 SetGenres cmd => HandleUpdateAsync(cmd.Id,
                     async a => await UpdateBookGenresAsync(a, cmd.Genres)),
+                SetSeries cmd => HandleUpdateAsync(cmd.Id,
+                    async a => await UpdateBookSeriesAsync(a, cmd.Series)),
                 SetBookReadDates cmd => HandleUpdateAsync(cmd.Id,
                     async a => await UpdateBookReadDatesAsync(a, cmd.BookReadDates)),
 
@@ -175,6 +178,11 @@ namespace BookOrganizer2.Domain.BookProfile
             if (cmd.Genres is not null && cmd.Genres.Count > 0)
             {
                 await UpdateBookGenresAsync(book, cmd.Genres).ConfigureAwait(false);
+            }
+
+            if (cmd.Series is not null && cmd.Series.Count > 0)
+            {
+                await UpdateBookSeriesAsync(book, cmd.Series).ConfigureAwait(false);
             }
 
             if (cmd.BookReadDates is not null && cmd.BookReadDates.Count > 0)
@@ -276,5 +284,8 @@ namespace BookOrganizer2.Domain.BookProfile
 
         private Task UpdateBookReadDatesAsync(Book book, ICollection<BookReadDate> bookReadDates)
             => ((IBookRepository)Repository).ChangeReadDates(book, bookReadDates);
+
+        private Task UpdateBookSeriesAsync(Book book, ICollection<Series> series)
+            => ((IBookRepository)Repository).ChangeSeries(book, series);
     }
 }

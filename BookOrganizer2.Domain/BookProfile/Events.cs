@@ -5,6 +5,7 @@ using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.PublisherProfile;
 using System;
 using System.Collections.Generic;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
@@ -28,6 +29,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<BookReadDate> BookReadDates { get; set; }
             public ICollection<Format> Formats { get; set; }
             public ICollection<Genre> Genres { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class BookUpdated
@@ -48,6 +50,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<BookReadDate> BookReadDates { get; set; }
             public ICollection<Format> Formats { get; set; }
             public ICollection<Genre> Genres { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class TitleChanged
@@ -137,6 +140,12 @@ namespace BookOrganizer2.Domain.BookProfile
         {
             public Guid Id { get; set; }
             public ICollection<Genre> Genres { get; set; }
+        }
+
+        public class SeriesChanged
+        {
+            public Guid Id { get; set; }
+            public ICollection<Series> Series { get; set; }
         }
 
         public class BookDeleted
