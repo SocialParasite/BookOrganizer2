@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
 {
@@ -10,6 +11,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public string Name { get; set; }
             public string PicturePath { get; set; }
             public string Description { get; set; }
+            public ICollection<Book> Books { get; set; }
         }
 
         public class Update
@@ -18,6 +20,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public string Name { get; set; }
             public string PicturePath { get; set; }
             public string Description { get; set; }
+            public ICollection<Book> Books { get; set; }
         }
         public class SetSeriesName
         {
@@ -35,6 +38,12 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         {
             public Guid Id { get; set; }
             public string Description { get; set; }
+        }
+
+        public class SetBooks
+        {
+            public Guid Id { get; set; }
+            public ICollection<Book> Books { get; set; }
         }
 
         public class DeleteGenre
