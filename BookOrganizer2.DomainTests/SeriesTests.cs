@@ -89,10 +89,10 @@ namespace BookOrganizer2.DomainTests
             var sut = CreateSeries();
             sut.Books.Count.Should().Be(0);
 
-            var newBooks = new List<Book>
+            var newBooks = new List<ReadOrder>
             {
-                Book.NewBook,
-                Book.NewBook
+                ReadOrder.NewReadOrder(Book.NewBook, Series.NewSeries, 3),
+                ReadOrder.NewReadOrder(Book.NewBook, Series.NewSeries, 1)
             };
 
             sut.SetBooks(newBooks);
@@ -100,5 +100,23 @@ namespace BookOrganizer2.DomainTests
             sut.Books.Should().NotBeNull();
             sut.Books.Count.Should().Be(2);
         }
+
+        //[Fact]
+        //public void Series_in_order()
+        //{
+        //    var sut = CreateSeries();
+
+        //    var newBooks = new List<ReadOrder>
+        //    {
+        //        ReadOrder.NewReadOrder(Book.NewBook, Series.NewSeries, 3),
+        //        ReadOrder.NewReadOrder(Book.NewBook, Series.NewSeries, 1)
+        //    };
+
+        //    sut.SetBooks(newBooks);
+
+        //    sut.Books.Should().NotBeNull();
+        //    sut.Books.Count.Should().Be(2);
+        //    sut.Books.First().Instalment.Should().Be(1);
+        //}
     }
 }

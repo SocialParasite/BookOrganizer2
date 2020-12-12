@@ -1,5 +1,4 @@
 ﻿using BookOrganizer2.Domain.BookProfile;
-using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -39,7 +38,6 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
             builder.HasMany(x => x.Genres);
             builder.HasMany(x => x.Formats);
             builder.HasMany(x => x.ReadDates);
-            builder.HasMany(x => x.Series);
         }
     }
 }

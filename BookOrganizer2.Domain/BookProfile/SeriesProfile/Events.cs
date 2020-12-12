@@ -11,7 +11,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public string Name { get; set; }
             public string PicturePath { get; set; }
             public string Description { get; set; }
-            public ICollection<Book> Books { get; set; }
+            public ICollection<ReadOrder> Books { get; set; }
         }
 
         public class SeriesUpdated
@@ -20,7 +20,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public string Name { get; set; }
             public string PicturePath { get; set; }
             public string Description { get; set; }
-            public ICollection<Book> Books { get; set; }
+            public ICollection<ReadOrder> Books { get; set; }
         }
 
         public class SeriesNameChanged
@@ -44,7 +44,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         public class BooksChanged
         {
             public Guid Id { get; set; }
-            public ICollection<Book> Books { get; set; }
+            public ICollection<ReadOrder> Books { get; set; }
         }
 
         public class SeriesDeleted

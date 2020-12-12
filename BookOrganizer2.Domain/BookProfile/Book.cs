@@ -37,7 +37,7 @@ namespace BookOrganizer2.Domain.BookProfile
         public ICollection<BookReadDate> ReadDates { get; private set; }
         public ICollection<Format> Formats { get; private set; }
         public ICollection<Genre> Genres { get; private set; }
-        public ICollection<Series> Series { get; private set; }
+        public ICollection<ReadOrder> Series { get; private set; }
 
         public static Book Create(BookId id,
                                     string title,
@@ -55,7 +55,7 @@ namespace BookOrganizer2.Domain.BookProfile
                                     ICollection<BookReadDate> bookReadDates = null,
                                     ICollection<Format> formats = null,
                                     ICollection<Genre> genres = null, 
-                                    ICollection<Series> series = null)
+                                    ICollection<ReadOrder> series = null)
         {
             ValidateParameters();
 
@@ -79,7 +79,7 @@ namespace BookOrganizer2.Domain.BookProfile
                 BookReadDates = bookReadDates ?? new List<BookReadDate>(),
                 Formats = formats ?? new List<Format>(),
                 Genres = genres ?? new List<Genre>(),
-                Series = series ?? new List<Series>()
+                Series = series ?? new List<ReadOrder>()
             });
 
             return book;
@@ -276,7 +276,7 @@ namespace BookOrganizer2.Domain.BookProfile
             });
         }
 
-        public void SetSeries(ICollection<Series> series)
+        public void SetSeries(ICollection<ReadOrder> series)
         {
             Apply(new Events.SeriesChanged
             {

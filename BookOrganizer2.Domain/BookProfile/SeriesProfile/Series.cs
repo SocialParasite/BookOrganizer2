@@ -11,16 +11,15 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
     {
         public SeriesId Id { get; private set; }
         public string Name { get; private set; }
-        //public int NumberOfBooks { get; private set; }
         public string PicturePath { get; private set; }
         public string Description { get; private set; }
-        public ICollection<Book> Books { get; set; }
+        public ICollection<ReadOrder> Books { get; set; }
 
         public static Series Create(SeriesId id, 
             string name, 
             string picturePath = null, 
             string description = null, 
-            ICollection<Book> books = null)
+            ICollection<ReadOrder> books = null)
         {
             ValidateParameters();
 
@@ -32,7 +31,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 Name = name,
                 PicturePath = picturePath,
                 Description = description,
-                Books = books ?? new List<Book>()
+                Books = books ?? new List<ReadOrder>()
             });
 
             return series;
@@ -95,14 +94,14 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             });
         }
 
-        public void SetBooks(ICollection<Book> books)
+        public void SetBooks(ICollection<ReadOrder> books)
         {
             Apply(new Events.BooksChanged
             {
                 Id = Id,
                 Books = books
             });
-
+            
             // TODO: Set read order?!
         }
 

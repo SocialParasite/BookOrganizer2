@@ -1,5 +1,4 @@
-﻿using BookOrganizer2.Domain.BookProfile;
-using BookOrganizer2.Domain.BookProfile.SeriesProfile;
+﻿using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,13 +20,6 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
                 .HasMaxLength(256);
 
             builder.Property(x => x.Description);
-
-            builder.HasMany(x => x.Books)
-                .WithMany(s => s.Series)
-                .UsingEntity<ReadOrder>(e => e.HasOne<Book>().WithMany(),
-                    e => e.HasOne<Series>().WithMany())
-                .ToTable("BooksSeries")
-                .Property(x => x.Instalment);
         }
     }
 }
