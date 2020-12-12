@@ -44,6 +44,7 @@ namespace BookOrganizer2.DA.SqlServer
             modelBuilder.ApplyConfiguration(new NationalityConfig());
             modelBuilder.ApplyConfiguration(new PublisherConfig());
             modelBuilder.ApplyConfiguration(new SeriesConfig());
+            modelBuilder.ApplyConfiguration(new ReadOrderConfig());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
