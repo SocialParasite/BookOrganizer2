@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Publisher_inserted_to_database()
         {
@@ -18,7 +19,8 @@ namespace BookOrganizer2.IntegrationTests
 
             (await repository.ExistsAsync(publisher.Id)).Should().BeTrue();
         }
-        
+
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public void Invalid_Publisher()
         {
@@ -26,6 +28,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Update_Publisher()
         {
@@ -44,6 +47,7 @@ namespace BookOrganizer2.IntegrationTests
             publisher.Name.Should().Be("NewPop");
         }
 
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Update_Publisher_Name()
         {
@@ -67,6 +71,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(publisherId);
         }
 
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Update_Publisher_LogoPath()
         {
@@ -89,6 +94,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(publisherId);
         }
 
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Update_Publisher_Description()
         {
@@ -112,6 +118,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(publisherId);
         }
 
+        [Trait("Integration", "DB\\Publisher")]
         [Fact]
         public async Task Remove_Publisher()
         {

@@ -9,6 +9,7 @@ using Xunit;
 
 namespace BookOrganizer2.DomainTests
 {
+    [Trait("Unit", "Unit")]
     public class SeriesTests
     {
         private Series CreateSeries()
@@ -84,7 +85,7 @@ namespace BookOrganizer2.DomainTests
         }
 
         [Fact]
-        public void Valid_ReadOrder()
+        public void Valid_ReadOrders()
         {
             var sut = CreateSeries();
             sut.Books.Count.Should().Be(0);

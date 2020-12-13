@@ -7,6 +7,7 @@ using Xunit;
 
 namespace BookOrganizer2.DomainTests
 {
+    [Trait("Unit", "Unit")]
     public class GenreTests
     {
         private Genre CreateGenre()

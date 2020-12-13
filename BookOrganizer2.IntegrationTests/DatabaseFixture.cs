@@ -32,7 +32,7 @@ namespace BookOrganizer2.IntegrationTests
         }
     }
 
-    [Trait("Integration", "Database")]
+    [Trait("Integration", "DB\\_ALL")]
     public sealed partial class DatabaseTests : IClassFixture<DatabaseFixture>
     {
         readonly DatabaseFixture _fixture;

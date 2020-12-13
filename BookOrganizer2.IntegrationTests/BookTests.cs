@@ -14,6 +14,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Book_inserted_to_database()
         {
@@ -23,6 +24,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(book.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Book_with_all_properties_inserted_to_database()
         {
@@ -50,6 +52,7 @@ namespace BookOrganizer2.IntegrationTests
             book.ReadDates.Count.Should().Be(2);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public void Invalid_Book()
         {
@@ -57,6 +60,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book()
         {
@@ -74,6 +78,7 @@ namespace BookOrganizer2.IntegrationTests
             //book.Title.Should().Be("Lynch");
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Title()
         {
@@ -97,6 +102,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_ReleaseYear()
         {
@@ -120,6 +126,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_PageCount()
         {
@@ -143,6 +150,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_WordCount()
         {
@@ -166,6 +174,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Isbn()
         {
@@ -189,6 +198,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_CoverPath()
         {
@@ -211,6 +221,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Description()
         {
@@ -234,6 +245,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Notes()
         {
@@ -257,6 +269,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_ReadStatus()
         {
@@ -280,6 +293,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Language()
         {
@@ -306,6 +320,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Publisher()
         {
@@ -332,6 +347,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Authors()
         {
@@ -359,6 +375,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Formats()
         {
@@ -386,6 +403,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Genres()
         {
@@ -413,6 +431,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(bookId);
         }
 
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Update_Book_Read_Dates()
         {
@@ -439,7 +458,8 @@ namespace BookOrganizer2.IntegrationTests
             sut.ReadDates.Count.Should().Be(4);
             sut.Id.Should().Be(bookId);
         }
-        
+
+        [Trait("Integration", "DB\\Book")]
         [Fact]
         public async Task Remove_Book()
         {

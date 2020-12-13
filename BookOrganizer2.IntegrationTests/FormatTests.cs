@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Format")]
         [Fact]
         public async Task Format_inserted_to_database()
         {
@@ -19,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(format.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Format")]
         [Fact]
         public void Invalid_Format()
         {
@@ -26,6 +28,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Format")]
         [Fact]
         public async Task Update_Format()
         {
@@ -41,6 +44,7 @@ namespace BookOrganizer2.IntegrationTests
             format.Name.Should().Be("hardcover");
         }
 
+        [Trait("Integration", "DB\\Format")]
         [Fact]
         public async Task Remove_Format()
         {
