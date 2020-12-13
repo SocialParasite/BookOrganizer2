@@ -46,7 +46,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public ICollection<ReadOrder> Books { get; set; }
         }
 
-        public class DeleteGenre
+        public class DeleteSeries
         {
             public Guid Id { get; set; }
         }
