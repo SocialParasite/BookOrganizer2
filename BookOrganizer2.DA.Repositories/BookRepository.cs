@@ -31,6 +31,8 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.Formats)
                     .Include(b => b.Genres)
                     .Include(b => b.ReadDates)
+                    .Include(b => b.Series)
+                    .ThenInclude(s => s.Book)
                     .FirstOrDefaultAsync(b => b.Id == id)
                     .ConfigureAwait(false);
             }
@@ -104,22 +106,6 @@ namespace BookOrganizer2.DA.Repositories
             var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
 
             b.SetReadDates(bookReadDates);
-            await Context.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        public async Task ChangeSeries(Book book, ICollection<Series> series)
-        {
-            var b = await Context.Books.FindAsync(book.Id).ConfigureAwait(false);
-
-            var newSeries = new List<Series>();
-            foreach (var s in series)
-            {
-                var srs = await GetSeriesAsync(s.Id).ConfigureAwait(false);
-                newSeries.Add(srs);
-            }
-
-
-            b.SetSeries(newSeries);
             await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
