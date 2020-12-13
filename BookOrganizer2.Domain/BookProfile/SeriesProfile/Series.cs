@@ -29,8 +29,8 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             {
                 Id = id,
                 Name = name,
-                PicturePath = picturePath,
-                Description = description,
+                PicturePath = picturePath ?? "",
+                Description = description ?? "",
                 Books = books ?? new List<ReadOrder>()
             });
 
@@ -101,8 +101,6 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 Id = Id,
                 Books = books
             });
-            
-            // TODO: Set read order?!
         }
 
         internal bool EnsureValidState()

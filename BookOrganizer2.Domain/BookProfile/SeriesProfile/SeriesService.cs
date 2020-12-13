@@ -28,7 +28,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                     (a) => Repository.Update(a)),
                 SetDescription cmd => HandleUpdate(cmd.Id, (a) => a.SetDescription(cmd.Description),
                     (a) => Repository.Update(a)),
-                //DeleteSeries cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                DeleteSeries cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
         }
@@ -55,7 +55,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             if (await Repository.ExistsAsync(cmd.Id))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
 
-            var series = Series.Create(cmd.Id, cmd.Name);
+            var series = Series.Create(cmd.Id, cmd.Name, cmd.PicturePath, cmd.Description);
 
             await Repository.AddAsync(series);
 

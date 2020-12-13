@@ -20,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
         {
             Context.Database.ExecuteSqlRaw("DELETE FROM BookReadDate");
             Context.Database.ExecuteSqlRaw("DELETE FROM Books");
+            Context.Database.ExecuteSqlRaw("DELETE FROM Series");
             Context.Database.ExecuteSqlRaw("DELETE FROM Authors");
             Context.Database.ExecuteSqlRaw("DELETE FROM AuthorBook");
             Context.Database.ExecuteSqlRaw("DELETE FROM BookFormat");
