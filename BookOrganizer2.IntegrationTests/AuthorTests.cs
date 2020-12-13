@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Author_inserted_to_database()
         {
@@ -19,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(author.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Author_with_all_properties_inserted_to_database()
         {
@@ -37,6 +39,7 @@ namespace BookOrganizer2.IntegrationTests
             author.Nationality.Name.Should().Be("american");
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public void Invalid_Author()
         {
@@ -44,6 +47,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author()
         {
@@ -62,6 +66,7 @@ namespace BookOrganizer2.IntegrationTests
             author.LastName.Should().Be("Lynch");
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_FirstName()
         {
@@ -85,6 +90,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_LastName()
         {
@@ -108,6 +114,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_DateOfBirth()
         {
@@ -135,6 +142,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_MugshotPath()
         {
@@ -157,6 +165,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_Biography()
         {
@@ -180,6 +189,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_Notes()
         {
@@ -203,6 +213,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Update_Author_Nationality()
         {
@@ -229,6 +240,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Id.Should().Be(authorId);
         }
 
+        [Trait("Integration", "DB\\Author")]
         [Fact]
         public async Task Remove_Author()
         {

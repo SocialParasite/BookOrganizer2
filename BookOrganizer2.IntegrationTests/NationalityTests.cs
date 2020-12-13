@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Nationality")]
         [Fact]
         public async Task Nationality_inserted_to_database()
         {
@@ -19,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(nationality.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Nationality")]
         [Fact]
         public void Invalid_Nationality()
         {
@@ -26,6 +28,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Nationality")]
         [Fact]
         public async Task Update_Nationality()
         {
@@ -41,6 +44,7 @@ namespace BookOrganizer2.IntegrationTests
             nationality.Name.Should().Be("russian");
         }
 
+        [Trait("Integration", "DB\\Nationality")]
         [Fact]
         public async Task Remove_Nationality()
         {

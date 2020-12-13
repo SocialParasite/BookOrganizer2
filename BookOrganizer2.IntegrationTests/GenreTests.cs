@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Genre")]
         [Fact]
         public async Task Genre_inserted_to_database()
         {
@@ -19,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(genre.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Genre")]
         [Fact]
         public void Invalid_Genre()
         {
@@ -26,6 +28,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Genre")]
         [Fact]
         public async Task Update_Genre()
         {
@@ -41,6 +44,7 @@ namespace BookOrganizer2.IntegrationTests
             genre.Name.Should().Be("fantasy");
         }
 
+        [Trait("Integration", "DB\\Genre")]
         [Fact]
         public async Task Remove_Genre()
         {

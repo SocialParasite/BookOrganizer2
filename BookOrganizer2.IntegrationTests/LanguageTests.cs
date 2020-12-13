@@ -10,6 +10,7 @@ namespace BookOrganizer2.IntegrationTests
 {
     public sealed partial class DatabaseTests
     {
+        [Trait("Integration", "DB\\Language")]
         [Fact]
         public async Task Language_inserted_to_database()
         {
@@ -19,6 +20,7 @@ namespace BookOrganizer2.IntegrationTests
             (await repository.ExistsAsync(language.Id)).Should().BeTrue();
         }
 
+        [Trait("Integration", "DB\\Language")]
         [Fact]
         public void Invalid_Language()
         {
@@ -26,6 +28,7 @@ namespace BookOrganizer2.IntegrationTests
             action.Should().ThrowAsync<ArgumentException>();
         }
 
+        [Trait("Integration", "DB\\Language")]
         [Fact]
         public async Task Update_Language()
         {
@@ -41,6 +44,7 @@ namespace BookOrganizer2.IntegrationTests
             language.Name.Should().Be("english");
         }
 
+        [Trait("Integration", "DB\\Language")]
         [Fact]
         public async Task Remove_Language()
         {
