@@ -70,9 +70,9 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 throw new ArgumentNullException();
             }
 
-            if (cmd.Books.Count > 0)
+            if (cmd.Books is not null && cmd.Books.Count > 0)
             {
-                await UpdateSeriesReadOrder(series, cmd.Books);
+                await UpdateSeriesReadOrder(series, cmd.Books).ConfigureAwait(false);
             }
         }
 

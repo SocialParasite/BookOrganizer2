@@ -4,6 +4,7 @@ using BookOrganizer2.IntegrationTests.Helpers;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.BookProfile;
 using Xunit;
@@ -150,6 +151,41 @@ namespace BookOrganizer2.IntegrationTests
 
             sut.Books.Count.Should().Be(4);
             sut.Id.Should().Be(seriesId);
+        }
+
+        [Trait("Integration", "DB\\Series")]
+        [Fact]
+        public async Task Set_Series_Read_Order()
+        {
+            var series = await SeriesHelpers.CreateValidSeriesWithBooks();
+
+            var repository = new SeriesRepository(_fixture.Context);
+            (await repository.ExistsAsync(series.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(series.Id);
+
+            var seriesId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Books.Count.Should().Be(2);
+            sut.Books.SingleOrDefault(b => b.Instalment == 1)?.BooksId
+                .Should().Be(sut.Books.SingleOrDefault(r => r.Book.Title == "Book 1")?.BooksId);
+            sut.Books.SingleOrDefault(b => b.Instalment == 2)?.BooksId
+                .Should().Be(sut.Books.SingleOrDefault(r => r.Book.Title == "Book 2")?.BooksId);
+
+            // Re-order collection
+            sut = await repository.LoadAsync(series.Id);
+
+            sut.Books.SingleOrDefault(b => b.Instalment == 1).Instalment = 0;
+            sut.Books.SingleOrDefault(b => b.Instalment == 2).Instalment = 1;
+            sut.Books.SingleOrDefault(b => b.Instalment == 0).Instalment = 2;
+
+            await repository.SaveAsync();
+
+            sut.Books.SingleOrDefault(b => b.Instalment == 2)?.BooksId
+                .Should().Be(sut.Books.SingleOrDefault(r => r.Book.Title == "Book 1")?.BooksId);
+            sut.Books.SingleOrDefault(b => b.Instalment == 1)?.BooksId
+                .Should().Be(sut.Books.SingleOrDefault(r => r.Book.Title == "Book 2")?.BooksId);
         }
 
         [Trait("Integration", "DB\\Series")]

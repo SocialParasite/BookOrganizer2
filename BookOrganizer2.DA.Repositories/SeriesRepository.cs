@@ -43,6 +43,8 @@ namespace BookOrganizer2.DA.Repositories
                 return await Context.Series
                     .Include(s => s.Books)
                     .ThenInclude(b => b.Series)
+                    .Include(s => s.Books)
+                    .ThenInclude(b => b.Book)
                     .SingleOrDefaultAsync(b => b.Id == id);
 
             return Series.NewSeries;

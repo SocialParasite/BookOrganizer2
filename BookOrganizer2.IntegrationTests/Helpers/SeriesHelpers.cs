@@ -40,8 +40,8 @@ namespace BookOrganizer2.IntegrationTests.Helpers
 
             var seriesService = new SeriesService(repository);
             
-            var book1 = await BookHelpers.CreateValidBook();
-            var book2 = await BookHelpers.CreateValidBook();
+            var book1 = await BookHelpers.CreateValidBook("Book 1");
+            var book2 = await BookHelpers.CreateValidBook("Book 2");
             var readOrder = new List<ReadOrder>
             {
                 ReadOrder.NewReadOrder(book1, null, 1),
@@ -73,7 +73,8 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 Id = sut.Id,
                 Name = sut.Name,
                 PicturePath = sut.PicturePath,
-                Description = sut.Description
+                Description = sut.Description,
+                Books = sut.Books
             };
 
             return seriesService.Handle(command);
