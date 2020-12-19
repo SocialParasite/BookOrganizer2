@@ -3,7 +3,9 @@ using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.IntegrationTests.Helpers;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.BookProfile;
 using Xunit;
 
 namespace BookOrganizer2.IntegrationTests
@@ -115,6 +117,38 @@ namespace BookOrganizer2.IntegrationTests
             await _fixture.Context.Entry(sut).ReloadAsync();
 
             sut.Description.Should().Contain("Bacon ipsum");
+            sut.Id.Should().Be(seriesId);
+        }
+
+        [Trait("Integration", "DB\\Series")]
+        [Fact]
+        public async Task Update_Series_Books()
+        {
+            var series = await SeriesHelpers.CreateValidSeriesWithBooks();
+
+            var repository = new SeriesRepository(_fixture.Context);
+            (await repository.ExistsAsync(series.Id)).Should().BeTrue();
+
+            var sut = await repository.LoadAsync(series.Id);
+
+            var seriesId = sut.Id;
+
+            sut.Should().NotBeNull();
+            sut.Books.Count.Should().Be(2);
+
+            // Add one more book to series
+            var book1 = await BookHelpers.CreateValidBook();
+            var book2 = await BookHelpers.CreateValidBook();
+            var newReadOrder = new List<ReadOrder>
+            {
+                ReadOrder.NewReadOrder(book1, null, 3),
+                ReadOrder.NewReadOrder(book2, null, 4)
+            };
+            await SeriesHelpers.UpdateSeriesReadOrder(sut.Id, newReadOrder);
+
+            sut = await repository.LoadAsync(series.Id);
+
+            sut.Books.Count.Should().Be(4);
             sut.Id.Should().Be(seriesId);
         }
 

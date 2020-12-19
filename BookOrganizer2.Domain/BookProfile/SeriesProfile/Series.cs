@@ -22,7 +22,6 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             ICollection<ReadOrder> books = null)
         {
             ValidateParameters();
-
             var series = new Series();
 
             series.Apply(new Events.SeriesCreated
