@@ -40,7 +40,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public string Description { get; set; }
         }
 
-        public class SetBooks
+        public class SetReadOrder
         {
             public Guid Id { get; set; }
             public ICollection<ReadOrder> Books { get; set; }

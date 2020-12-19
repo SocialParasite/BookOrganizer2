@@ -2,6 +2,8 @@
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static BookOrganizer2.Domain.BookProfile.SeriesProfile.Commands;
 
@@ -28,6 +30,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                     (a) => Repository.Update(a)),
                 SetDescription cmd => HandleUpdate(cmd.Id, (a) => a.SetDescription(cmd.Description),
                     (a) => Repository.Update(a)),
+                SetReadOrder cmd => HandleSeriesBooksUpdate(cmd),
                 DeleteSeries cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };
@@ -56,9 +59,8 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
 
             var series = Series.Create(cmd.Id, cmd.Name, cmd.PicturePath, cmd.Description);
-
+            
             await Repository.AddAsync(series);
-
             if (series.EnsureValidState())
             {
                 await Repository.SaveAsync();
@@ -66,6 +68,11 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             else
             {
                 throw new ArgumentNullException();
+            }
+
+            if (cmd.Books is not null && cmd.Books.Count > 0)
+            {
+                await UpdateSeriesReadOrder(series, cmd.Books).ConfigureAwait(false);
             }
         }
 
@@ -109,21 +116,24 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 throw new ArgumentException();
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Series> operation, Action<Series> operation2 = null)
+        private async Task HandleSeriesBooksUpdate(SetReadOrder cmd)
         {
-            if (await Repository.ExistsAsync(id))
+            if (await Repository.ExistsAsync(cmd.Id))
             {
-                var series = await Repository.GetAsync(id);
-                operation(series);
-                operation2?.Invoke(series);
+                var series = await ((ISeriesRepository)Repository).LoadAsync(cmd.Id);
 
-                if (series.EnsureValidState())
+                if (cmd.Books.Count > 0)
                 {
-                    await Repository.SaveAsync();
+                    await UpdateSeriesReadOrder(series, cmd.Books).ConfigureAwait(false);
                 }
             }
             else
                 throw new ArgumentException();
+        }
+
+        private Task UpdateSeriesReadOrder(Series series, ICollection<ReadOrder> books)
+        {
+            return ((ISeriesRepository) Repository).ChangeReadOrder(series, books);
         }
     }
 }

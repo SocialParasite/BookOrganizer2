@@ -17,7 +17,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
 {
     public static class BookHelpers
     {
-        public static async Task<Book> CreateValidBook()
+        public static async Task<Book> CreateValidBook(string title = null)
         {
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
@@ -28,7 +28,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var command = new Commands.Create
             {
                 Id = new BookId(SequentialGuid.NewSequentialGuid()),
-                Title = "Book 1"
+                Title = title ?? "Book 1"
 
             };
 
