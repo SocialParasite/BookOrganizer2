@@ -221,7 +221,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (!string.IsNullOrEmpty(SelectedItem.MugshotPath)
                 && SelectedItem.MugshotPath != temp)
             {
-                FileExplorerService.CreateThumbnail(SelectedItem.MugshotPath);
+                FileExplorerService.CreateThumbnail(SelectedItem.MugshotPath, DialogService);
             }
         }
 

@@ -280,7 +280,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (!string.IsNullOrEmpty(SelectedItem.BookCoverPath)
                 && SelectedItem.BookCoverPath != temp)
             {
-                FileExplorerService.CreateThumbnail(SelectedItem.BookCoverPath);
+                FileExplorerService.CreateThumbnail(SelectedItem.BookCoverPath, DialogService);
             }
         }
 
@@ -342,8 +342,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 void SetDefaultBookCoverIfNoneSet()
                 {
-                    if (SelectedItem.BookCoverPath is null)
-                        SelectedItem.BookCoverPath = FileExplorerService.GetImagePath();
+                    SelectedItem.BookCoverPath ??= FileExplorerService.GetImagePath();
                 }
 
                 void SetDefaultBookTitleIfNoneSet()
