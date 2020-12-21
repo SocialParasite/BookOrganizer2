@@ -15,9 +15,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
-                    <CollectionViewSource x:Key="BooksSeriesList" Source="{Binding SelectedItem.Model.BooksSeries}">
+                    <CollectionViewSource x:Key="BooksSeriesList" Source="{Binding SelectedItem.Model.Series}">
                         <CollectionViewSource.SortDescriptions>
-                            <componentModel:SortDescription PropertyName="Series.SeriesReadOrder.Instalment" />
+                            <componentModel:SortDescription PropertyName="Instalment" />
                         </CollectionViewSource.SortDescriptions>
                     </CollectionViewSource>
                 </ResourceDictionary>
@@ -125,7 +125,7 @@
                     IsEnabled="{Binding UserMode.Item4}">
                     <Button.Template>
                         <ControlTemplate>
-                            <Image x:Name="authorImage" Source="{Binding SelectedItem.BookCoverPicturePath}" />
+                            <Image x:Name="authorImage" Source="{Binding SelectedItem.BookCoverPath}" />
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -330,7 +330,7 @@
                     Grid.Column="2"
                     BorderThickness="{Binding UserMode.Item4, Converter={StaticResource ShowBordersInEditMode}}"
                     Style="{StaticResource ValidationTextBoxStyle}"
-                    Text="{Binding SelectedItem.ISBN, UpdateSourceTrigger=PropertyChanged}" />
+                    Text="{Binding SelectedItem.Isbn, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
 
             <Grid Grid.Row="2">
@@ -360,7 +360,7 @@
                                 <TextBlock FontSize="16">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{1}">
-                                            <Binding Path="Id" />
+                                            <Binding Path="Id.Value" />
                                             <Binding Path="DisplayMember" />
                                         </MultiBinding>
                                     </TextBlock.Text>
@@ -403,7 +403,7 @@
                     x:Name="BookAuthorsGroupBox"
                     Margin="5"
                     HorizontalAlignment="Left"
-                    Visibility="{Binding SelectedItem.Model.AuthorsLink.Count, Converter={StaticResource CountToVisibilityConverter}}">
+                    Visibility="{Binding SelectedItem.Model.Authors.Count, Converter={StaticResource CountToVisibilityConverter}}">
                     <GroupBox.Header>
                         <Label Content="Book Authors: " FontWeight="Bold" />
                     </GroupBox.Header>
@@ -411,7 +411,7 @@
                     <ListBox
                         x:Name="authorListBox"
                         BorderThickness="0"
-                        ItemsSource="{Binding SelectedItem.Model.AuthorsLink}">
+                        ItemsSource="{Binding SelectedItem.Model.Authors}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Width="630" Margin="0,5,0,5">
@@ -423,15 +423,15 @@
                                     <TextBlock FontSize="16">
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{1}, {0}">
-                                                <Binding Path="Author.FirstName" />
-                                                <Binding Path="Author.LastName" />
-                                                <Binding Path="Id" />
+                                                <Binding Path="FirstName" />
+                                                <Binding Path="LastName" />
+                                                <Binding Path="Id.Value" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                         <TextBlock.InputBindings>
                                             <MouseBinding
                                                 Command="{Binding DataContext.ShowSelectedAuthorCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
-                                                CommandParameter="{Binding Author.Id}"
+                                                CommandParameter="{Binding Id.Value}"
                                                 MouseAction="LeftDoubleClick" />
                                         </TextBlock.InputBindings>
                                     </TextBlock>
@@ -439,7 +439,7 @@
                                         x:Name="authorListButton"
                                         Grid.Column="2"
                                         Command="{Binding DataContext.RemoveAuthorAsABookAuthorCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
-                                        CommandParameter="{Binding Author.Id}"
+                                        CommandParameter="{Binding Id.Value}"
                                         Content="-"
                                         Style="{StaticResource AddItemButtonStyle}"
                                         ToolTip="Remove author from book authors."
@@ -464,6 +464,18 @@
                             Style="{StaticResource FreeTextBoxStyle}"
                             Text="{Binding SelectedItem.Description, UpdateSourceTrigger=PropertyChanged}" />
                     </TabItem>
+                    <TabItem Header="Notes">
+                        <TabItem.Visibility>
+                            <MultiBinding Converter="{StaticResource VisibilityConverter}">
+                                <Binding Path="SelectedItem.Notes.Length" />
+                                <Binding Path="UserMode.Item1" />
+                            </MultiBinding>
+                        </TabItem.Visibility>
+                        <TextBox
+                            x:Name="notesTextBlock"
+                            Style="{StaticResource FreeTextBoxStyle}"
+                            Text="{Binding SelectedItem.Notes, UpdateSourceTrigger=PropertyChanged}" />
+                    </TabItem>
                     <TabItem Header="Additional Information">
                         <!--  series, read dates, genres, formats  -->
                         <Grid>
@@ -482,7 +494,7 @@
                                 Grid.RowSpan="3"
                                 Margin="5">
                                 <GroupBox.Header>
-                                    <Label Content="{Binding SelectedItem.Model.BooksSeries.Count, Converter={StaticResource BookSeriesHeader}}" FontWeight="Bold" />
+                                    <Label Content="{Binding SelectedItem.Model.Series.Count, Converter={StaticResource BookSeriesHeader}}" FontWeight="Bold" />
                                 </GroupBox.Header>
                                 <!--<GroupBox.Style>
                                 <Style BasedOn="{StaticResource MetroGroupBox}" TargetType="GroupBox">
@@ -506,13 +518,13 @@
                                                 <Expander.Header>
                                                     <Label
                                                         Background="LightSkyBlue"
-                                                        Content="{Binding Series.Name}"
+                                                        Content="{Binding Name}"
                                                         FontWeight="Bold"
                                                         Style="{StaticResource LabelStyles}">
                                                         <Label.InputBindings>
                                                             <MouseBinding
                                                                 Command="{Binding DataContext.ShowSelectedSeriesCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                                CommandParameter="{Binding Series.Id}"
+                                                                CommandParameter="{Binding Id.Value}"
                                                                 MouseAction="LeftDoubleClick" />
                                                         </Label.InputBindings>
                                                     </Label>
@@ -521,7 +533,7 @@
                                                     x:Name="booksInSeriesListBox"
                                                     MinWidth="300"
                                                     BorderThickness="0"
-                                                    ItemsSource="{Binding Series.SeriesReadOrder}">
+                                                    ItemsSource="{Binding Series}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
                                                             <TextBlock
@@ -532,8 +544,9 @@
                                                                 <TextBlock.InputBindings>
                                                                     <MouseBinding
                                                                         Command="{Binding DataContext.ShowSelectedBookCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                                        CommandParameter="{Binding Book.Id}"
+                                                                        CommandParameter="{Binding Id.Value}"
                                                                         MouseAction="LeftDoubleClick" />
+
                                                                 </TextBlock.InputBindings>
                                                             </TextBlock>
                                                         </DataTemplate>

@@ -85,7 +85,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 .ObservesProperty(() => SelectedItem.LanguageId)
                 .ObservesProperty(() => SelectedItem.PublisherId);
 
-            SelectedItem = null; //new BookWrapper(domainService.CreateItem(), domainService);
+            SelectedItem = new BookWrapper(domainService.CreateItem());
 
             NewReadDate = DateTime.Today;
             Languages = new ObservableCollection<LookupItem>();
@@ -118,10 +118,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand AddNewFormatCommand { get; }
         public ICommand AddNewGenreCommand { get; }
 
-        //public override Task LoadAsync(Guid id)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         //public override BookWrapper CreateWrapper(Book entity)
         //{
@@ -292,7 +288,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    book = await ((BookRepository)DomainService.Repository).LoadAsync(id);
+                    book = await ((BookRepository)DomainService.Repository).LoadAsync(id).ConfigureAwait(false);
                 }
                 else
                 {
@@ -373,7 +369,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (SelectedPublisher is null)
                     {
-                        if (SelectedItem.Model.Publisher != null)
+                        if (SelectedItem.Model.Publisher is not null)
                         {
                             SelectedPublisher =
                                 new LookupItem
@@ -650,7 +646,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnPublisherSelectionChangedExecute()
         {
-            if (SelectedPublisher != null && Publishers.Any())
+            if (SelectedPublisher is not null && Publishers.Any())
             {
                 SelectedItem.PublisherId = SelectedPublisher.Id;
                 //SetChangeTracker();
@@ -781,7 +777,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public override BookWrapper CreateWrapper(Book entity)
         {
-            BookWrapper wrapper = null; //new BookWrapper(entity, DomainService);
+            BookWrapper wrapper = new BookWrapper(entity);
             return wrapper;
         }
 
