@@ -125,10 +125,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
-        
+
         //public virtual void OnShowSelectedBookExecute(Guid? id)
         //    => SelectedBookId = (Guid)id;
-        
+
         public virtual void SwitchEditableStateExecute()
         {
             UserMode = UserMode.Item2 == DetailViewState.ViewMode

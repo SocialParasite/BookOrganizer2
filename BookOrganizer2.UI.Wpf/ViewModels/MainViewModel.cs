@@ -72,8 +72,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedPublisherIdEvent<Guid>>()
             //            .Subscribe(OnOpenPublisherMatchingSelectedId);
 
-            //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedAuthorIdEvent<Guid>>()
-            //            .Subscribe(OnOpenAuthorMatchingSelectedId);
+            _eventAggregator.GetEvent<OpenItemMatchingSelectedAuthorIdEvent<Guid>>()
+                    .Subscribe(OnOpenAuthorMatchingSelectedId);
 
             //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
             //        .Subscribe(OnOpenSeriesMatchingSelectedId);
@@ -228,15 +228,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         //        });
         //}
 
-        //private void OnOpenAuthorMatchingSelectedId(Guid authorId)
-        //{
-        //    OnOpenDetailViewMatchingSelectedId(
-        //        new OpenDetailViewEventArgs
-        //        {
-        //            Id = authorId,
-        //            ViewModelName = nameof(AuthorDetailViewModel)
-        //        });
-        //}
+        private void OnOpenAuthorMatchingSelectedId(Guid authorId)
+        {
+            OnOpenDetailViewMatchingSelectedId(
+                new OpenDetailViewEventArgs
+                {
+                    Id = authorId,
+                    ViewModelName = nameof(AuthorDetailViewModel)
+                });
+        }
 
         //private void OnOpenSeriesMatchingSelectedId(Guid seriesId)
         //{
