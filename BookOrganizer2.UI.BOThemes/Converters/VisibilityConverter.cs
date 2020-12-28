@@ -9,12 +9,10 @@ namespace BookOrganizer2.UI.BOThemes.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            // TODO:
-            values[1] = true;
-
             if (values[0] == DependencyProperty.UnsetValue && values[1] == DependencyProperty.UnsetValue) return Visibility.Collapsed;
             if (values[0] == DependencyProperty.UnsetValue && (bool)values[1]) return Visibility.Collapsed;
-            if (values[0] == DependencyProperty.UnsetValue || !(bool)values[1]) return Visibility.Visible;
+            if (values[0] != DependencyProperty.UnsetValue && (int)values[0] == 0 && (bool)values[1]) return Visibility.Collapsed;
+            if (values[0] != DependencyProperty.UnsetValue || !(bool)values[1]) return Visibility.Visible;
 
             return Visibility.Visible;
         }
