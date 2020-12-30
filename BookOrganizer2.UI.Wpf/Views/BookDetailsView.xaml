@@ -125,7 +125,7 @@
                     IsEnabled="{Binding UserMode.Item4}">
                     <Button.Template>
                         <ControlTemplate>
-                            <Image x:Name="authorImage" Source="{Binding SelectedItem.BookCoverPath}" />
+                            <Image x:Name="bookCoverImage" Source="{Binding SelectedItem.BookCoverPath}" />
                         </ControlTemplate>
                     </Button.Template>
                 </Button>

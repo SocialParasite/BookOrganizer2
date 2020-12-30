@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,7 +18,8 @@ namespace BookOrganizer2.Domain.BookProfile
     {
         private Book()
         {
-            Authors ??= new List<Author>();
+            Authors ??= new ObservableCollection<Author>();
+            ReadDates ??= new ObservableCollection<BookReadDate>();
         }
 
         public BookId Id { get; private set; }
@@ -73,10 +75,10 @@ namespace BookOrganizer2.Domain.BookProfile
                 IsRead = isRead,
                 Language = language,
                 Publisher = publisher,
-                Authors = authors ?? new List<Author>(),
-                BookReadDates = bookReadDates ?? new List<BookReadDate>(),
-                Formats = formats ?? new List<Format>(),
-                Genres = genres ?? new List<Genre>()
+                Authors = authors, /*?? new List<Author>(),*/
+                BookReadDates = bookReadDates, 
+                Formats = formats, /*?? new List<Format>(),*/
+                Genres = genres /*?? new List<Genre>()*/
             });
 
             return book;

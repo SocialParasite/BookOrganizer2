@@ -33,6 +33,8 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.ReadDates)
                     .Include(b => b.Series)
                     .ThenInclude(s => s.Book)
+                    .Include(b => b.Series)
+                    .ThenInclude(s => s.Series)
                     .FirstOrDefaultAsync(b => b.Id == id)
                     .ConfigureAwait(false);
             }
@@ -123,7 +125,7 @@ namespace BookOrganizer2.DA.Repositories
         private async Task<Publisher> GetPublisherAsync(PublisherId publisherId)
             => await Context.Publishers.FindAsync(publisherId).ConfigureAwait(false);
 
-        private async Task<Author> GetAuthorAsync(AuthorId authorId)
+        public async Task<Author> GetAuthorAsync(AuthorId authorId)
             => await Context.Authors.FindAsync(authorId).ConfigureAwait(false);
 
         private async Task<Format> GetFormatAsync(FormatId formatId)
