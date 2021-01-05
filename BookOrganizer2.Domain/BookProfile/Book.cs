@@ -19,6 +19,8 @@ namespace BookOrganizer2.Domain.BookProfile
         private Book()
         {
             Authors ??= new ObservableCollection<Author>();
+            Formats ??= new ObservableCollection<Format>();
+            Genres ??= new ObservableCollection<Genre>();
             ReadDates ??= new ObservableCollection<BookReadDate>();
         }
 
@@ -75,10 +77,10 @@ namespace BookOrganizer2.Domain.BookProfile
                 IsRead = isRead,
                 Language = language,
                 Publisher = publisher,
-                Authors = authors, /*?? new List<Author>(),*/
+                Authors = authors, 
                 BookReadDates = bookReadDates, 
-                Formats = formats, /*?? new List<Format>(),*/
-                Genres = genres /*?? new List<Genre>()*/
+                Formats = formats, 
+                Genres = genres
             });
 
             return book;

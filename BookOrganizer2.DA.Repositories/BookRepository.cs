@@ -128,10 +128,10 @@ namespace BookOrganizer2.DA.Repositories
         public async Task<Author> GetAuthorAsync(AuthorId authorId)
             => await Context.Authors.FindAsync(authorId).ConfigureAwait(false);
 
-        private async Task<Format> GetFormatAsync(FormatId formatId)
+        public async Task<Format> GetFormatAsync(FormatId formatId)
             => await Context.Formats.FindAsync(formatId).ConfigureAwait(false);
 
-        private async Task<Genre> GetGenreAsync(GenreId genreId)
+        public async Task<Genre> GetGenreAsync(GenreId genreId)
             => await Context.Genres.FindAsync(genreId).ConfigureAwait(false);
 
         private async Task<Series> GetSeriesAsync(SeriesId seriesId)

@@ -19,5 +19,7 @@ namespace BookOrganizer2.Domain.DA
         Task ChangeReadDates(Book book, ICollection<BookReadDate> bookReadDates);
 
         Task<Author> GetAuthorAsync(AuthorId authorId);
+        Task<Format> GetFormatAsync(FormatId formatId);
+        Task<Genre> GetGenreAsync(GenreId genreId);
     }
 }

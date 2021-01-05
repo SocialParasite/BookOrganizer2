@@ -30,6 +30,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
     public class BookDetailViewModel : BaseDetailViewModel<Book, BookId, BookWrapper>
     {
         private BookWrapper _selectedItem;
+
+        // TODO: ???
         private bool _languageIsDirty; // _navPropertyIsDirty; ?? Is one enough for all?
 
         private bool LanguageIsDirty
@@ -260,10 +262,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void SetReadDateExecute()
         {
-            var newReadDate = new BookReadDate { ReadDate = NewReadDate };
+            var newReadDate = new BookReadDate(NewReadDate);
 
             SelectedItem.Model.ReadDates.Add(newReadDate);
-            NewReadDate = NewReadDate;
             //SetChangeTracker();
 
         }
@@ -438,9 +439,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         protected override bool SaveItemCanExecute()
         {
-            return (!SelectedItem.HasErrors) && (HasChanges || SelectedItem.Id == default)
-                && (SelectedItem.Model.Language.Id != default
-                    && SelectedItem.Model.PageCount > 0);
+            return (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
         }
 
         protected override string CreateChangeMessage(DatabaseOperation operation)
@@ -649,57 +648,45 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnBookFormatSelectionChangedExecute(LookupItem lookupItem)
         {
-            //if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == false))
-            //{
-            //    AllBookFormats.Remove(AllBookFormats.Where(bf => bf.Item1.Id == lookupItem.Id).Single());
-            //    AllBookFormats.Add((lookupItem, true).ToTuple());
+            if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == false))
+            {
+                AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
+                AllBookFormats.Add((lookupItem, true).ToTuple());
 
-            //    var newFormat = await (DomainService.Repository as IBookRepository).GetBookFormatById(lookupItem.Id);
+                var newFormat = await ((IBookRepository) DomainService.Repository).GetFormatAsync(lookupItem.Id);
 
-            //    SelectedItem.Model.Formats.Add(new BooksFormats
-            //    {
-            //        FormatId = newFormat.Id,
-            //        Format = newFormat,
-            //        Book = SelectedItem.Model,
-            //        BookId = SelectedItem.Id
-            //    });
-            //}
-            //else if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == true))
-            //{
-            //    AllBookFormats.Remove(AllBookFormats.Where(bf => bf.Item1.Id == lookupItem.Id).Single());
-            //    AllBookFormats.Add((lookupItem, false).ToTuple());
+                SelectedItem.Model.Formats.Add(newFormat);
+            }
+            else if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == true))
+            {
+                AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
+                AllBookFormats.Add((lookupItem, false).ToTuple());
 
-            //    var item = SelectedItem.Model.Formats.Single(f => f.FormatId == lookupItem.Id);
-            //    SelectedItem.Model.Formats.Remove(item);
-            //}
+                var item = SelectedItem.Model.Formats.Single(f => f.Id == lookupItem.Id);
+                SelectedItem.Model.Formats.Remove(item);
+            }
             //SetChangeTracker();
         }
 
         private async void OnBookGenreSelectionChangedExecute(LookupItem lookupItem)
         {
-            //if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == false))
-            //{
-            //    AllBookGenres.Remove(AllBookGenres.Where(bg => bg.Item1.Id == lookupItem.Id).Single());
-            //    AllBookGenres.Add((lookupItem, true).ToTuple());
+            if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == false))
+            {
+                AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
+                AllBookGenres.Add((lookupItem, true).ToTuple());
 
-            //    var newGenre = await (DomainService.Repository as IBookRepository).GetBookGenreById(lookupItem.Id);
+                var newGenre = await ((IBookRepository) DomainService.Repository).GetGenreAsync(lookupItem.Id);
 
-            //    SelectedItem.Model.Genres.Add(new BookGenres
-            //    {
-            //        GenreId = newGenre.Id,
-            //        Genre = newGenre,
-            //        Book = SelectedItem.Model,
-            //        BookId = SelectedItem.Id
-            //    });
-            //}
-            //else if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == true))
-            //{
-            //    AllBookGenres.Remove(AllBookGenres.Where(bg => bg.Item1.Id == lookupItem.Id).Single());
-            //    AllBookGenres.Add((lookupItem, false).ToTuple());
+                SelectedItem.Model.Genres.Add(newGenre);
+            }
+            else if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == true))
+            {
+                AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
+                AllBookGenres.Add((lookupItem, false).ToTuple());
 
-            //    var item = SelectedItem.Model.Genres.Single(g => g.Id == lookupItem.Id);
-            //    SelectedItem.Model.Genres.Remove(item);
-            //}
+                var item = SelectedItem.Model.Genres.Single(g => g.Id == lookupItem.Id);
+                SelectedItem.Model.Genres.Remove(item);
+            }
             //SetChangeTracker();
         }
 
@@ -797,25 +784,27 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnAddNewGenreExecute(string genre)
         {
-            AddNewBookGenreToCollection(genre);
+            AddNewGenre(genre);
         }
 
-        private async Task AddNewBookGenreToCollection(string genre)
+        private async Task AddNewGenre(string genre)
         {
+            // TODO: 
             var newGenre = Genre.NewGenre;
-            newGenre.SetName(genre);
+            //newGenre.SetName(genre);
 
-            //await (DomainService as BookService).AddNewBookGenre(newGenre);
+            await (DomainService as BookService)!.AddNewBookGenre(genre);
             await InitializeAllBookGenresCollection();
         }
 
         private void OnAddNewFormatExecute(string format)
         {
-            AddNewBookFormatToCollection(format);
+            AddNewFormat(format);
         }
 
-        private async Task AddNewBookFormatToCollection(string format)
+        private async Task AddNewFormat(string format)
         {
+            // TODO: 
             var newFormat = Format.NewFormat;
             newFormat.SetName(format);
 
