@@ -8,7 +8,7 @@ namespace BookOrganizer2.Domain.DA
     public interface ISeriesRepository : IRepository<Series, SeriesId>
     {
         Task<Series> LoadAsync(SeriesId id);
-
+        Task<Book> GetBookAsync(BookId id);
         Task ChangeReadOrder(Series series, ICollection<ReadOrder> books);
     }
 }

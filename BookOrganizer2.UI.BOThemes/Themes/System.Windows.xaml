@@ -7,10 +7,11 @@
     <converters:AdjustWidthConverter x:Key="AdjustWidthConverter" />
     <converters:BackgroundColorConverter x:Key="BackgroundColorConverter" />
     <converters:BookSeriesHeader x:Key="BookSeriesHeader" />
-    <!--<local:BoolToMaxConverter x:Key="BoolToMaxConverter" />-->
+    <converters:BoolToMaxConverter x:Key="BoolToMaxConverter" />
     <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
     <converters:DobCountAge x:Key="DobCountAge" />
     <converters:GuidToVisibilityConverter x:Key="GuidToVisibilityConverter" />
+    <converters:MultiValueConverter x:Key="MultiValueConverter" />
     <!-- <local:RowHasValuesConverter x:Key="RowHasValuesConverter" />-->
     <converters:ShowBordersInEditMode x:Key="ShowBordersInEditMode" />
     <converters:StyleConverter x:Key="StyleConverter" />
