@@ -61,18 +61,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             _eventAggregator.GetEvent<OpenDetailViewEvent>()
                 .Subscribe(OnOpenDetailViewMatchingSelectedId);
-            //if (eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() != null)
-            //{
-            //    this.eventAggregator.GetEvent<OpenItemViewEvent>()
-            //        .Subscribe(OnOpenSelectedItemView);
+            if (_eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() != null)
+            {
+                _eventAggregator.GetEvent<OpenItemViewEvent>()
+                    .Subscribe(OnOpenSelectedItemView);
 
-            //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
-            //            .Subscribe(OnOpenBookMatchingSelectedId);
+                _eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
+                        .Subscribe(OnOpenBookMatchingSelectedId);
 
-            //    this.eventAggregator.GetEvent<OpenItemMatchingSelectedPublisherIdEvent<Guid>>()
-            //            .Subscribe(OnOpenPublisherMatchingSelectedId);
+                _eventAggregator.GetEvent<OpenItemMatchingSelectedPublisherIdEvent<Guid>>()
+                        .Subscribe(OnOpenPublisherMatchingSelectedId);
 
-            _eventAggregator.GetEvent<OpenItemMatchingSelectedAuthorIdEvent<Guid>>()
+                _eventAggregator.GetEvent<OpenItemMatchingSelectedAuthorIdEvent<Guid>>()
                     .Subscribe(OnOpenAuthorMatchingSelectedId);
 
             _eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
@@ -83,7 +83,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             _eventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Subscribe(OnChangeDetailsView);
-            //}
+            }
         }
 
         public ICommand ShowMenuCommand { get; }
@@ -208,25 +208,25 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             IsViewVisible = true;
         }
 
-        //private void OnOpenBookMatchingSelectedId(Guid bookId)
-        //{
-        //    OnOpenDetailViewMatchingSelectedId(
-        //       new OpenDetailViewEventArgs
-        //       {
-        //           Id = bookId,
-        //           ViewModelName = nameof(BookDetailViewModel)
-        //       });
-        //}
+        private void OnOpenBookMatchingSelectedId(Guid bookId)
+        {
+            OnOpenDetailViewMatchingSelectedId(
+               new OpenDetailViewEventArgs
+               {
+                   Id = bookId,
+                   ViewModelName = nameof(BookDetailViewModel)
+               });
+        }
 
-        //private void OnOpenPublisherMatchingSelectedId(Guid publisherId)
-        //{
-        //    OnOpenDetailViewMatchingSelectedId(
-        //        new OpenDetailViewEventArgs
-        //        {
-        //            Id = publisherId,
-        //            ViewModelName = nameof(PublisherDetailViewModel)
-        //        });
-        //}
+        private void OnOpenPublisherMatchingSelectedId(Guid publisherId)
+        {
+            OnOpenDetailViewMatchingSelectedId(
+                new OpenDetailViewEventArgs
+                {
+                    Id = publisherId,
+                    ViewModelName = nameof(PublisherDetailViewModel)
+                });
+        }
 
         private void OnOpenAuthorMatchingSelectedId(Guid authorId)
         {

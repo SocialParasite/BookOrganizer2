@@ -17,7 +17,7 @@
                 <ResourceDictionary>
                     <CollectionViewSource x:Key="BooksSeriesList" Source="{Binding SelectedItem.Model.Series}">
                         <CollectionViewSource.SortDescriptions>
-                            <componentModel:SortDescription PropertyName="Instalment" />
+                            <componentModel:SortDescription PropertyName="Series.Books.Instalment" />
                         </CollectionViewSource.SortDescriptions>
                     </CollectionViewSource>
                 </ResourceDictionary>
@@ -499,7 +499,7 @@
                                 <GroupBox.Style>
                                     <Style TargetType="GroupBox">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding SelectedItem.Model.BooksSeries.Count}" Value="0">
+                                            <DataTrigger Binding="{Binding SelectedItem.Model.Series.Count}" Value="0">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                             </DataTrigger>
                                         </Style.Triggers>
@@ -508,9 +508,9 @@
                                 <ItemsControl x:Name="BooksSeriesItemsControl" ItemsSource="{Binding Source={StaticResource BooksSeriesList}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
+                                            <!--  Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.95}"  -->
                                             <Expander
                                                 x:Name="bookSeriesExpander"
-                                                Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.95}"
                                                 Margin="0,5,0,5"
                                                 Background="LightSkyBlue"
                                                 BorderBrush="LightSkyBlue"
@@ -532,12 +532,12 @@
                                                 <ListBox
                                                     x:Name="booksInSeriesListBox"
                                                     MinWidth="300"
-                                                    BorderThickness="0"
-                                                    ItemsSource="{Binding Series}">
+                                                    BorderThickness="0" 
+                                                    ItemsSource="{Binding Series.Books}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
+                                                            <!--  Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.92}"  -->
                                                             <TextBlock
-                                                                Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.92}"
                                                                 FontSize="14"
                                                                 Text="{Binding Book.Title}"
                                                                 TextWrapping="Wrap">

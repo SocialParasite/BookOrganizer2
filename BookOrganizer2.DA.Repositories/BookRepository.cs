@@ -32,9 +32,11 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.Genres)
                     .Include(b => b.ReadDates)
                     .Include(b => b.Series)
-                    .ThenInclude(s => s.Book)
-                    .Include(b => b.Series)
                     .ThenInclude(s => s.Series)
+                    .ThenInclude(s => s.Books)
+                    .ThenInclude(b => b.Book)
+                    //.Include(b => b.Series)
+                    //.ThenInclude(s => s.Book)
                     .FirstOrDefaultAsync(b => b.Id == id)
                     .ConfigureAwait(false);
             }

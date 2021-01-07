@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using BookOrganizer2.DA.Repositories;
-using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
