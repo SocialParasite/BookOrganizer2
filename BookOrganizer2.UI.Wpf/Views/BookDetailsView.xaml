@@ -17,7 +17,7 @@
                 <ResourceDictionary>
                     <CollectionViewSource x:Key="BooksSeriesList" Source="{Binding SelectedItem.Model.Series}">
                         <CollectionViewSource.SortDescriptions>
-                            <componentModel:SortDescription PropertyName="Instalment" />
+                            <componentModel:SortDescription PropertyName="Series.Books.Instalment" />
                         </CollectionViewSource.SortDescriptions>
                     </CollectionViewSource>
                 </ResourceDictionary>
@@ -125,7 +125,7 @@
                     IsEnabled="{Binding UserMode.Item4}">
                     <Button.Template>
                         <ControlTemplate>
-                            <Image x:Name="authorImage" Source="{Binding SelectedItem.BookCoverPath}" />
+                            <Image x:Name="bookCoverImage" Source="{Binding SelectedItem.BookCoverPath}" />
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -360,7 +360,7 @@
                                 <TextBlock FontSize="16">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{1}">
-                                            <Binding Path="Id.Value" />
+                                            <Binding Path="Id" />
                                             <Binding Path="DisplayMember" />
                                         </MultiBinding>
                                     </TextBlock.Text>
@@ -496,21 +496,21 @@
                                 <GroupBox.Header>
                                     <Label Content="{Binding SelectedItem.Model.Series.Count, Converter={StaticResource BookSeriesHeader}}" FontWeight="Bold" />
                                 </GroupBox.Header>
-                                <!--<GroupBox.Style>
-                                <Style BasedOn="{StaticResource MetroGroupBox}" TargetType="GroupBox">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedItem.Model.BooksSeries.Count}" Value="0">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </GroupBox.Style>-->
+                                <GroupBox.Style>
+                                    <Style TargetType="GroupBox">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SelectedItem.Model.Series.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </GroupBox.Style>
                                 <ItemsControl x:Name="BooksSeriesItemsControl" ItemsSource="{Binding Source={StaticResource BooksSeriesList}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
+                                            <!--  Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.95}"  -->
                                             <Expander
                                                 x:Name="bookSeriesExpander"
-                                                Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.95}"
                                                 Margin="0,5,0,5"
                                                 Background="LightSkyBlue"
                                                 BorderBrush="LightSkyBlue"
@@ -518,13 +518,13 @@
                                                 <Expander.Header>
                                                     <Label
                                                         Background="LightSkyBlue"
-                                                        Content="{Binding Name}"
+                                                        Content="{Binding Series.Name}"
                                                         FontWeight="Bold"
                                                         Style="{StaticResource LabelStyles}">
                                                         <Label.InputBindings>
                                                             <MouseBinding
                                                                 Command="{Binding DataContext.ShowSelectedSeriesCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                                CommandParameter="{Binding Id.Value}"
+                                                                CommandParameter="{Binding Series.Id.Value}"
                                                                 MouseAction="LeftDoubleClick" />
                                                         </Label.InputBindings>
                                                     </Label>
@@ -532,21 +532,20 @@
                                                 <ListBox
                                                     x:Name="booksInSeriesListBox"
                                                     MinWidth="300"
-                                                    BorderThickness="0"
-                                                    ItemsSource="{Binding Series}">
+                                                    BorderThickness="0" 
+                                                    ItemsSource="{Binding Series.Books}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>
+                                                            <!--  Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.92}"  -->
                                                             <TextBlock
-                                                                Width="{Binding ElementName=SeriesGroupBox, Path=ActualWidth, Converter={StaticResource AdjustWidthConverter}, ConverterParameter=0.92}"
                                                                 FontSize="14"
                                                                 Text="{Binding Book.Title}"
                                                                 TextWrapping="Wrap">
                                                                 <TextBlock.InputBindings>
                                                                     <MouseBinding
                                                                         Command="{Binding DataContext.ShowSelectedBookCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                                        CommandParameter="{Binding Id.Value}"
+                                                                        CommandParameter="{Binding Book.Id.Value}"
                                                                         MouseAction="LeftDoubleClick" />
-
                                                                 </TextBlock.InputBindings>
                                                             </TextBlock>
                                                         </DataTemplate>

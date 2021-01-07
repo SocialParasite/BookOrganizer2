@@ -43,11 +43,11 @@
                         Command="{Binding ShowItemsCommand}"
                         CommandParameter="{x:Type viewModel:PublishersViewModel}"
                         Content="Publishers" />
-                    <!--<Button
+                    <Button
                         x:Name="ShowSeriesButton"
                         Command="{Binding ShowItemsCommand}"
                         CommandParameter="{x:Type viewModel:SeriesViewModel}"
-                        Content="Series" />-->
+                        Content="Series" />
                 </WrapPanel>
             </GroupBox>
             <GroupBox x:Name="AddItemsGroupBox">
@@ -97,11 +97,11 @@
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:PublisherDetailViewModel}"
                         Content="Add a new publisher" />
-                    <!--<Button
+                    <Button
                         x:Name="AddSeriesButton"
                         Command="{Binding AddNewItemCommand}"
                         CommandParameter="{x:Type viewModel:SeriesDetailViewModel}"
-                        Content="Add a new series" />-->
+                        Content="Add a new series" />
                 </WrapPanel>
             </GroupBox>
             <GroupBox x:Name="EditItemsGroupBox" Width="{Binding ElementName=AddItemsGroupBox, Path=ActualWidth}">

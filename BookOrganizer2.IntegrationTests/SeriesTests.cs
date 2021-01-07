@@ -181,7 +181,7 @@ namespace BookOrganizer2.IntegrationTests
             sut.Books.SingleOrDefault(b => b.Instalment == 0).Instalment = 2;
 
             await repository.SaveAsync();
-
+            sut = await repository.LoadAsync(series.Id);
             sut.Books.SingleOrDefault(b => b.Instalment == 2)?.BooksId
                 .Should().Be(sut.Books.SingleOrDefault(r => r.Book.Title == "Book 1")?.BooksId);
             sut.Books.SingleOrDefault(b => b.Instalment == 1)?.BooksId

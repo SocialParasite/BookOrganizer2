@@ -14,8 +14,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         public GenreService(IRepository<Genre, GenreId> repository) 
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public Genre CreateItem() 
-            => Genre.NewGenre;
+        public Genre CreateItem() => Genre.NewGenre;
 
         public Task Handle(object command)
         {
@@ -23,7 +22,6 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                //SetGenreName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetName(cmd.Name), (a) => Repository.Update(a)),
                 DeleteGenre cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };

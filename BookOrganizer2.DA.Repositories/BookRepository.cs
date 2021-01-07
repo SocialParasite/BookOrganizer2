@@ -32,7 +32,11 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.Genres)
                     .Include(b => b.ReadDates)
                     .Include(b => b.Series)
-                    .ThenInclude(s => s.Book)
+                    .ThenInclude(s => s.Series)
+                    .ThenInclude(s => s.Books)
+                    .ThenInclude(b => b.Book)
+                    //.Include(b => b.Series)
+                    //.ThenInclude(s => s.Book)
                     .FirstOrDefaultAsync(b => b.Id == id)
                     .ConfigureAwait(false);
             }
@@ -123,13 +127,13 @@ namespace BookOrganizer2.DA.Repositories
         private async Task<Publisher> GetPublisherAsync(PublisherId publisherId)
             => await Context.Publishers.FindAsync(publisherId).ConfigureAwait(false);
 
-        private async Task<Author> GetAuthorAsync(AuthorId authorId)
+        public async Task<Author> GetAuthorAsync(AuthorId authorId)
             => await Context.Authors.FindAsync(authorId).ConfigureAwait(false);
 
-        private async Task<Format> GetFormatAsync(FormatId formatId)
+        public async Task<Format> GetFormatAsync(FormatId formatId)
             => await Context.Formats.FindAsync(formatId).ConfigureAwait(false);
 
-        private async Task<Genre> GetGenreAsync(GenreId genreId)
+        public async Task<Genre> GetGenreAsync(GenreId genreId)
             => await Context.Genres.FindAsync(genreId).ConfigureAwait(false);
 
         private async Task<Series> GetSeriesAsync(SeriesId seriesId)

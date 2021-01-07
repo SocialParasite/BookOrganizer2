@@ -63,34 +63,34 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             set => SetValue(value);
         }
 
-        public Guid LanguageId
-        {
-            get => GetValue<Guid>();
-            set => SetValue(value);
-        }
+        //public Guid LanguageId
+        //{
+        //    get => GetValue<Guid>();
+        //    set => SetValue(value);
+        //}
 
-        public Guid PublisherId
-        {
-            get => GetValue<Guid>();
-            set => SetValue(value);
-        }
+        //public Guid PublisherId
+        //{
+        //    get => GetValue<Guid>();
+        //    set => SetValue(value);
+        //}
 
-        public List<Guid> AuthorIds
-        {
-            get => GetValue<List<Guid>>();
-            set => SetValue(value);
-        }
+        //public List<Guid> AuthorIds
+        //{
+        //    get => GetValue<List<Guid>>();
+        //    set => SetValue(value);
+        //}
 
-        public List<Guid> FormatIds
-        {
-            get => GetValue<List<Guid>>();
-            set => SetValue(value);
-        }
+        //public List<Guid> FormatIds
+        //{
+        //    get => GetValue<List<Guid>>();
+        //    set => SetValue(value);
+        //}
 
-        public List<Guid> GenreIds
-        {
-            get => GetValue<List<Guid>>();
-            set => SetValue(value);
-        }
+        //public List<Guid> GenreIds
+        //{
+        //    get => GetValue<List<Guid>>();
+        //    set => SetValue(value);
+        //}
     }
 }

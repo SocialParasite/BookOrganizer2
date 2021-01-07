@@ -48,7 +48,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             DeleteItemCommand = new DelegateCommand(DeleteItemExecute, DeleteItemCanExecute)
                 .ObservesProperty(() => UserMode);
             CloseDetailViewCommand = new DelegateCommand(CloseDetailViewExecute);
-            //ShowSelectedBookCommand = new DelegateCommand<Guid?>(OnShowSelectedBookExecute, OnShowSelectedBookCanExecute);
+            ShowSelectedBookCommand = new DelegateCommand<Guid?>(OnShowSelectedBookExecute, OnShowSelectedBookCanExecute);
 
             UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
         }
@@ -102,20 +102,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        //public Guid SelectedBookId
-        //{
-        //    get => selectedBookId;
-        //    set
-        //    {
-        //        selectedBookId = value;
-        //        OnPropertyChanged();
-        //        if (selectedBookId != Guid.Empty)
-        //        {
-        //            eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
-        //                           .Publish(selectedBookId);
-        //        }
-        //    }
-        //}
+        public Guid SelectedBookId
+        {
+            get => _selectedBookId;
+            set
+            {
+                _selectedBookId = value;
+                OnPropertyChanged();
+                if (_selectedBookId != Guid.Empty)
+                {
+                    EventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
+                                   .Publish(_selectedBookId);
+                }
+            }
+        }
 
         public Guid Id
         {
@@ -125,9 +125,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
-
-        //public virtual void OnShowSelectedBookExecute(Guid? id)
-        //    => SelectedBookId = (Guid)id;
 
         public virtual void SwitchEditableStateExecute()
         {
@@ -208,6 +205,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private bool OnShowSelectedBookCanExecute(Guid? id)
                 => (!(id is null) && id != Guid.Empty);
+
+        public virtual void OnShowSelectedBookExecute(Guid? id)
+            => SelectedBookId = (Guid)id;
 
         private bool DeleteItemCanExecute()
             => SelectedItem.Model.Id != default && UserMode.Item4;

@@ -37,12 +37,15 @@ namespace BookOrganizer2.DA.Repositories
             await Context.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        public Task<Book> GetBookAsync(BookId id)
+            => Context.Books.SingleAsync(b => b.Id == id);
+
         public async Task<Series> LoadAsync(SeriesId id)
         {
             if (id != default)
                 return await Context.Series
                     .Include(s => s.Books)
-                    .ThenInclude(b => b.Series)
+                    .ThenInclude(b => b.Series.Books)
                     .Include(s => s.Books)
                     .ThenInclude(b => b.Book)
                     .SingleOrDefaultAsync(b => b.Id == id);

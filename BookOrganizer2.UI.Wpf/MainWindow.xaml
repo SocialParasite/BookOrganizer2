@@ -52,6 +52,12 @@
             <DataTemplate DataType="{x:Type viewModel:PublisherDetailViewModel}">
                 <views:PublisherDetailView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:SeriesViewModel}">
+                <views:SeriesView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:SeriesDetailViewModel}">
+                <views:SeriesDetailView />
+            </DataTemplate>
             <Style x:Key="FadeOutMenu" TargetType="{x:Type Label}">
                 <Setter Property="Height" Value="10" />
                 <Style.Triggers>

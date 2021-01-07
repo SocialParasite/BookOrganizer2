@@ -257,5 +257,35 @@ namespace BookOrganizer2.Domain.BookProfile
 
         private Task UpdateBookReadDatesAsync(Book book, ICollection<BookReadDate> bookReadDates)
             => ((IBookRepository)Repository).ChangeReadDates(book, bookReadDates);
+
+        public Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName) 
+            => _publisherLookupDataService.GetPublisherLookupAsync(viewModelName);
+
+        public Task<IEnumerable<LookupItem>> GetLanguageLookupAsync(string viewModelName) 
+            => _languageLookupDataService.GetLanguageLookupAsync(viewModelName);
+
+        public Task<IEnumerable<LookupItem>> GetAuthorLookupAsync(string viewModelName)
+            => _authorLookupDataService.GetAuthorLookupAsync(viewModelName);
+
+        public Task<IEnumerable<LookupItem>> GetFormatLookupAsync(string viewModelName)
+            => _formatLookupDataService.GetFormatLookupAsync(viewModelName);
+
+        public Task<IEnumerable<LookupItem>> GetGenreLookupAsync(string viewModelName)
+            => _genreLookupDataService.GetGenreLookupAsync(viewModelName);
+
+        public async Task<Genre> AddNewBookGenre(string name)
+        {
+            GenreProfile.Commands.Create cmd = new GenreProfile.Commands.Create
+            {
+                Id = SequentialGuid.NewSequentialGuid(), 
+                Name = name
+            };
+
+            // TODO: How to access GenreService??!
+
+            var test = Genre.NewGenre;
+            return test;
+            //var genre = await _genreService.Handle(cmd);
+        }
     }
 }
