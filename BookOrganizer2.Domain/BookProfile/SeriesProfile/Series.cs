@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using BookOrganizer2.Domain.Exceptions;
@@ -14,6 +15,11 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         public string PicturePath { get; private set; }
         public string Description { get; private set; }
         public ICollection<ReadOrder> Books { get; set; }
+
+        public Series()
+        {
+            Books ??= new ObservableCollection<ReadOrder>();
+        }
 
         public static Series Create(SeriesId id, 
             string name, 
