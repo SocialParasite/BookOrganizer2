@@ -22,7 +22,7 @@ using Serilog;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
-    public class SeriesDetailViewModel : BaseDetailViewModel<Series, SeriesId, SeriesWrapper>
+    public class SeriesDetailViewModel : BaseDetailViewModel<Series, SeriesId, SeriesWrapper>, IDropTarget
     {
         private SeriesWrapper selectedItem;
         private readonly IBookLookupDataService bookLookupDataService;
@@ -208,15 +208,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             var addedBook = await (DomainService.Repository as ISeriesRepository).GetBookAsync((Guid)id);
 
-            var booksSeries = new ReadOrder
-            {
-                Book = addedBook,
-                BooksId = addedBook.Id,
-                Series = SelectedItem.Model,
-                SeriesId = SelectedItem.Id
-            };
-            SelectedItem.Model.Books.Add(booksSeries);
-
             SelectedItem.Model.Books
                 .Add(new ReadOrder
                 {
@@ -228,8 +219,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 });
 
             Books.Remove(Books.First(b => b.Id == id));
-
-            //SelectedItem.NumberOfBooks = SelectedItem.Model.SeriesReadOrder.Count();
 
             //SetChangeTracker();
         }
