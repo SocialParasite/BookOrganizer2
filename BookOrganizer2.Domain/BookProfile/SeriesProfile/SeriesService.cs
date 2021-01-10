@@ -43,7 +43,8 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 Id = new SeriesId(SequentialGuid.NewSequentialGuid()),
                 Name = model.Name,
                 PicturePath =  model.PicturePath,
-                Description =  model.Description
+                Description =  model.Description,
+                Books = model.Books
             };
 
             await Handle(command);
