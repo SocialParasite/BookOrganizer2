@@ -56,7 +56,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public override SeriesWrapper SelectedItem
         {
-            get { return selectedItem; }
+            get => selectedItem;
             set
             {
                 selectedItem = value ?? throw new ArgumentNullException(nameof(SelectedItem));
@@ -73,8 +73,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                var series = await ((ISeriesRepository) DomainService.Repository).LoadAsync(id) ?? new Series();
-
+                Series series = null;
+                if (id != default)
+                {
+                    series = await ((ISeriesRepository) DomainService.Repository).LoadAsync(id) ?? Series.NewSeries;
+                }
+                else
+                {
+                    series = Series.NewSeries;
+                    IsNewItem = true;
+                }
                 SelectedItem = CreateWrapper(series);
 
                 SelectedItem.PropertyChanged += (s, e) =>
@@ -111,8 +119,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 void SetDefaultSeriesPictureIfNoneSet()
                 {
-                    if (SelectedItem.PicturePath is null)
-                        SelectedItem.PicturePath = FileExplorerService.GetImagePath();
+                    SelectedItem.PicturePath ??= FileExplorerService.GetImagePath();
                 }
 
 
@@ -161,12 +168,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             else
             {
                 var booksSeries = SelectedItem.Model.Books
-                                                .Where(s => s.SeriesId == SelectedItem.Id && s.BooksId == id)
-                                                .First();
-                SelectedItem.Model.Books.Remove(booksSeries);
+                    .First(s => s.SeriesId == SelectedItem.Id && s.BooksId == id);
 
-                //var sro = SelectedItem.Model.Books.SeriesReadOrder.First(b => b.BookId == id);
-                //SelectedItem.Model.SeriesReadOrder.Remove(sro);
+                SelectedItem.Model.Books.Remove(booksSeries);
 
                 Books.Add(new LookupItem { Id = booksSeries.BooksId, DisplayMember = booksSeries.Book.Title, Picture = booksSeries.Book.BookCoverPath });
 
