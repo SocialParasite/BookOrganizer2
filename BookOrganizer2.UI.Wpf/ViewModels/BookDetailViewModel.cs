@@ -161,21 +161,21 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        //public Guid SelectedSeriesId
-        //{
-        //    get => selectedSeriesId;
-        //    set
-        //    {
-        //        selectedSeriesId = value;
-        //        OnPropertyChanged();
+        public Guid SelectedSeriesId
+        {
+            get => selectedSeriesId;
+            set
+            {
+                selectedSeriesId = value;
+                OnPropertyChanged();
 
-        //        if (selectedSeriesId != Guid.Empty)
-        //        {
-        //            EventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
-        //                           .Publish(SelectedSeriesId);
-        //        }
-        //    }
-        //}
+                if (selectedSeriesId != Guid.Empty)
+                {
+                    EventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
+                                   .Publish(SelectedSeriesId);
+                }
+            }
+        }
 
         public SolidColorBrush HighlightBrush
         {
@@ -264,7 +264,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             var newReadDate = new BookReadDate(NewReadDate);
 
             SelectedItem.Model.ReadDates.Add(newReadDate);
-            //SetChangeTracker();
+            SetChangeTracker();
 
         }
 
@@ -610,7 +610,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var removedAuthorAsLookupItem = SelectedItem.Model.Authors.Single(al => al.Id == authorId);
                 SelectedItem.Model.Authors.Remove(removedAuthorAsLookupItem);
 
-                //SetChangeTracker();
+                SetChangeTracker();
             }
         }
 
@@ -624,7 +624,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             Authors.Remove(lookupItem);
 
-            //SetChangeTracker();
+            SetChangeTracker();
         }
 
         private void OnLanguageSelectionChangedExecute()
@@ -701,8 +701,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private void OnShowSelectedPublisherExecute(Guid? id)
             => SelectedPublisherId = (Guid)id;
 
-        //private void OnShowSelectedSeriesExecute(Guid? id)
-        //    => SelectedSeriesId = (Guid)id;
+        private void OnShowSelectedSeriesExecute(Guid? id)
+            => SelectedSeriesId = (Guid)id;
 
         private bool OnShowSelectedSeriesCanExecute(Guid? id)
             => (id is null || id == Guid.Empty) ? false : true;
@@ -714,7 +714,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var deletedReadDate = SelectedItem.Model.ReadDates.First(rd => rd.ReadDate == readDate);
                 SelectedItem.Model.ReadDates.Remove(deletedReadDate);
 
-                //SetChangeTracker();
+                SetChangeTracker();
             }
         }
 

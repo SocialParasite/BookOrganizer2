@@ -132,14 +132,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 ? (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGreen, !UserMode.Item4).ToTuple()
                 : (!UserMode.Item1, DetailViewState.ViewMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
         }
-        
-        //protected void SetChangeTracker()
-        //{
-        //    if (!HasChanges)
-        //    {
-        //        HasChanges = DomainService.Repository.HasChanges();
-        //    }
-        //}
+
+        protected void SetChangeTracker()
+        {
+            if (!HasChanges)
+            {
+                HasChanges = DomainService.Repository.HasChanges();
+            }
+        }
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem);
 
