@@ -188,7 +188,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 RefreshSeriesReadOrder();
 
-                //SetChangeTracker();
+                SetChangeTracker();
             }
 
         }
@@ -224,7 +224,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             Books.Remove(Books.First(b => b.Id == id));
 
-            //SetChangeTracker();
+            SetChangeTracker();
         }
 
         private void OnFilterBookListExecute(string filter)
@@ -328,7 +328,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 RefreshSeriesReadOrder();
             }
-            //SetChangeTracker();
+            SetChangeTracker();
         }
 
         public override SeriesWrapper CreateWrapper(Series entity)
