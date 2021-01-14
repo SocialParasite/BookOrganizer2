@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.BookProfile.LanguageProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
 {
-    public class LanguageService : IDomainService<Language, LanguageId>
+    public class LanguageService : ISimpleDomainService<Language, LanguageId>
     {
         public IRepository<Language, LanguageId> Repository { get; }
 

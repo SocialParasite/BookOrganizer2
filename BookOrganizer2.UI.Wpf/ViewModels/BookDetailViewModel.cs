@@ -62,7 +62,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public BookDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            IDomainService<Book, BookId> domainService,
+            IBookDomainService domainService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
@@ -287,7 +287,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    book = await ((BookRepository)DomainService.Repository).LoadAsync(id).ConfigureAwait(false);
+                    book = await ((IBookDomainService)DomainService).LoadAsync(id).ConfigureAwait(false);
                 }
                 else
                 {
@@ -302,7 +302,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -590,7 +590,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             if (authorId != null)
             {
-                var removedAuthor = await ((IBookRepository) DomainService.Repository).GetAuthorAsync((Guid)authorId);
+                var removedAuthor = await ((IBookDomainService)DomainService).GetAuthorAsync((Guid)authorId);
                 Authors.Add(
                     new LookupItem
                     {
@@ -618,7 +618,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             if (lookupItem is null) return;
 
-            var addedAuthor = await ((IBookRepository) DomainService.Repository).GetAuthorAsync(lookupItem.Id);
+            var addedAuthor = await ((IBookDomainService) DomainService).GetAuthorAsync(lookupItem.Id);
 
             SelectedItem.Model.Authors.Add(addedAuthor);
 
@@ -652,7 +652,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
                 AllBookFormats.Add((lookupItem, true).ToTuple());
 
-                var newFormat = await ((IBookRepository) DomainService.Repository).GetFormatAsync(lookupItem.Id);
+                var newFormat = await ((IBookDomainService) DomainService).GetFormatAsync(lookupItem.Id);
 
                 SelectedItem.Model.Formats.Add(newFormat);
             }
@@ -674,7 +674,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
                 AllBookGenres.Add((lookupItem, true).ToTuple());
 
-                var newGenre = await ((IBookRepository) DomainService.Repository).GetGenreAsync(lookupItem.Id);
+                var newGenre = await ((IBookDomainService) DomainService).GetGenreAsync(lookupItem.Id);
 
                 SelectedItem.Model.Genres.Add(newGenre);
             }

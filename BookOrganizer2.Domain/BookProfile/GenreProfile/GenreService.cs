@@ -7,11 +7,11 @@ using static BookOrganizer2.Domain.BookProfile.GenreProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.GenreProfile
 {
-    public class GenreService : IDomainService<Genre, GenreId>
+    public class GenreService : ISimpleDomainService<Genre, GenreId>
     {
         public IRepository<Genre, GenreId> Repository { get; }
 
-        public GenreService(IRepository<Genre, GenreId> repository) 
+        public GenreService(IRepository<Genre, GenreId> repository)
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
         public Genre CreateItem() => Genre.NewGenre;

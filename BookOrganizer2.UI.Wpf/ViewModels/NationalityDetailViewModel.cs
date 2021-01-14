@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public NationalityDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            IDomainService<Nationality, NationalityId> domainService,
+            ISimpleDomainService<Nationality, NationalityId> domainService,
             INationalityLookupDataService nationalityLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
@@ -73,7 +73,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    nationality = await DomainService.Repository.GetAsync(id) ?? Nationality.NewNationality;
+                    nationality = await ((ISimpleDomainService<Nationality, NationalityId>)DomainService).GetAsync(id) 
+                                  ?? Nationality.NewNationality;
                 }
                 else
                 {
@@ -87,7 +88,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -148,7 +149,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnChangeEditedNationalityExecute(Guid? nationalityId)
         {
-            if (DomainService.Repository.HasChanges())
+            if (DomainService.HasChanges())
             {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Changing editable nationality will loose all unsaved changes. Are you sure you still want to switch?");
                 var result = DialogService.OpenDialog(dialog);
@@ -159,8 +160,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            DomainService.Repository.ResetTracking(SelectedItem.Model);
-            HasChanges = DomainService.Repository.HasChanges();
+            ((ISimpleDomainService<Nationality, NationalityId>)DomainService).ResetTracking(SelectedItem.Model);
+            HasChanges = DomainService.HasChanges();
 
             if (nationalityId is not null) await LoadAsync((Guid) nationalityId);
         }

@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.BookProfile.FormatProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.FormatProfile
 {
-    public class FormatService : IDomainService<Format, FormatId>
+    public class FormatService : ISimpleDomainService<Format, FormatId>
     {
         public IRepository<Format, FormatId> Repository { get; }
 

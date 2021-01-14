@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -29,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public SeriesDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
-                                     IDomainService<Series, SeriesId> domainService,
+                                     ISeriesDomainService domainService,
                                      IBookLookupDataService bookLookupDataService,
                                      IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
@@ -76,7 +75,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Series series = null;
                 if (id != default)
                 {
-                    series = await ((ISeriesRepository) DomainService.Repository).LoadAsync(id) ?? Series.NewSeries;
+                    series = await ((ISeriesDomainService) DomainService).LoadAsync(id) ?? Series.NewSeries;
                 }
                 else
                 {
@@ -89,7 +88,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -210,7 +209,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnAddBookToSeriesExecute(Guid? id)
         {
-            var addedBook = await (DomainService.Repository as ISeriesRepository).GetBookAsync((Guid)id);
+            var addedBook = await ((ISeriesDomainService) DomainService).GetBookAsync((Guid)id);
 
             SelectedItem.Model.Books
                 .Add(new ReadOrder

@@ -21,7 +21,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public PublisherDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
-                                     IDomainService<Publisher, PublisherId> domainService,
+                                     IPublisherDomainService domainService,
                                      IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
@@ -62,7 +62,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    publisher = await ((PublisherRepository)DomainService.Repository).LoadAsync(id);
+                    publisher = await ((IPublisherDomainService)DomainService).LoadAsync(id);
                 }
                 else
                 {
@@ -76,7 +76,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {

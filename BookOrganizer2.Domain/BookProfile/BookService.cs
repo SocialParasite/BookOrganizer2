@@ -5,7 +5,6 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
-using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
@@ -14,7 +13,7 @@ using static BookOrganizer2.Domain.BookProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
-    public class BookService : IDomainService<Book, BookId>
+    public class BookService : IBookDomainService
     {
         private readonly ILanguageLookupDataService _languageLookupDataService;
         private readonly IPublisherLookupDataService _publisherLookupDataService;

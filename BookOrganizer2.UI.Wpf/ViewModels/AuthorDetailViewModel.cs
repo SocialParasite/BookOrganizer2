@@ -34,7 +34,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public AuthorDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
-                                     IDomainService<Author, AuthorId> domainService,
+                                     IAuthorDomainService domainService,
                                      IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
@@ -88,7 +88,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    author = await ((AuthorRepository)DomainService.Repository).LoadAsync(id);
+                    author = await ((IAuthorDomainService)DomainService).LoadAsync(id);
                 }
                 else
                 {
@@ -103,7 +103,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -202,7 +202,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (_nationalityIsDirty)
             {
                 var currentNationality =
-                    await ((AuthorRepository)DomainService.Repository).GetNationalityAsync(SelectedNationality.Id);
+                    await ((IAuthorDomainService)DomainService).GetNationalityAsync(SelectedNationality.Id);
                 SelectedItem.Model.SetNationality(currentNationality);
             }
             base.SaveItemExecute();
