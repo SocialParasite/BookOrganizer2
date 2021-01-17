@@ -37,7 +37,7 @@ namespace BookOrganizer2.DA.Repositories
         {
             var entity = await Context.Set<TEntity>().FindAsync(id);
 
-            if (entity != null)
+            if (entity is not null)
                 Context.Set<TEntity>().Remove(entity);
         }
 

@@ -150,7 +150,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 var result = DialogService.OpenDialog(dialog);
 
-                if (result == DialogResult.No)
+                if (result is DialogResult.No)
                 {
                     return;
                 }

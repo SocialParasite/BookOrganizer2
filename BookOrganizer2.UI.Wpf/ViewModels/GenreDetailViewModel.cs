@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public GenreDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            ISimpleDomainService<Genre, GenreId> domainService,
+            IGenreService domainService,
             IGenreLookupDataService genreLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)

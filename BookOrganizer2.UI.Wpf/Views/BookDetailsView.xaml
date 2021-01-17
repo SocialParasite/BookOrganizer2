@@ -220,7 +220,7 @@
                     <TextBlock.InputBindings>
                         <MouseBinding
                             Command="{Binding ShowSelectedPublisherCommand}"
-                            CommandParameter="{Binding SelectedItem.Model.Publisher.Id}"
+                            CommandParameter="{Binding SelectedItem.Model.Publisher.Id.Value}"
                             MouseAction="LeftDoubleClick" />
                     </TextBlock.InputBindings>
                     <b:Interaction.Triggers>

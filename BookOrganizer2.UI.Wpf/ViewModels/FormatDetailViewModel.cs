@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public FormatDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            ISimpleDomainService<Format, FormatId> domainService,
+            IFormatService domainService,
             IFormatLookupDataService formatLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)

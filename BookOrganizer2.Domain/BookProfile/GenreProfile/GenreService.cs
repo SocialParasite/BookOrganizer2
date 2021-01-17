@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.BookProfile.GenreProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.GenreProfile
 {
-    public class GenreService : ISimpleDomainService<Genre, GenreId>
+    public class GenreService : IGenreService
     {
         public IRepository<Genre, GenreId> Repository { get; }
 
@@ -33,6 +33,18 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             {
                 Id = new GenreId(SequentialGuid.NewSequentialGuid()),
                 Name = model.Name
+            };
+
+            await Handle(command);
+
+            return await Repository.GetAsync(command.Id);
+        }
+        public async Task<Genre> AddNew(string name)
+        {
+            var command = new Create
+            {
+                Id = new GenreId(SequentialGuid.NewSequentialGuid()),
+                Name = name
             };
 
             await Handle(command);

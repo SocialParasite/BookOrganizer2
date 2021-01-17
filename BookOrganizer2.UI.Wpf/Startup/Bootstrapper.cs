@@ -1,10 +1,8 @@
-﻿using System.IO;
-using Autofac;
+﻿using Autofac;
 using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.Repositories.Lookups;
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.Wpf.Interfaces;
@@ -13,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Prism.Events;
 using Serilog;
+using System.IO;
 
 namespace BookOrganizer2.UI.Wpf.Startup
 {

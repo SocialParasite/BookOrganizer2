@@ -15,5 +15,8 @@ namespace BookOrganizer2.Domain.Services
         Task<Author> GetAuthorAsync(Guid id) => ((IBookRepository)Repository).GetAuthorAsync(id);
         Task<Format> GetFormatAsync(Guid id) => ((IBookRepository)Repository).GetFormatAsync(id);
         Task<Genre> GetGenreAsync(Guid id) => ((IBookRepository)Repository).GetGenreAsync(id);
+
+        Task<Genre> AddNewGenre(string name);
+        Task<Format> AddNewFormat(string name);
     }
 }
