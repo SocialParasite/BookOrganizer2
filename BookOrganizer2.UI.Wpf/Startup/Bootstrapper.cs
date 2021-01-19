@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Prism.Events;
 using Serilog;
 using System.IO;
+using BookOrganizer2.UI.Wpf.ViewModels.Reports;
 
 namespace BookOrganizer2.UI.Wpf.Startup
 {
@@ -40,10 +41,10 @@ namespace BookOrganizer2.UI.Wpf.Startup
                 .AsImplementedInterfaces()
                 .WithParameter("imagePath", "");
 
-            //builder.RegisterType<ReportLookupDataService>().AsImplementedInterfaces();
-            //builder.RegisterAssemblyTypes(typeof(AnnualBookStatisticsReportViewModel).Assembly)
-            //    .Where(type => type.Name.EndsWith("ReportViewModel"))
-            //    .Keyed<IReport>(c => c.Name);
+            builder.RegisterType<ReportLookupDataService>().AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(AnnualBookStatisticsReportViewModel).Assembly)
+                .Where(type => type.Name.EndsWith("ReportViewModel"))
+                .Keyed<IReport>(c => c.Name);
 
             builder.RegisterAssemblyTypes(typeof(AuthorRepository).Assembly)
                 .Where(type => type.Name.EndsWith("Repository"))

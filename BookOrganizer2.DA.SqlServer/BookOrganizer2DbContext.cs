@@ -7,6 +7,7 @@ using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.PublisherProfile;
+using BookOrganizer2.Domain.Reports;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.SqlServer
@@ -45,7 +46,12 @@ namespace BookOrganizer2.DA.SqlServer
             modelBuilder.ApplyConfiguration(new PublisherConfig());
             modelBuilder.ApplyConfiguration(new SeriesConfig());
             modelBuilder.ApplyConfiguration(new ReadOrderConfig());
+
+            modelBuilder.Entity<AnnualBookStatisticsReport>().HasNoKey();
+            modelBuilder.Entity<AnnualBookStatisticsInRangeReport>().HasNoKey();
+            modelBuilder.Entity<MonthlyReadsReport>().HasNoKey();
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             _connectionString ??= ConnectivityService.GetConnectionString();
