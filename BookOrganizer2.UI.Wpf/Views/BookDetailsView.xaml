@@ -220,7 +220,7 @@
                     <TextBlock.InputBindings>
                         <MouseBinding
                             Command="{Binding ShowSelectedPublisherCommand}"
-                            CommandParameter="{Binding SelectedItem.Model.Publisher.Id}"
+                            CommandParameter="{Binding SelectedItem.Model.Publisher.Id.Value}"
                             MouseAction="LeftDoubleClick" />
                     </TextBlock.InputBindings>
                     <b:Interaction.Triggers>
@@ -532,7 +532,7 @@
                                                 <ListBox
                                                     x:Name="booksInSeriesListBox"
                                                     MinWidth="300"
-                                                    BorderThickness="0" 
+                                                    BorderThickness="0"
                                                     ItemsSource="{Binding Series.Books}">
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate>

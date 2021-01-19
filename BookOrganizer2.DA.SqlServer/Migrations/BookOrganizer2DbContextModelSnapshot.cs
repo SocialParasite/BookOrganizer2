@@ -373,17 +373,21 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
 
             modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.ReadOrder", b =>
                 {
-                    b.HasOne("BookOrganizer2.Domain.BookProfile.Book", null)
-                        .WithMany()
+                    b.HasOne("BookOrganizer2.Domain.BookProfile.Book", "Book")
+                        .WithMany("Series")
                         .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BookOrganizer2.Domain.BookProfile.SeriesProfile.Series", null)
-                        .WithMany()
+                    b.HasOne("BookOrganizer2.Domain.BookProfile.SeriesProfile.Series", "Series")
+                        .WithMany("Books")
                         .HasForeignKey("SeriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Series");
                 });
 
             modelBuilder.Entity("BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Nationality", b =>
@@ -394,6 +398,13 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
             modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.Book", b =>
                 {
                     b.Navigation("ReadDates");
+
+                    b.Navigation("Series");
+                });
+
+            modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.SeriesProfile.Series", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

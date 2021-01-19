@@ -28,13 +28,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public GenreDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            IDomainService<Genre, GenreId> domainService,
+            IGenreService domainService,
             IGenreLookupDataService genreLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
             _genreLookupDataService = genreLookupDataService ?? throw new ArgumentNullException(nameof(genreLookupDataService));
-
             ChangeEditedGenreCommand = new DelegateCommand<Guid?>(OnChangeEditedGenreExecute);
             SaveItemCommand = new DelegateCommand(SaveItemExecute, base.SaveItemCanExecute)
                 .ObservesProperty(() => SelectedItem.Name);
@@ -73,7 +72,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    genre = await DomainService.Repository.GetAsync(id) ?? Genre.NewGenre;
+                    genre = await ((ISimpleDomainService<Genre, GenreId>)DomainService).GetAsync(id) ?? Genre.NewGenre;
                 }
                 else
                 {
@@ -87,7 +86,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -148,7 +147,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnChangeEditedGenreExecute(Guid? genreId)
         {
-            if (DomainService.Repository.HasChanges())
+            if (DomainService.HasChanges())
             {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Changing editable genre will loose all unsaved changes. Are you sure you still want to switch?");
                 var result = DialogService.OpenDialog(dialog);
@@ -159,8 +158,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            DomainService.Repository.ResetTracking(SelectedItem.Model);
-            HasChanges = DomainService.Repository.HasChanges();
+            ((ISimpleDomainService<Genre, GenreId>) DomainService).ResetTracking(SelectedItem.Model);
+            HasChanges = DomainService.HasChanges();
 
             if (genreId is not null) await LoadAsync((Guid) genreId);
         }

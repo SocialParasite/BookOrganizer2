@@ -273,7 +273,7 @@ namespace BookOrganizer2.DomainTests
         public void Valid_Authors()
         {
             var sut = CreateBook();
-            sut.Authors.Count.Should().Be(0);
+            sut.Authors?.Count.Should().Be(0);
 
             var newAuthors = new List<Author>
             {
@@ -291,7 +291,7 @@ namespace BookOrganizer2.DomainTests
         public void Valid_Genres()
         {
             var sut = CreateBook();
-            sut.Genres.Count.Should().Be(0);
+            sut.Genres?.Count.Should().Be(0);
 
             var newGenres = new List<Genre>
             {
@@ -309,7 +309,7 @@ namespace BookOrganizer2.DomainTests
         public void Valid_Formats()
         {
             var sut = CreateBook();
-            sut.Formats.Count.Should().Be(0);
+            sut.Formats?.Count.Should().Be(0);
 
             var newFormats = new List<Format>
             {
@@ -327,7 +327,7 @@ namespace BookOrganizer2.DomainTests
         public void Valid_ReadDates()
         {
             var sut = CreateBook();
-            sut.ReadDates.Count.Should().Be(0);
+            sut.ReadDates?.Count.Should().Be(0);
             var newReadDates = new List<BookReadDate>
             {
                 new BookReadDate(),

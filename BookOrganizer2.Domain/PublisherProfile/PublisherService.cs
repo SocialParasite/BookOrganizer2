@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.PublisherProfile.Commands;
 
 namespace BookOrganizer2.Domain.PublisherProfile
 {
-    public class PublisherService : IDomainService<Publisher, PublisherId>
+    public class PublisherService : IPublisherDomainService
     {
         public readonly INationalityLookupDataService NationalityLookupDataService;
         public IRepository<Publisher, PublisherId> Repository { get; }

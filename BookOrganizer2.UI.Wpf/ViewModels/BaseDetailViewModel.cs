@@ -26,7 +26,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         protected readonly ILogger Logger;
         protected readonly IDomainService<T, TId> DomainService;
         protected readonly IDialogService DialogService;
-
         private Tuple<bool, DetailViewState, SolidColorBrush, bool> _userMode;
         private bool _hasChanges;
         private Guid _selectedBookId;
@@ -137,7 +136,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             if (!HasChanges)
             {
-                HasChanges = DomainService.Repository.HasChanges();
+                HasChanges = DomainService.HasChanges();
             }
         }
         protected virtual bool SaveItemCanExecute()
@@ -151,7 +150,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 var result = DialogService.OpenDialog(dialog);
 
-                if (result == DialogResult.No)
+                if (result is DialogResult.No)
                 {
                     return;
                 }
@@ -165,8 +164,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
             else
             {
-                DomainService.Repository.Update(SelectedItem.Model);
-                await SaveRepository();
+                DomainService.Update(SelectedItem.Model);
+                await SaveAsync();
             }
 
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
@@ -184,7 +183,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void CloseDetailViewExecute()
         {
-            if (DomainService.Repository.HasChanges())
+            if (DomainService.HasChanges())
             {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Closing will loose all unsaved changes. Are you sure you still want to close this view?");
                 var result = DialogService.OpenDialog(dialog);
@@ -220,8 +219,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             if (result == DialogResult.No) { }
             else
             {
-                await DomainService.Repository.RemoveAsync(SelectedItem.Model.Id);
-                await SaveRepository();
+                await DomainService.RemoveAsync(SelectedItem.Model.Id);
+                await SaveAsync();
 
                 CloseDetailViewExecute();
 
@@ -234,7 +233,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private async Task SaveRepository()
-            => await DomainService.Repository.SaveAsync();
+        private async Task SaveAsync()
+            => await DomainService.SaveChanges();
     }
 }

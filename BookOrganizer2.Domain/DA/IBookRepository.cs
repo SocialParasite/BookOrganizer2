@@ -11,6 +11,7 @@ namespace BookOrganizer2.Domain.DA
 {
     public interface IBookRepository
     {
+        Task<Book> LoadAsync(BookId id);
         Task ChangeLanguage(Book book, LanguageId languageId);
         Task ChangePublisher(Book book, PublisherId publisherId);
         Task ChangeAuthors(Book book, ICollection<Author> authors);

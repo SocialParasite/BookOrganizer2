@@ -24,7 +24,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                  [NotNull] ILanguageLookupDataService languageLookupDataService)
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this._nationalityLookupDataService = nationalityLookupDataService 
+            _nationalityLookupDataService = nationalityLookupDataService 
                                                 ?? throw new ArgumentNullException(nameof(nationalityLookupDataService));
             _formatLookupDataService = formatLookupDataService ?? throw new ArgumentNullException(nameof(formatLookupDataService));
             _genreLookupDataService = genreLookupDataService ?? throw new ArgumentNullException(nameof(genreLookupDataService));

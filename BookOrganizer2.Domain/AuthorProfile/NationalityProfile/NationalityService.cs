@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
-    public class NationalityService : IDomainService<Nationality, NationalityId>
+    public class NationalityService : ISimpleDomainService<Nationality, NationalityId>
     {
         public IRepository<Nationality, NationalityId> Repository { get; }
 

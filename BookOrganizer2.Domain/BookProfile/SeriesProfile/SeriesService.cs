@@ -9,7 +9,7 @@ using static BookOrganizer2.Domain.BookProfile.SeriesProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
 {
-    public class SeriesService : IDomainService<Series, SeriesId>
+    public class SeriesService : ISeriesDomainService
     {
         public IRepository<Series, SeriesId> Repository { get; }
 

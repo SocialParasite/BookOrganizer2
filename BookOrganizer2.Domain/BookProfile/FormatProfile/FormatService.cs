@@ -7,7 +7,7 @@ using static BookOrganizer2.Domain.BookProfile.FormatProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile.FormatProfile
 {
-    public class FormatService : IDomainService<Format, FormatId>
+    public class FormatService : IFormatService
     {
         public IRepository<Format, FormatId> Repository { get; }
 
@@ -35,6 +35,19 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
             {
                 Id = new FormatId(SequentialGuid.NewSequentialGuid()),
                 Name = model.Name
+            };
+
+            await Handle(command);
+
+            return await Repository.GetAsync(command.Id);
+        }
+
+        public async Task<Format> AddNew(string name)
+        {
+            var command = new Create
+            {
+                Id = new FormatId(SequentialGuid.NewSequentialGuid()),
+                Name = name
             };
 
             await Handle(command);

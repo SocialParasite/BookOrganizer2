@@ -8,7 +8,7 @@ using static BookOrganizer2.Domain.AuthorProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
-    public class AuthorService : IDomainService<Author, AuthorId>
+    public class AuthorService : IAuthorDomainService
     {
         public readonly INationalityLookupDataService NationalityLookupDataService;
         public IRepository<Author, AuthorId> Repository { get; }

@@ -10,5 +10,11 @@ namespace BookOrganizer2.Domain.Services
         T CreateItem();
         Task<T> AddNew(T model);
         Guid GetId(TId id);
+
+        // BaseDetailViewModel
+        Task SaveChanges() => Repository.SaveAsync();
+        Task RemoveAsync(TId id) => Repository.RemoveAsync(id);
+        bool HasChanges() => Repository.HasChanges();
+        void Update(T entity) => Repository.Update(entity);
     }
 }

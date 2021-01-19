@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -22,19 +21,19 @@ using Serilog;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
-    public class SeriesDetailViewModel : BaseDetailViewModel<Series, SeriesId, SeriesWrapper>, IDropTarget
+    public sealed class SeriesDetailViewModel : BaseDetailViewModel<Series, SeriesId, SeriesWrapper>, IDropTarget
     {
-        private SeriesWrapper selectedItem;
-        private readonly IBookLookupDataService bookLookupDataService;
+        private SeriesWrapper _selectedItem;
+        private readonly IBookLookupDataService _bookLookupDataService;
 
         public SeriesDetailViewModel(IEventAggregator eventAggregator,
                                      ILogger logger,
-                                     IDomainService<Series, SeriesId> domainService,
+                                     ISeriesDomainService domainService,
                                      IBookLookupDataService bookLookupDataService,
                                      IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
-            this.bookLookupDataService = bookLookupDataService ?? throw new ArgumentNullException(nameof(bookLookupDataService));
+            this._bookLookupDataService = bookLookupDataService ?? throw new ArgumentNullException(nameof(bookLookupDataService));
 
             AddSeriesPictureCommand = new DelegateCommand(OnAddSeriesPictureExecute);
             FilterBookListCommand = new DelegateCommand<string>(OnFilterBookListExecute);
@@ -56,10 +55,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public override SeriesWrapper SelectedItem
         {
-            get => selectedItem;
+            get => _selectedItem;
             set
             {
-                selectedItem = value ?? throw new ArgumentNullException(nameof(SelectedItem));
+                _selectedItem = value ?? throw new ArgumentNullException(nameof(SelectedItem));
                 OnPropertyChanged();
             }
         }
@@ -76,7 +75,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Series series = null;
                 if (id != default)
                 {
-                    series = await ((ISeriesRepository) DomainService.Repository).LoadAsync(id) ?? Series.NewSeries;
+                    series = await ((ISeriesDomainService) DomainService).LoadAsync(id) ?? Series.NewSeries;
                 }
                 else
                 {
@@ -89,7 +88,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -210,7 +209,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnAddBookToSeriesExecute(Guid? id)
         {
-            var addedBook = await (DomainService.Repository as ISeriesRepository).GetBookAsync((Guid)id);
+            var addedBook = await ((ISeriesDomainService) DomainService).GetBookAsync((Guid)id);
 
             SelectedItem.Model.Books
                 .Add(new ReadOrder
@@ -266,19 +265,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private async Task<IEnumerable<LookupItem>> GetBookList()
-            => await bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));
+            => await _bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));
 
         private void OnAddSeriesPictureExecute()
         {
             SelectedItem.PicturePath = FileExplorerService.BrowsePicture() ?? SelectedItem.PicturePath;
         }
 
+        public override SeriesWrapper CreateWrapper(Series entity)
+        {
+            var wrapper = new SeriesWrapper(entity);
+            return wrapper;
+        }
+
         public void DragOver(IDropInfo dropInfo)
         {
-            ReadOrder sourceItem = dropInfo.Data as ReadOrder;
-            ReadOrder targetItem = dropInfo.TargetItem as ReadOrder;
-
-            if (sourceItem != null && targetItem != null)
+            if (dropInfo.Data is ReadOrder _ && dropInfo.TargetItem is ReadOrder _)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Copy;
@@ -329,12 +331,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 RefreshSeriesReadOrder();
             }
             SetChangeTracker();
-        }
-
-        public override SeriesWrapper CreateWrapper(Series entity)
-        {
-            var wrapper = new SeriesWrapper(entity);
-            return wrapper;
         }
     }
 }

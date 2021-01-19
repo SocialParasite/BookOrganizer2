@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public LanguageDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            IDomainService<Language, LanguageId> domainService,
+            ISimpleDomainService<Language, LanguageId> domainService,
             ILanguageLookupDataService languageLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
@@ -73,7 +73,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    language = await DomainService.Repository.GetAsync(id) ?? Language.NewLanguage;
+                    language = await ((ISimpleDomainService<Language, LanguageId>)DomainService).GetAsync(id) ?? Language.NewLanguage;
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -148,7 +148,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnChangeEditedLanguageExecute(Guid? languageId)
         {
-            if (DomainService.Repository.HasChanges())
+            if (DomainService.HasChanges())
             {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Changing editable language will loose all unsaved changes. Are you sure you still want to switch?");
                 var result = DialogService.OpenDialog(dialog);
@@ -159,8 +159,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            DomainService.Repository.ResetTracking(SelectedItem.Model);
-            HasChanges = DomainService.Repository.HasChanges();
+            ((ISimpleDomainService<Language, LanguageId>)DomainService).ResetTracking(SelectedItem.Model);
+            HasChanges = DomainService.HasChanges();
 
             if (languageId is not null) await LoadAsync((Guid) languageId);
         }

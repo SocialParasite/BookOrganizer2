@@ -5,7 +5,6 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
-using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
@@ -14,13 +13,15 @@ using static BookOrganizer2.Domain.BookProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
-    public class BookService : IDomainService<Book, BookId>
+    public class BookService : IBookDomainService
     {
         private readonly ILanguageLookupDataService _languageLookupDataService;
         private readonly IPublisherLookupDataService _publisherLookupDataService;
         private readonly IAuthorLookupDataService _authorLookupDataService;
         private readonly IFormatLookupDataService _formatLookupDataService;
         private readonly IGenreLookupDataService _genreLookupDataService;
+        private readonly IGenreService _genreService;
+        private readonly IFormatService _formatService;
 
         public IRepository<Book, BookId> Repository { get; }
 
@@ -29,7 +30,9 @@ namespace BookOrganizer2.Domain.BookProfile
             IPublisherLookupDataService publisherLookupDataService = null,
             IAuthorLookupDataService authorLookupDataService = null,
             IFormatLookupDataService formatLookupDataService = null,
-            IGenreLookupDataService genreLookupDataService = null)
+            IGenreLookupDataService genreLookupDataService = null,
+            IGenreService genreService = null,
+            IFormatService formatService = null)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _languageLookupDataService = languageLookupDataService;
@@ -37,6 +40,8 @@ namespace BookOrganizer2.Domain.BookProfile
             _authorLookupDataService = authorLookupDataService;
             _formatLookupDataService = formatLookupDataService;
             _genreLookupDataService = genreLookupDataService;
+            _genreService = genreService;
+            _formatService = formatService;
         }
 
         public Book CreateItem()
@@ -273,19 +278,8 @@ namespace BookOrganizer2.Domain.BookProfile
         public Task<IEnumerable<LookupItem>> GetGenreLookupAsync(string viewModelName)
             => _genreLookupDataService.GetGenreLookupAsync(viewModelName);
 
-        public async Task<Genre> AddNewBookGenre(string name)
-        {
-            GenreProfile.Commands.Create cmd = new GenreProfile.Commands.Create
-            {
-                Id = SequentialGuid.NewSequentialGuid(), 
-                Name = name
-            };
+        public Task<Genre> AddNewGenre(string name) => _genreService.AddNew(name);
 
-            // TODO: How to access GenreService??!
-
-            var test = Genre.NewGenre;
-            return test;
-            //var genre = await _genreService.Handle(cmd);
-        }
+        public Task<Format> AddNewFormat(string name) => _formatService.AddNew(name);
     }
 }

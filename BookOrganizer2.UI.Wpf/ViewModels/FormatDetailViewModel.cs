@@ -28,7 +28,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public FormatDetailViewModel(IEventAggregator eventAggregator,
             ILogger logger,
-            IDomainService<Format, FormatId> domainService,
+            IFormatService domainService,
             IFormatLookupDataService formatLookupDataService,
             IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
@@ -73,7 +73,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 if (id != default)
                 {
-                    format = await DomainService.Repository.GetAsync(id) ?? Format.NewFormat;
+                    format = await ((ISimpleDomainService<Format, FormatId>)DomainService).GetAsync(id) ?? Format.NewFormat;
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (!HasChanges)
                     {
-                        HasChanges = DomainService.Repository.HasChanges();
+                        HasChanges = DomainService.HasChanges();
                     }
                     if (e.PropertyName == nameof(SelectedItem.HasErrors))
                     {
@@ -143,12 +143,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NewItemAdded();
         }
 
-        private async Task<IEnumerable<LookupItem>> GetFormatList()
-            => await _formatLookupDataService.GetFormatLookupAsync(nameof(FormatDetailViewModel));
+        private Task<IEnumerable<LookupItem>> GetFormatList()
+            => _formatLookupDataService.GetFormatLookupAsync(nameof(FormatDetailViewModel));
 
         private async void OnChangeEditedFormatExecute(Guid? formatId)
         {
-            if (DomainService.Repository.HasChanges())
+            if (DomainService.HasChanges())
             {
                 var dialog = new OkCancelViewModel("Close the view?", "You have made changes. Changing editable format will loose all unsaved changes. Are you sure you still want to switch?");
                 var result = DialogService.OpenDialog(dialog);
@@ -159,8 +159,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            DomainService.Repository.ResetTracking(SelectedItem.Model);
-            HasChanges = DomainService.Repository.HasChanges();
+            ((ISimpleDomainService<Format, FormatId>)DomainService).ResetTracking(SelectedItem.Model);
+            HasChanges = DomainService.HasChanges();
 
             if (formatId is not null) await LoadAsync((Guid) formatId);
         }

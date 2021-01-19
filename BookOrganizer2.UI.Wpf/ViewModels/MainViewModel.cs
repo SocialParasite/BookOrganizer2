@@ -40,7 +40,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             DetailViewModels = new ObservableCollection<IDetailViewModel>();
-            TEMP_DetailViewModels = new ObservableCollection<IDetailViewModel>();
 
             OpenSelectedViewCommand = new DelegateCommand<string>(OnOpenSelectedViewExecute);
 
@@ -61,7 +60,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             _eventAggregator.GetEvent<OpenDetailViewEvent>()
                 .Subscribe(OnOpenDetailViewMatchingSelectedId);
-            if (_eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() != null)
+
+            if (_eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() is not null)
             {
                 _eventAggregator.GetEvent<OpenItemViewEvent>()
                     .Subscribe(OnOpenSelectedItemView);
@@ -75,14 +75,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 _eventAggregator.GetEvent<OpenItemMatchingSelectedAuthorIdEvent<Guid>>()
                     .Subscribe(OnOpenAuthorMatchingSelectedId);
 
-            _eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
-                .Subscribe(OnOpenSeriesMatchingSelectedId);
+                _eventAggregator.GetEvent<OpenItemMatchingSelectedSeriesIdEvent<Guid>>()
+                    .Subscribe(OnOpenSeriesMatchingSelectedId);
 
-            _eventAggregator.GetEvent<CloseDetailsViewEvent>()
-                .Subscribe(CloseDetailsView);
+                _eventAggregator.GetEvent<CloseDetailsViewEvent>()
+                    .Subscribe(CloseDetailsView);
 
-            _eventAggregator.GetEvent<ChangeDetailsViewEvent>()
-                .Subscribe(OnChangeDetailsView);
+                _eventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                    .Subscribe(OnChangeDetailsView);
             }
         }
 
@@ -91,7 +91,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand CreateNewItemCommand { get; set; }
 
         public ObservableCollection<IDetailViewModel> DetailViewModels { get; }
-        public ObservableCollection<IDetailViewModel> TEMP_DetailViewModels { get; }
 
         public IDetailViewModel SelectedDetailViewModel
         {
