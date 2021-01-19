@@ -143,8 +143,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NewItemAdded();
         }
 
-        private async Task<IEnumerable<LookupItem>> GetFormatList()
-            => await _formatLookupDataService.GetFormatLookupAsync(nameof(FormatDetailViewModel));
+        private Task<IEnumerable<LookupItem>> GetFormatList()
+            => _formatLookupDataService.GetFormatLookupAsync(nameof(FormatDetailViewModel));
 
         private async void OnChangeEditedFormatExecute(Guid? formatId)
         {
