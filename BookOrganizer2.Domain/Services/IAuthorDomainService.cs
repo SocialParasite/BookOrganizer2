@@ -10,6 +10,6 @@ namespace BookOrganizer2.Domain.Services
     {
         Task<Author> LoadAsync(AuthorId id) => ((IAuthorRepository)Repository).LoadAsync(id);
 
-        Task<Nationality> GetNationalityAsync(Guid id) => ((IAuthorRepository)Repository).GetNationalityAsync(id);
+        ValueTask<Nationality> GetNationalityAsync(Guid id) => ((IAuthorRepository)Repository).GetNationalityAsync(id);
     }
 }

@@ -162,7 +162,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 throw new ArgumentException();
         }
 
-        private async Task UpdateNationalityAsync(Author author, NationalityId nationalityId) 
-            => await ((IAuthorRepository) Repository).ChangeNationality(author, nationalityId);
+        private Task UpdateNationalityAsync(Author author, NationalityId nationalityId) 
+            => ((IAuthorRepository) Repository).ChangeNationality(author, nationalityId);
     }
 }
