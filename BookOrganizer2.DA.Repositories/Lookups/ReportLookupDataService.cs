@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
-using BookOrganizer2.DA.SqlServer;
+﻿using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.DA.Reports;
 using BookOrganizer2.Domain.Reports;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
