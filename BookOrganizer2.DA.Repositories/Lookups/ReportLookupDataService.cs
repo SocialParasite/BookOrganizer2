@@ -23,35 +23,29 @@ namespace BookOrganizer2.DA.Repositories.Lookups
 
         public async Task<IEnumerable<AnnualBookStatisticsReport>> GetAnnualBookStatisticsReportAsync(int? year = null)
         {
-            using (var ctx = _contextCreator())
-            {
-                return await ctx.Set<AnnualBookStatisticsReport>()
-                    .FromSqlInterpolated($"EXEC GetAnnualReadReport {year ?? DateTime.Now.Year}")
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            await using var ctx = _contextCreator();
+            return await ctx.Set<AnnualBookStatisticsReport>()
+                .FromSqlInterpolated($"EXEC GetAnnualReadReport {year ?? DateTime.Now.Year}")
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<AnnualBookStatisticsInRangeReport>> GetAnnualBookStatisticsInRangeReportAsync(int? startYear, int? endYear)
         {
-            using (var ctx = _contextCreator())
-            {
-                return await ctx.Set<AnnualBookStatisticsInRangeReport>()
-                    .FromSqlInterpolated($"EXEC GetPeriodicalReadReport {startYear ?? DateTime.Now.Year}, {endYear ?? DateTime.Now.Year}")
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            await using var ctx = _contextCreator();
+            return await ctx.Set<AnnualBookStatisticsInRangeReport>()
+                .FromSqlInterpolated($"EXEC GetPeriodicalReadReport {startYear ?? DateTime.Now.Year}, {endYear ?? DateTime.Now.Year}")
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<MonthlyReadsReport>> GetMonthlyReadsReportAsync(int? year = null, int? month = null)
         {
-            using (var ctx = _contextCreator())
-            {
-                return await ctx.Set<MonthlyReadsReport>()
-                    .FromSqlInterpolated($"EXEC GetMonthlyReads {year ?? DateTime.Now.Year}, {month ?? DateTime.Now.Month}")
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
+            await using var ctx = _contextCreator();
+            return await ctx.Set<MonthlyReadsReport>()
+                .FromSqlInterpolated($"EXEC GetMonthlyReads {year ?? DateTime.Now.Year}, {month ?? DateTime.Now.Month}")
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

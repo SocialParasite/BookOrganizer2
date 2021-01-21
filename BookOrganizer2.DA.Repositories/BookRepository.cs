@@ -117,7 +117,7 @@ namespace BookOrganizer2.DA.Repositories
         {
             var entity = await LoadAsync(id).ConfigureAwait(false);
 
-            if (entity != null)
+            if (entity is not null)
                 Context.Remove(entity);
         }
 
