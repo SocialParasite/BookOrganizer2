@@ -1,12 +1,13 @@
+using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
+using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Shared;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BookOrganizer2.DA.SqlServer;
-using BookOrganizer2.Domain.DA;
-using BookOrganizer2.Domain.Shared;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -26,6 +27,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             using (var ctx = _contextCreator())
             {
                 return await ctx.Series
+                    .Include(b => b.Books)
+                    .ThenInclude(b => b.Book)
+                    .ThenInclude(b => b.Formats)
                     .AsNoTracking()
                     .OrderBy(s => s.Name)
                     .Select(s =>
@@ -35,61 +39,61 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                             DisplayMember = s.Name,
                             Picture = GetPictureThumbnail(s.PicturePath) ?? _placeholderPic,
                             ViewModelName = viewModelName,
-                            //ItemStatus = CheckSeriesStatus(s)
+                            ItemStatus = CheckSeriesStatus(s)
                         })
                     .ToListAsync();
             }
 
+        }
 
-            //SeriesStatus CheckSeriesStatus(Series series)
-            //{
-            //    var readStatus = series.SeriesReadOrder.All(b => b.Book.IsRead);
+        static SeriesStatus CheckSeriesStatus(Series series)
+        {
+            var readStatus = series.Books.All(b => b.Book.IsRead);
 
-            //    bool partlyRead = false;
-            //    bool partlyOwned = false;
+            bool partlyRead = false;
+            bool partlyOwned = false;
 
-            //    if (!readStatus) partlyRead = series.SeriesReadOrder.Any(b => b.Book.IsRead);
+            if (!readStatus) partlyRead = series.Books.Any(b => b.Book.IsRead);
 
-            //    var owned = series.SeriesReadOrder.All(b => b.Book.FormatLink.Count > 0);
+            var owned = series.Books.All(b => b.Book.Formats.Count > 0);
 
-            //    if (!readStatus) partlyOwned = series.SeriesReadOrder.Any(b => b.Book.FormatLink.Count > 0);
+            if (!readStatus) partlyOwned = series.Books.Any(b => b.Book.Formats.Count > 0);
 
-            //    if (readStatus && owned)
-            //        return SeriesStatus.AllOwnedAllRead;
+            if (readStatus && owned)
+                return SeriesStatus.AllOwnedAllRead;
 
-            //    if (!partlyOwned && !partlyRead)
-            //        return SeriesStatus.NoneOwnedNoneRead;
+            if (!partlyOwned && !partlyRead)
+                return SeriesStatus.NoneOwnedNoneRead;
 
-            //    if (!owned && partlyRead)
-            //        return SeriesStatus.NoneOwnedPartlyRead;
+            if (!owned && partlyRead)
+                return SeriesStatus.NoneOwnedPartlyRead;
 
-            //    if (readStatus && !owned)
-            //        return SeriesStatus.NoneOwnedAllRead;
+            if (readStatus && !owned)
+                return SeriesStatus.NoneOwnedAllRead;
 
-            //    if (!partlyRead && partlyOwned)
-            //        return SeriesStatus.PartlyOwnedNoneRead;
-
-
-            //    if (partlyRead && partlyOwned)
-            //        return SeriesStatus.PartlyOwnedPartlyRead;
-
-            //    if (readStatus && partlyOwned)
-            //        return SeriesStatus.PartlyOwnedAllRead;
+            if (!partlyRead && partlyOwned)
+                return SeriesStatus.PartlyOwnedNoneRead;
 
 
-            //    if (owned && !partlyRead)
-            //        return SeriesStatus.AllOwnedPartlyRead;
+            if (partlyRead && partlyOwned)
+                return SeriesStatus.PartlyOwnedPartlyRead;
 
-            //    if (owned && partlyRead)
-            //        return SeriesStatus.AllOwnedPartlyRead;
+            if (readStatus && partlyOwned)
+                return SeriesStatus.PartlyOwnedAllRead;
 
-            //    return SeriesStatus.None;
-            //}
+
+            if (owned && !partlyRead)
+                return SeriesStatus.AllOwnedPartlyRead;
+
+            if (owned && partlyRead)
+                return SeriesStatus.AllOwnedPartlyRead;
+
+            return SeriesStatus.None;
         }
 
         private static string GetPictureThumbnail(string picturePath)
         {
-            var extension = Path.GetExtension(picturePath);
+            //var extension = Path.GetExtension(picturePath);
             var fileName = Path.GetFileNameWithoutExtension(picturePath);
             //var thumbnail = $"{fileName}_thumb{extension}";
             var thumbnail = $"{fileName}_thumb.jpg";
