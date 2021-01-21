@@ -91,7 +91,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         {
             var extension = Path.GetExtension(picturePath);
             var fileName = Path.GetFileNameWithoutExtension(picturePath);
-            var thumbnail = $"{fileName}_thumb{extension}";
+            //var thumbnail = $"{fileName}_thumb{extension}";
+            var thumbnail = $"{fileName}_thumb.jpg";
             var filePath = Path.GetDirectoryName(picturePath);
             var thumbPath = $@"{filePath}\{thumbnail}";
             return thumbPath;

@@ -8,6 +8,6 @@ namespace BookOrganizer2.Domain.DA
     {
         Task<Author> LoadAsync(AuthorId id);
         Task ChangeNationality(Author author, NationalityId nationalityId);
-        Task<Nationality> GetNationalityAsync(NationalityId id);
+        ValueTask<Nationality> GetNationalityAsync(NationalityId id);
     }
 }

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using BookOrganizer2.Domain.BookProfile;
 
 namespace BookOrganizer2.UI.BOThemes.Converters
 {
@@ -43,13 +44,6 @@ namespace BookOrganizer2.UI.BOThemes.Converters
             throw new NotSupportedException();
         }
 
-        [Flags]
-        public enum BookStatus
-        {
-            None = 0,
-            Read = 1,
-            Owned = 2
-        }
 
         [Flags]
         public enum SeriesStatus

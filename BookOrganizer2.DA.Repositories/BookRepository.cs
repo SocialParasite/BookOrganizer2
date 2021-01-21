@@ -117,27 +117,27 @@ namespace BookOrganizer2.DA.Repositories
         {
             var entity = await LoadAsync(id).ConfigureAwait(false);
 
-            if (entity != null)
+            if (entity is not null)
                 Context.Remove(entity);
         }
 
-        private async Task<Language> GetLanguageAsync(LanguageId languageId) 
-            => await Context.Languages.FindAsync(languageId).ConfigureAwait(false);
+        private ValueTask<Language> GetLanguageAsync(LanguageId languageId) 
+            => Context.Languages.FindAsync(languageId);
 
-        private async Task<Publisher> GetPublisherAsync(PublisherId publisherId)
-            => await Context.Publishers.FindAsync(publisherId).ConfigureAwait(false);
+        private ValueTask<Publisher> GetPublisherAsync(PublisherId publisherId)
+            => Context.Publishers.FindAsync(publisherId);
 
-        public async Task<Author> GetAuthorAsync(AuthorId authorId)
-            => await Context.Authors.FindAsync(authorId).ConfigureAwait(false);
+        public ValueTask<Author> GetAuthorAsync(AuthorId authorId)
+            => Context.Authors.FindAsync(authorId);
 
-        public async Task<Format> GetFormatAsync(FormatId formatId)
-            => await Context.Formats.FindAsync(formatId).ConfigureAwait(false);
+        public ValueTask<Format> GetFormatAsync(FormatId formatId)
+            => Context.Formats.FindAsync(formatId);
 
-        public async Task<Genre> GetGenreAsync(GenreId genreId)
-            => await Context.Genres.FindAsync(genreId).ConfigureAwait(false);
+        public ValueTask<Genre> GetGenreAsync(GenreId genreId)
+            => Context.Genres.FindAsync(genreId);
 
-        private async Task<Series> GetSeriesAsync(SeriesId seriesId)
-            => await Context.Series.FindAsync(seriesId).ConfigureAwait(false);
+        private ValueTask<Series> GetSeriesAsync(SeriesId seriesId)
+            => Context.Series.FindAsync(seriesId);
 
     }
 }

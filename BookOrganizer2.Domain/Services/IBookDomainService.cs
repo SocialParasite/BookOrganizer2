@@ -12,9 +12,9 @@ namespace BookOrganizer2.Domain.Services
     {
         Task<Book> LoadAsync(BookId id) => ((IBookRepository)Repository).LoadAsync(id);
 
-        Task<Author> GetAuthorAsync(Guid id) => ((IBookRepository)Repository).GetAuthorAsync(id);
-        Task<Format> GetFormatAsync(Guid id) => ((IBookRepository)Repository).GetFormatAsync(id);
-        Task<Genre> GetGenreAsync(Guid id) => ((IBookRepository)Repository).GetGenreAsync(id);
+        ValueTask<Author> GetAuthorAsync(Guid id) => ((IBookRepository)Repository).GetAuthorAsync(id);
+        ValueTask<Format> GetFormatAsync(Guid id) => ((IBookRepository)Repository).GetFormatAsync(id);
+        ValueTask<Genre> GetGenreAsync(Guid id) => ((IBookRepository)Repository).GetGenreAsync(id);
 
         Task<Genre> AddNewGenre(string name);
         Task<Format> AddNewFormat(string name);

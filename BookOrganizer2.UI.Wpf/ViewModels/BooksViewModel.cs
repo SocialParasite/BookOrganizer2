@@ -53,21 +53,5 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
-        //public override async Task InitializeRepositoryAsync()
-        //{
-        //    try
-        //    {
-        //        Items = await _bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));
-
-        //        EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var dialog = new NotificationViewModel("Exception", ex.Message);
-        //        DialogService.OpenDialog(dialog);
-
-        //        Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
-        //    }
-        //}
     }
 }

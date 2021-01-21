@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.BookProfile;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -33,16 +34,31 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                         Id = a.Id,
                         DisplayMember = a.Title,
                         Picture = GetPictureThumbnail(a.BookCoverPath) ?? _placeholderPic,
-                        ViewModelName = viewModelName
+                        ViewModelName = viewModelName, 
+                        ItemStatus = CheckBookStatus(a.IsRead, a.Formats.Count > 0)
                     })
                 .ToListAsync();
         }
 
+        static BookStatus CheckBookStatus(bool read, bool owned)
+        {
+            switch (read)
+            {
+                case true when owned:
+                    return BookStatus.Read | BookStatus.Owned;
+                case true:
+                    return BookStatus.Read;
+            }
+
+            return owned ? BookStatus.Owned : BookStatus.None;
+        }
+
         private static string GetPictureThumbnail(string picturePath)
         {
-            var extension = Path.GetExtension(picturePath);
+            //var extension = Path.GetExtension(picturePath);
             var fileName = Path.GetFileNameWithoutExtension(picturePath);
-            var thumbnail = $"{fileName}_thumb{extension}";
+            //var thumbnail = $"{fileName}_thumb{extension}";
+            var thumbnail = $"{fileName}_thumb.jpg";
             var filePath = Path.GetDirectoryName(picturePath);
             var thumbPath = $@"{filePath}\{thumbnail}";
             return thumbPath;

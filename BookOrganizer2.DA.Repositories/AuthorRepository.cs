@@ -18,8 +18,7 @@ namespace BookOrganizer2.DA.Repositories
             if (id != default)
                 return await Context.Authors
                     .Include(b => b.Nationality)
-                    //.Include(b => b.BooksLink)
-                    //.ThenInclude(bl => bl.Book)
+                    .Include(b => b.Books)
                     .FirstOrDefaultAsync(b => b.Id == id);
 
             return Author.NewAuthor;
@@ -32,7 +31,7 @@ namespace BookOrganizer2.DA.Repositories
             await Context.SaveChangesAsync();
         }
 
-        public async Task<Nationality> GetNationalityAsync(NationalityId nationalityId) 
-            => await Context.Nationalities.FindAsync(nationalityId);
+        public ValueTask<Nationality> GetNationalityAsync(NationalityId nationalityId) 
+            => Context.Nationalities.FindAsync(nationalityId);
     }
 }

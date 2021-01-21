@@ -208,7 +208,7 @@
                             x:Name="bibliographyListBox"
                             HorizontalContentAlignment="Stretch"
                             BorderThickness="0"
-                            ItemsSource="{Binding SelectedItem.Model.BooksLink}">
+                            ItemsSource="{Binding SelectedItem.Model.Books}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -223,18 +223,18 @@
                                                         x:Name="bookCoverImage"
                                                         MaxWidth="75"
                                                         MaxHeight="75"
-                                                        Source="{Binding Book.BookCoverPicturePath}" />
+                                                        Source="{Binding BookCoverPath}" />
                                                     <TextBlock
                                                         x:Name="basicLabelTextBlock"
                                                         Grid.Column="1"
                                                         Margin="20,0,0,0"
                                                         FontSize="18"
-                                                        Text="{Binding Book.Title}"
+                                                        Text="{Binding Title}"
                                                         TextWrapping="Wrap">
                                                         <TextBlock.InputBindings>
                                                             <MouseBinding
                                                                 Command="{Binding DataContext.ShowSelectedBookCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}}"
-                                                                CommandParameter="{Binding Book.Id}"
+                                                                CommandParameter="{Binding Id.Value}"
                                                                 MouseAction="LeftDoubleClick" />
                                                         </TextBlock.InputBindings>
                                                     </TextBlock>
