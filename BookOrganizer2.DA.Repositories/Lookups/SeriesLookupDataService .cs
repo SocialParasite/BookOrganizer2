@@ -22,74 +22,48 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             _placeholderPic = imagePath;
         }
 
-        public async Task<IEnumerable<LookupItem>> GetSeriesLookupAsync(string viewModelName)
+        public async Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName)
         {
-            using (var ctx = _contextCreator())
+            await using var ctx = _contextCreator();
+            return await ctx.Series
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Book)
+                .ThenInclude(b => b.Formats)
+                .AsNoTracking()
+                .OrderBy(s => s.Name)
+                .Select(s =>
+                    new SeriesLookupItem
+                    {
+                        Id = s.Id,
+                        DisplayMember = s.Name,
+                        Picture = GetPictureThumbnail(s.PicturePath) ?? _placeholderPic,
+                        ViewModelName = viewModelName,
+                        InfoText = GetInfoText(s),
+                        SeriesState = GetSeriesState(s)
+                    })
+                .ToListAsync();
+        }
+
+        private static string GetInfoText(Series s)
+        {
+            return $"Books in series: {GetBookCount(s)} \rOwned: {GetOwnedBooks(s)} \rRead: {GetReadBooks(s)}";
+        }
+
+        private static SeriesState GetSeriesState(Series s)
+        {
+            return new()
             {
-                return await ctx.Series
-                    .Include(b => b.Books)
-                    .ThenInclude(b => b.Book)
-                    .ThenInclude(b => b.Formats)
-                    .AsNoTracking()
-                    .OrderBy(s => s.Name)
-                    .Select(s =>
-                        new LookupItem
-                        {
-                            Id = s.Id,
-                            DisplayMember = s.Name,
-                            Picture = GetPictureThumbnail(s.PicturePath) ?? _placeholderPic,
-                            ViewModelName = viewModelName,
-                            ItemStatus = CheckSeriesStatus(s)
-                        })
-                    .ToListAsync();
-            }
-
+                BookCount = GetBookCount(s),
+                OwnedBookCount = GetOwnedBooks(s),
+                ReadBookCount = GetReadBooks(s)
+            };
         }
 
-        static SeriesStatus CheckSeriesStatus(Series series)
-        {
-            var readStatus = series.Books.All(b => b.Book.IsRead);
+        private static int GetReadBooks(Series series) => series.Books.Count(b => b.Book.IsRead) / 2;
 
-            bool partlyRead = false;
-            bool partlyOwned = false;
+        private static int GetOwnedBooks(Series series) => series.Books.Count(b => b.Book.Formats.Any()) / 2;
 
-            if (!readStatus) partlyRead = series.Books.Any(b => b.Book.IsRead);
-
-            var owned = series.Books.All(b => b.Book.Formats.Count > 0);
-
-            if (!readStatus) partlyOwned = series.Books.Any(b => b.Book.Formats.Count > 0);
-
-            if (readStatus && owned)
-                return SeriesStatus.AllOwnedAllRead;
-
-            if (!partlyOwned && !partlyRead)
-                return SeriesStatus.NoneOwnedNoneRead;
-
-            if (!owned && partlyRead)
-                return SeriesStatus.NoneOwnedPartlyRead;
-
-            if (readStatus && !owned)
-                return SeriesStatus.NoneOwnedAllRead;
-
-            if (!partlyRead && partlyOwned)
-                return SeriesStatus.PartlyOwnedNoneRead;
-
-
-            if (partlyRead && partlyOwned)
-                return SeriesStatus.PartlyOwnedPartlyRead;
-
-            if (readStatus && partlyOwned)
-                return SeriesStatus.PartlyOwnedAllRead;
-
-
-            if (owned && !partlyRead)
-                return SeriesStatus.AllOwnedPartlyRead;
-
-            if (owned && partlyRead)
-                return SeriesStatus.AllOwnedPartlyRead;
-
-            return SeriesStatus.None;
-        }
+        private static int GetBookCount(Series series) => series.Books.Count / 2;
 
         private static string GetPictureThumbnail(string picturePath)
         {

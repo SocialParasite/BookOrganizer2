@@ -6,6 +6,6 @@ namespace BookOrganizer2.Domain.DA
 {
     public interface ISeriesLookupDataService
     {
-        Task<IEnumerable<LookupItem>> GetSeriesLookupAsync(string viewModelName);
+        Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName);
     }
 }

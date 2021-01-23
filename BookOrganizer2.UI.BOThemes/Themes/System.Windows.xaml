@@ -13,6 +13,8 @@
     <converters:GuidToVisibilityConverter x:Key="GuidToVisibilityConverter" />
     <converters:MultiValueConverter x:Key="MultiValueConverter" />
     <!-- <local:RowHasValuesConverter x:Key="RowHasValuesConverter" />-->
+    <converters:SeriesBooksOwnedStatus x:Key="SeriesBooksOwnedStatus" />
+    <converters:SeriesBooksReadStatus x:Key="SeriesBooksReadStatus" />
     <converters:ShowBordersInEditMode x:Key="ShowBordersInEditMode" />
     <converters:StyleConverter x:Key="StyleConverter" />
     <converters:TotalRowIdentifier x:Key="TotalRowIdentifier" />

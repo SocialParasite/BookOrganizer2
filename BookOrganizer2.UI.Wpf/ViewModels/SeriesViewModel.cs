@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.DA;
+﻿using BookOrganizer2.Domain.DA;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
