@@ -8,6 +8,6 @@ namespace BookOrganizer2.Domain.Shared
         public string DisplayMember { get; set; }
         public string Picture { get; set; }
         public string ViewModelName { get; set; }
-        public object ItemStatus { get; set; }
+        public string InfoText { get; set; }
     }
 }

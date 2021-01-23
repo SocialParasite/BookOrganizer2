@@ -68,7 +68,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             return $"{operation.ToString()}: {SelectedItem.Name}.";
         }
 
-        public async override Task LoadAsync(Guid id)
+        public override async Task LoadAsync(Guid id)
         {
             try
             {
@@ -120,7 +120,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     SelectedItem.PicturePath ??= FileExplorerService.GetImagePath();
                 }
-
 
                 async Task PopulateAllBooksCollection()
                 {
@@ -264,12 +263,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private async Task<IEnumerable<LookupItem>> GetBookList()
-            => await _bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));
+        private Task<IEnumerable<BookLookupItem>> GetBookList()
+            => _bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));
 
         private void OnAddSeriesPictureExecute()
         {
+            var temp = SelectedItem.PicturePath;
             SelectedItem.PicturePath = FileExplorerService.BrowsePicture() ?? SelectedItem.PicturePath;
+            if (!string.IsNullOrEmpty(SelectedItem.PicturePath)
+                && SelectedItem.PicturePath != temp)
+            {
+                FileExplorerService.CreateThumbnail(SelectedItem.PicturePath, DialogService);
+            }
         }
 
         public override SeriesWrapper CreateWrapper(Series entity)

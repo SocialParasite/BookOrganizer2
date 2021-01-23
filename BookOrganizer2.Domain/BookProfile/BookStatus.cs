@@ -7,6 +7,8 @@ namespace BookOrganizer2.Domain.BookProfile
     {
         None = 0,
         Read = 1,
-        Owned = 2
+        Owned = 2,
+
+        OwnedAndRead = Read | Owned
     }
 }

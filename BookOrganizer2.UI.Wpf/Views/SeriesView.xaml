@@ -29,28 +29,55 @@
                                 <ControlTemplate TargetType="{x:Type Label}">
                                     <Label
                                         x:Name="textBlockLabel"
-                                        Background="{Binding ItemStatus, Converter={StaticResource BackgroundColorConverter}}"
+                                        Background="WhiteSmoke"
                                         BorderBrush="SteelBlue"
                                         BorderThickness="1"
                                         FontSize="12"
-                                        ToolTip="{Binding ItemStatus}">
+                                        ToolTip="{Binding InfoText}">
                                         <Label.Content>
                                             <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="50" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Image
-                                                    x:Name="itemPicture"
-                                                    MaxWidth="75"
-                                                    MaxHeight="75"
-                                                    Source="{Binding Picture}" />
-                                                <TextBlock
-                                                    x:Name="BasicLabelTextBlock"
-                                                    Grid.Column="1"
-                                                    Margin="20,0,0,0"
-                                                    Text="{Binding DisplayMember}"
-                                                    TextWrapping="Wrap" />
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="75" />
+                                                    <RowDefinition Height="20" />
+                                                </Grid.RowDefinitions>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="50" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Image
+                                                        x:Name="itemPicture"
+                                                        MaxWidth="75"
+                                                        MaxHeight="75"
+                                                        Source="{Binding Picture}" />
+                                                    <TextBlock
+                                                        x:Name="BasicLabelTextBlock"
+                                                        Grid.Column="1"
+                                                        Margin="20,0,0,0"
+                                                        Text="{Binding DisplayMember}"
+                                                        TextWrapping="Wrap" />
+                                                </Grid>
+                                                <Grid Grid.Row="1">
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="*" />
+                                                    </Grid.RowDefinitions>
+                                                    <ProgressBar
+                                                        x:Name="BooksReadPb"
+                                                        Width="300"
+                                                        Height="10"
+                                                        Foreground="Blue"
+                                                        Value="{Binding SeriesState, Converter={StaticResource SeriesBooksReadStatus}}" />
+                                                    <ProgressBar
+                                                        x:Name="BooksOwnedPb"
+                                                        Grid.Row="1"
+                                                        Width="300"
+                                                        Height="10"
+                                                        Margin="0,2,0,0"
+                                                        Foreground="Green"
+                                                        Value="{Binding SeriesState, Converter={StaticResource SeriesBooksOwnedStatus}}" />
+                                                </Grid>
                                             </Grid>
                                         </Label.Content>
                                     </Label>

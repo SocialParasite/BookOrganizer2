@@ -29,11 +29,11 @@
                                 <ControlTemplate TargetType="{x:Type Label}">
                                     <Label
                                         x:Name="textBlockLabel"
-                                        Background="{Binding ItemStatus, Converter={StaticResource BackgroundColorConverter}}"
+                                        Background="{Binding BookStatus, Converter={StaticResource BackgroundColorConverter}}"
                                         BorderBrush="SteelBlue"
                                         BorderThickness="1"
                                         FontSize="12"
-                                        ToolTip="{Binding ItemStatus}">
+                                        ToolTip="{Binding InfoText}">
                                         <Label.Content>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
