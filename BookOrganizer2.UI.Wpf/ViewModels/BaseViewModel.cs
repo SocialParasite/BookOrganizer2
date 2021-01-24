@@ -38,7 +38,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                            OnItemNameLabelMouseLeftButtonUpCanExecute);
         }
 
-        public string ViewModelType { get; set; }
+        [UsedImplicitly]
+        public string ViewModelType { get; init; }
 
         protected IEnumerable<LookupItem> Items;
         [UsedImplicitly]
@@ -105,7 +106,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private bool OnItemNameLabelMouseLeftButtonUpCanExecute(LookupItem item)
-            => (item.Id != Guid.Empty);
+            => item.Id != Guid.Empty;
 
         private void OnItemNameLabelMouseLeftButtonUpExecute(LookupItem item)
         {

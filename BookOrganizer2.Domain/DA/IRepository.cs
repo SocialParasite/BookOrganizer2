@@ -4,7 +4,7 @@ namespace BookOrganizer2.Domain.DA
 {
     public interface IRepository<T, in TId> where T : class
     {
-        Task<T> GetAsync(TId id);
+        ValueTask<T> GetAsync(TId id);
         Task<bool> ExistsAsync(TId id);
 
         Task AddAsync(T entity);

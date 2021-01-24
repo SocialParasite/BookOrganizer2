@@ -1,4 +1,4 @@
-﻿using BookOrganizer2.Domain.Shared;
+﻿using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using System;
 using System.Globalization;
 using System.Windows.Data;

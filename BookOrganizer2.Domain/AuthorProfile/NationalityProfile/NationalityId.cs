@@ -24,6 +24,6 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
         public static implicit operator Guid(NationalityId self) => self.Value;
 
         public static implicit operator NationalityId(Guid value)
-            => new NationalityId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }

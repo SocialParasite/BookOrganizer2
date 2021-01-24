@@ -16,10 +16,12 @@ namespace BookOrganizer2.DA.Repositories
         public async Task<Author> LoadAsync(AuthorId id)
         {
             if (id != default)
+            {
                 return await Context.Authors
                     .Include(b => b.Nationality)
                     .Include(b => b.Books)
                     .FirstOrDefaultAsync(b => b.Id == id);
+            }
 
             return Author.NewAuthor;
         }

@@ -13,10 +13,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
     {
         private readonly Func<BookOrganizer2DbContext> _contextCreator;
 
-        public ReportLookupDataService(Func<BookOrganizer2DbContext> contextCreator)
-        {
-            _contextCreator = contextCreator ?? throw new ArgumentNullException(nameof(contextCreator));
-        }
+        public ReportLookupDataService(Func<BookOrganizer2DbContext> contextCreator) 
+            => _contextCreator = contextCreator ?? throw new ArgumentNullException(nameof(contextCreator));
 
         public async Task<IEnumerable<AnnualBookStatisticsReport>> GetAnnualBookStatisticsReportAsync(int? year = null)
         {

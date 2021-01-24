@@ -15,6 +15,7 @@ using BookOrganizer2.UI.Wpf.Enums;
 using BookOrganizer2.UI.Wpf.Services;
 using BookOrganizer2.UI.Wpf.Wrappers;
 using GongSolutions.Wpf.DragDrop;
+using JetBrains.Annotations;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -33,7 +34,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                      IDialogService dialogService)
             : base(eventAggregator, logger, domainService, dialogService)
         {
-            this._bookLookupDataService = bookLookupDataService ?? throw new ArgumentNullException(nameof(bookLookupDataService));
+            _bookLookupDataService = bookLookupDataService ?? throw new ArgumentNullException(nameof(bookLookupDataService));
 
             AddSeriesPictureCommand = new DelegateCommand(OnAddSeriesPictureExecute);
             FilterBookListCommand = new DelegateCommand<string>(OnFilterBookListExecute);
@@ -46,11 +47,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AllBooks = new ObservableCollection<LookupItem>();
         }
 
+        [UsedImplicitly]
         public ICommand AddSeriesPictureCommand { get; }
+        [UsedImplicitly]
         public ICommand FilterBookListCommand { get; }
+        [UsedImplicitly]
         public ICommand AddBookToSeriesCommand { get; }
-
+        [UsedImplicitly]
         public ObservableCollection<LookupItem> Books { get; set; }
+        [UsedImplicitly]
         public ObservableCollection<LookupItem> AllBooks { get; set; }
 
         public override SeriesWrapper SelectedItem
@@ -63,10 +68,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        protected override string CreateChangeMessage(DatabaseOperation operation)
-        {
-            return $"{operation.ToString()}: {SelectedItem.Name}.";
-        }
+        protected override string CreateChangeMessage(DatabaseOperation operation) 
+            => $"{operation.ToString()}: {SelectedItem.Name}.";
 
         public override async Task LoadAsync(Guid id)
         {
@@ -109,7 +112,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
                 else
                 {
-                    this.SwitchEditableStateExecute();
+                    SwitchEditableStateExecute();
                     SelectedItem.Name = "";
                 }
 
@@ -203,12 +206,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private bool OnAddBookToSeriesCanExecute(Guid? id)
-            => (id is null || id == Guid.Empty) ? false : true;
+        private static bool OnAddBookToSeriesCanExecute(Guid? id)
+            => id is not null && id != Guid.Empty;
 
-        private async void OnAddBookToSeriesExecute(Guid? id)
+        private void OnAddBookToSeriesExecute(Guid? id)
         {
-            var addedBook = await ((ISeriesDomainService) DomainService).GetBookAsync((Guid)id);
+            GetBookToAdd(id).Await();
+        }
+
+        private async Task GetBookToAdd(Guid? id)
+        {
+            var addedBook = await ((ISeriesDomainService)DomainService).GetBookAsync((Guid)id);
 
             SelectedItem.Model.Books
                 .Add(new ReadOrder
@@ -227,7 +235,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnFilterBookListExecute(string filter)
         {
-            if (filter != string.Empty && filter != null)
+            if (!string.IsNullOrEmpty(filter))
             {
                 var filteredCollection = AllBooks.Where(item => !SelectedItem.Model.Books
                                                  .Any(x => x.SeriesId == SelectedItem.Id && x.BooksId == item.Id))

@@ -48,7 +48,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<int> GetGenreCount()
         {
             await using var ctx = _contextCreator();
-            return ctx.Genres.Count();
+            return await ctx.Genres.CountAsync();
         }
     }
 }

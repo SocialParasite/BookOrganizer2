@@ -6,6 +6,6 @@ namespace BookOrganizer2.Domain.Services
     {
         // Format-, Genre-, Language-, NationalityDetailViewModel
         void ResetTracking(T entity) => Repository.ResetTracking(entity);
-        Task<T> GetAsync(TId id) => Repository.GetAsync(id);
+        ValueTask<T> GetAsync(TId id) => Repository.GetAsync(id);
     }
 }

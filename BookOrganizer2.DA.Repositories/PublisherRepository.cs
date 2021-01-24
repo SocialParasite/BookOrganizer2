@@ -15,10 +15,11 @@ namespace BookOrganizer2.DA.Repositories
         public async Task<Publisher> LoadAsync(PublisherId id)
         {
             if (id != default)
+            {
                 return await Context.Publishers
-                    //.Include(b => b.BooksLink)
-                    //.ThenInclude(bl => bl.Book)
+                    .Include(b => b.Books)
                     .FirstOrDefaultAsync(b => b.Id == id);
+            }
 
             return Publisher.NewPublisher;
         }

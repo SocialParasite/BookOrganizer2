@@ -48,7 +48,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<int> GetFormatCount()
         {
             await using var ctx = _contextCreator();
-            return ctx.Formats.Count();
+            return await ctx.Formats.CountAsync();
         }
     }
 }

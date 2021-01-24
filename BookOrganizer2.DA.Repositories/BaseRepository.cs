@@ -3,6 +3,7 @@ using BookOrganizer2.Domain.DA;
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BookOrganizer2.DA.Repositories
 {
@@ -15,14 +16,11 @@ namespace BookOrganizer2.DA.Repositories
         protected BaseRepository(TContext context)
             => Context = context ?? throw new ArgumentNullException(nameof(context));
 
-        //public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
-        //    => await Context.Set<TEntity>().ToListAsync();
+        public virtual ValueTask<TEntity> GetAsync(TId id)
+            => Context.Set<TEntity>().FindAsync(id);
 
-        public virtual async Task<TEntity> GetAsync(TId id)
-            => await Context.Set<TEntity>().FindAsync(id);
-
-        public async Task SaveAsync()
-            => await Context.SaveChangesAsync();
+        public Task SaveAsync()
+            => Context.SaveChangesAsync();
 
         public async Task<bool> ExistsAsync(TId id) 
             => await Context.Set<TEntity>().FindAsync(id) != null;
