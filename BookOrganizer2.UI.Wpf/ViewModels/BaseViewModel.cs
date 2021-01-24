@@ -106,7 +106,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private bool OnItemNameLabelMouseLeftButtonUpCanExecute(LookupItem item)
-            => (item.Id != Guid.Empty);
+            => item.Id != Guid.Empty;
 
         private void OnItemNameLabelMouseLeftButtonUpExecute(LookupItem item)
         {

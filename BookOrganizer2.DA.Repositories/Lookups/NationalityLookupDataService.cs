@@ -13,10 +13,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
     {
         private readonly Func<BookOrganizer2DbContext> _contextCreator;
 
-        public NationalityLookupDataService(Func<BookOrganizer2DbContext> contextCreator)
-        {
-            _contextCreator = contextCreator;
-        }
+        public NationalityLookupDataService(Func<BookOrganizer2DbContext> contextCreator) 
+            => _contextCreator = contextCreator;
 
         public async Task<IEnumerable<LookupItem>> GetNationalityLookupAsync(string viewModelName)
         {
@@ -48,7 +46,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<int> GetNationalityCount()
         {
             await using var ctx = _contextCreator();
-            return ctx.Nationalities.Count();
+            return await ctx.Nationalities.CountAsync();
         }
     }
 }

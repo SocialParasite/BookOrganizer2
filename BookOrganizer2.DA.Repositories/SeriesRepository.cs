@@ -17,7 +17,6 @@ namespace BookOrganizer2.DA.Repositories
 
         public async Task ChangeReadOrder(Series series, ICollection<ReadOrder> books)
         {
-            // TODO: Instalment number
             var modSeries = await LoadAsync(series.Id).ConfigureAwait(false);
 
             var newBooks = books.Select(s => s.Book)
@@ -38,7 +37,12 @@ namespace BookOrganizer2.DA.Repositories
         }
 
         public Task<Book> GetBookAsync(BookId id)
-            => Context.Books.SingleAsync(b => b.Id == id);
+        {
+            return Context.Books.Include(s => s.Series)
+                //.ThenInclude(s => s.Series)
+                //.ThenInclude(b => b.Books)
+                .SingleAsync(b => b.Id == id);
+        }
 
         public async Task<Series> LoadAsync(SeriesId id)
         {
