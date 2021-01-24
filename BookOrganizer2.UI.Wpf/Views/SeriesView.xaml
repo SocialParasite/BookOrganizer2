@@ -55,6 +55,7 @@
                                                         Grid.Column="1"
                                                         Margin="20,0,0,0"
                                                         Text="{Binding DisplayMember}"
+                                                        TextAlignment="Right"
                                                         TextWrapping="Wrap" />
                                                 </Grid>
                                                 <Grid Grid.Row="1">
@@ -67,7 +68,8 @@
                                                         x:Name="BooksReadPb"
                                                         Width="300"
                                                         Height="10"
-                                                        Foreground="Blue"
+                                                        Background="Azure"
+                                                        Foreground="LightGreen"
                                                         Value="{Binding SeriesState, Converter={StaticResource SeriesBooksReadStatus}}" />
                                                     <ProgressBar
                                                         x:Name="BooksOwnedPb"
@@ -75,7 +77,8 @@
                                                         Width="300"
                                                         Height="10"
                                                         Margin="0,2,0,0"
-                                                        Foreground="Green"
+                                                        Background="Azure"
+                                                        Foreground="LightSalmon"
                                                         Value="{Binding SeriesState, Converter={StaticResource SeriesBooksOwnedStatus}}" />
                                                 </Grid>
                                             </Grid>

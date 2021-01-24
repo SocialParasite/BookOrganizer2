@@ -4,15 +4,15 @@ namespace BookOrganizer2.Domain.Shared
 {
     public class SeriesLookupItem : LookupItem
     {
-        public SeriesState SeriesState { get; set; }
+        public SeriesState SeriesState { get; init; }
     }
 
     public class SeriesState
     {
-        public int BookCount { get; set; }
+        public int BookCount { get; init; }
 
-        public int ReadBookCount { get; set; }
+        public int ReadBookCount { get; init; }
 
-        public int OwnedBookCount { get; set; }
+        public int OwnedBookCount { get; init; }
     }
 }

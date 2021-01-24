@@ -4,10 +4,10 @@ namespace BookOrganizer2.Domain.Shared
 {
     public class LookupItem
     {
-        public Guid Id { get; set; }
-        public string DisplayMember { get; set; }
-        public string Picture { get; set; }
-        public string ViewModelName { get; set; }
-        public string InfoText { get; set; }
+        public Guid Id { get; init; }
+        public string DisplayMember { get; init; }
+        public string Picture { get; init; }
+        public string ViewModelName { get; init; }
+        public string InfoText { get; init; }
     }
 }
