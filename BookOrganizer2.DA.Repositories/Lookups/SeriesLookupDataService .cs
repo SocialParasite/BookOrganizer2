@@ -1,7 +1,6 @@
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
-using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

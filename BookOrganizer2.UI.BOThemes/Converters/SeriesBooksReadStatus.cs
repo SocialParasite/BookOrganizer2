@@ -1,7 +1,7 @@
-﻿using System;
+﻿using BookOrganizer2.Domain.BookProfile.SeriesProfile;
+using System;
 using System.Globalization;
 using System.Windows.Data;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.UI.BOThemes.Converters
 {

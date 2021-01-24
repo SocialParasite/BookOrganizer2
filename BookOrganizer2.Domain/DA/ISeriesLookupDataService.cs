@@ -1,4 +1,4 @@
-﻿using BookOrganizer2.Domain.Shared;
+﻿using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
