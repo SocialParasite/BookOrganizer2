@@ -33,7 +33,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                         Id = a.Id,
                         DisplayMember = $"{a.LastName}, {a.FirstName}",
                         Picture = GetPictureThumbnail(a.MugshotPath) ?? _placeholderPic,
-                        ViewModelName = viewModelName
+                        ViewModelName = viewModelName,
+                        InfoText = $"Books: {a.Books.Count}"
                     })
                 .ToListAsync();
         }

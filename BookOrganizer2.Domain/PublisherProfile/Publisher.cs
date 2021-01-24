@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.BookProfile;
 
 namespace BookOrganizer2.Domain.PublisherProfile
 {
@@ -18,7 +19,7 @@ namespace BookOrganizer2.Domain.PublisherProfile
         public string Name { get; private set; }
         public string LogoPath { get; private set; }
         public string Description { get; private set; }
-        //public ICollection<Book> Books { get; set; }
+        public ICollection<Book> Books { get; set; }
 
 
 
