@@ -24,6 +24,6 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
         public static implicit operator Guid(LanguageId self) => self.Value;
 
         public static implicit operator LanguageId(Guid value)
-            => new LanguageId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }

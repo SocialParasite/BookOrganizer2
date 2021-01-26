@@ -28,9 +28,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.Reports
                                            ILogger logger,
                                            IDialogService dialogService)
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
-            this._dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _lookupService = lookupService ?? throw new ArgumentNullException(nameof(lookupService));
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
 
             YearSelectionChangedCommand = new DelegateCommand(OnYearSelectionChangedExecute);
             MonthSelectionChangedCommand = new DelegateCommand(OnMonthSelectionChangedExecute);

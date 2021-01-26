@@ -62,7 +62,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             }
         }
 
-        public static Author NewAuthor => new Author { Id = new AuthorId(SequentialGuid.NewSequentialGuid()) };
+        public static Author NewAuthor => new() { Id = new AuthorId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetFirstName(string name)
         {

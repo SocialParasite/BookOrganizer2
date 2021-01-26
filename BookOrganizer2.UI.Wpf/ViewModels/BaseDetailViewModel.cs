@@ -233,7 +233,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private async Task SaveAsync()
-            => await DomainService.SaveChanges();
+        private Task SaveAsync()
+            => DomainService.SaveChanges();
     }
 }

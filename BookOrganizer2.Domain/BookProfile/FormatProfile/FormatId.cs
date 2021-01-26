@@ -24,6 +24,6 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
         public static implicit operator Guid(FormatId self) => self.Value;
 
         public static implicit operator FormatId(Guid value)
-            => new FormatId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }

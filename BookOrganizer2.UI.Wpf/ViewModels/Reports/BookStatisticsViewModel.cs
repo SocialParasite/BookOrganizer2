@@ -12,7 +12,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.Reports
 
         public BookStatisticsViewModel(IIndex<string, IReport> viewModelCreator)
         {
-            this._viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
+            _viewModelCreator = viewModelCreator ?? throw new ArgumentNullException(nameof(viewModelCreator));
 
             InitializeView();
         }

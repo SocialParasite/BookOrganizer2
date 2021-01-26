@@ -23,7 +23,6 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                //SetLanguageName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetName(cmd.Name), (a) => Repository.Update(a)),
                 DeleteLanguage cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
                 _ => Task.CompletedTask
             };

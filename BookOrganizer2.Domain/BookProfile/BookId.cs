@@ -26,7 +26,7 @@ namespace BookOrganizer2.Domain.BookProfile
         public static implicit operator Guid(BookId self) => self.Value;
 
         public static implicit operator BookId(Guid value)
-            => new BookId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }
 

@@ -29,15 +29,18 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             void ValidateParameters()
             {
                 if (id is null)
+                {
                     throw new ArgumentNullException(nameof(id),
                         "Nationality without unique identifier cannot be created.");
+                }
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentNullException(nameof(name), "Nationality without name cannot be created.");
             }
         }
 
         public static Nationality NewNationality
-            => new Nationality { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
+            => new() { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

@@ -28,15 +28,18 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
             void ValidateParameters()
             {
                 if (id is null)
+                {
                     throw new ArgumentNullException(nameof(id),
                         "Format without unique identifier cannot be created.");
+                }
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentNullException(nameof(name), "Format without name cannot be created.");
             }
         }
 
         public static Format NewFormat
-            => new Format { Id = new FormatId(SequentialGuid.NewSequentialGuid()) };
+            => new() { Id = new FormatId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

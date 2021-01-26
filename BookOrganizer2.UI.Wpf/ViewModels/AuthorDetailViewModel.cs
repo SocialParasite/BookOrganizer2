@@ -78,7 +78,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
-        public override AuthorWrapper CreateWrapper(Author entity) => new AuthorWrapper(entity);
+        public override AuthorWrapper CreateWrapper(Author entity) => new(entity);
 
         public override async Task LoadAsync(Guid id)
         {
@@ -174,8 +174,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 if (reset)
                 {
-                    while (await ((AuthorService)DomainService).NationalityLookupDataService.GetNationalityCount() 
-                           == Nationalities.Count)
+                    while (await ((AuthorService)DomainService).NationalityLookupDataService.GetNationalityCount() == Nationalities.Count)
                     {
                     }
                 }

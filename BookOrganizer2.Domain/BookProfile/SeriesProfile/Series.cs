@@ -21,10 +21,10 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             Books ??= new ObservableCollection<ReadOrder>();
         }
 
-        public static Series Create(SeriesId id, 
-            string name, 
-            string picturePath = null, 
-            string description = null, 
+        public static Series Create(SeriesId id,
+            string name,
+            string picturePath = null,
+            string description = null,
             ICollection<ReadOrder> books = null)
         {
             ValidateParameters();
@@ -44,8 +44,11 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             void ValidateParameters()
             {
                 if (id is null)
+                {
                     throw new ArgumentNullException(nameof(id),
                         "Series without unique identifier cannot be created.");
+                }
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentNullException(nameof(name), "Series without name cannot be created.");
             }

@@ -118,6 +118,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public override PublisherWrapper CreateWrapper(Publisher entity) => new PublisherWrapper(entity);
+        public override PublisherWrapper CreateWrapper(Publisher entity) => new(entity);
     }
 }

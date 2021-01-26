@@ -28,7 +28,7 @@ namespace BookOrganizer2.Domain.BookProfile
         public static implicit operator Guid(ReadDateId self) => self.Value;
 
         public static implicit operator ReadDateId(Guid value)
-            => new ReadDateId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }
 
