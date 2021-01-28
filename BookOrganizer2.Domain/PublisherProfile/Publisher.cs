@@ -51,7 +51,7 @@ namespace BookOrganizer2.Domain.PublisherProfile
             }
         }
 
-        public static Publisher NewPublisher => new Publisher { Id = new PublisherId(SequentialGuid.NewSequentialGuid()) };
+        public static Publisher NewPublisher => new() { Id = new PublisherId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

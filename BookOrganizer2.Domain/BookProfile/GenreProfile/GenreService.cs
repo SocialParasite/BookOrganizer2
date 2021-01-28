@@ -53,6 +53,26 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         }
 
         public Guid GetId(GenreId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Genre model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(GenreId id)
+        {
+            var command = new DeleteGenre
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
 
         private async Task HandleCreate(Create cmd)
         {

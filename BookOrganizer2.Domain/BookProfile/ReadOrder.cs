@@ -12,6 +12,6 @@ namespace BookOrganizer2.Domain.BookProfile
         public Series Series { get; set; }
 
         public static ReadOrder NewReadOrder(Book book, Series series, int instalment)
-            => new ReadOrder { Book = book, Series = series, Instalment = instalment };
+            => new() { Book = book, Series = series, Instalment = instalment };
     }
 }

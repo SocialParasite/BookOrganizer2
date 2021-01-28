@@ -28,15 +28,18 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             void ValidateParameters()
             {
                 if (id is null)
+                {
                     throw new ArgumentNullException(nameof(id),
                         "Genre without unique identifier cannot be created.");
+                }
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentNullException(nameof(name), "Genre without name cannot be created.");
             }
         }
 
         public static Genre NewGenre
-            => new Genre { Id = new GenreId(SequentialGuid.NewSequentialGuid()) };
+            => new() { Id = new GenreId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

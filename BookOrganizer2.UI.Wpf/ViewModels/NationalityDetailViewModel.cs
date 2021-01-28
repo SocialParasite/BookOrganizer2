@@ -144,8 +144,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NewItemAdded();
         }
 
-        private async Task<IEnumerable<LookupItem>> GetNationalityList()
-            => await _nationalityLookupDataService.GetNationalityLookupAsync(nameof(NationalityDetailViewModel));
+        private Task<IEnumerable<LookupItem>> GetNationalityList()
+            => _nationalityLookupDataService.GetNationalityLookupAsync(nameof(NationalityDetailViewModel));
 
         private async void OnChangeEditedNationalityExecute(Guid? nationalityId)
         {

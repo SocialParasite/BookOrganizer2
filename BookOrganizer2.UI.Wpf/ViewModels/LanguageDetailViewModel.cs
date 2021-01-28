@@ -143,8 +143,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NewItemAdded();
         }
 
-        private async Task<IEnumerable<LookupItem>> GetLanguageList()
-            => await _languageLookupDataService.GetLanguageLookupAsync(nameof(LanguageDetailViewModel));
+        private Task<IEnumerable<LookupItem>> GetLanguageList()
+            => _languageLookupDataService.GetLanguageLookupAsync(nameof(LanguageDetailViewModel));
 
         private async void OnChangeEditedLanguageExecute(Guid? languageId)
         {

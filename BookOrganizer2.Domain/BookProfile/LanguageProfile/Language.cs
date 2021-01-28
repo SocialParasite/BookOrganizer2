@@ -27,15 +27,18 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             void ValidateParameters()
             {
                 if (id is null)
+                {
                     throw new ArgumentNullException(nameof(id),
                         "Language without unique identifier cannot be created.");
+                }
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new ArgumentNullException(nameof(name), "Language without name cannot be created.");
             }
         }
 
         public static Language NewLanguage
-            => new Language { Id = new LanguageId(SequentialGuid.NewSequentialGuid()) };
+            => new() { Id = new LanguageId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

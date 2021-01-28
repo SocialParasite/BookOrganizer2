@@ -24,6 +24,6 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         public static implicit operator Guid(GenreId self) => self.Value;
 
         public static implicit operator GenreId(Guid value)
-            => new GenreId(new SequentialGuid(value));
+            => new(new SequentialGuid(value));
     }
 }

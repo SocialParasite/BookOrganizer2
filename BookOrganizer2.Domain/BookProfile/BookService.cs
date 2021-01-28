@@ -92,7 +92,40 @@ namespace BookOrganizer2.Domain.BookProfile
         }
 
         public Guid GetId(BookId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Book model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Title = model.Title,
+                ReleaseYear = model.ReleaseYear,
+                PageCount = model.PageCount,
+                WordCount = model.WordCount,
+                Isbn = model.Isbn,
+                BookCoverPath = model.BookCoverPath,
+                Description = model.Description,
+                Notes = model.Notes,
+                IsRead = model.IsRead,
+                Language = model.Language,
+                Publisher = model.Publisher,
+                Authors = model.Authors,
+                BookReadDates = model.ReadDates,
+                Formats = model.Formats,
+                Genres = model.Genres
+            };
 
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(BookId id)
+        {
+            var command = new DeleteBook
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
         public async Task<Book> AddNew(Book model)
         {
             var command = new Create
@@ -209,6 +242,10 @@ namespace BookOrganizer2.Domain.BookProfile
             if (await Repository.ExistsAsync(id))
             {
                 var book = await Repository.GetAsync(id);
+
+                if (book is null)
+                    throw new InvalidOperationException($"Entity with id {id} cannot be found");
+
                 operation(book);
                 operation2?.Invoke(book);
 

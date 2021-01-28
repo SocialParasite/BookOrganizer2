@@ -43,6 +43,26 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
         }
 
         public Guid GetId(NationalityId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Nationality model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(NationalityId id)
+        {
+            var command = new DeleteNationality
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
 
         private async Task HandleCreate(Create cmd)
         {

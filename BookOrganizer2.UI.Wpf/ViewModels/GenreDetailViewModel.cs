@@ -142,8 +142,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NewItemAdded();
         }
 
-        private async Task<IEnumerable<LookupItem>> GetGenreList()
-            => await _genreLookupDataService.GetGenreLookupAsync(nameof(GenreDetailViewModel));
+        private Task<IEnumerable<LookupItem>> GetGenreList()
+            => _genreLookupDataService.GetGenreLookupAsync(nameof(GenreDetailViewModel));
 
         private async void OnChangeEditedGenreExecute(Guid? genreId)
         {

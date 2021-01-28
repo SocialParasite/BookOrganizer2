@@ -49,6 +49,32 @@ namespace BookOrganizer2.Domain.AuthorProfile
         }
 
         public Guid GetId(AuthorId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Author model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                DateOfBirth = model.DateOfBirth,
+                MugshotPath = model.MugshotPath,
+                Biography = model.Biography,
+                Notes = model.Notes,
+                Nationality = model.Nationality
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(AuthorId id)
+        {
+            var command = new DeleteAuthor
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
 
         public async Task<Author> AddNew(Author model)
         {

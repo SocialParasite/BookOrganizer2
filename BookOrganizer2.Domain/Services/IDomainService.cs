@@ -13,8 +13,8 @@ namespace BookOrganizer2.Domain.Services
 
         // BaseDetailViewModel
         Task SaveChanges() => Repository.SaveAsync();
-        Task RemoveAsync(TId id) => Repository.RemoveAsync(id);
+        Task RemoveAsync(TId id);
         bool HasChanges() => Repository.HasChanges();
-        void Update(T entity) => Repository.Update(entity);
+        Task Update(T entity);
     }
 }
