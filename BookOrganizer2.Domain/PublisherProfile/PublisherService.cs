@@ -40,6 +40,28 @@ namespace BookOrganizer2.Domain.PublisherProfile
         }
 
         public Guid GetId(PublisherId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Publisher model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name,
+                LogoPath = model.LogoPath,
+                Description = model.Description
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(PublisherId id)
+        {
+            var command = new DeletePublisher
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
 
         public async Task<Publisher> AddNew(Publisher model)
         {

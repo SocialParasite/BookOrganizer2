@@ -164,8 +164,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
             else
             {
-                DomainService.Update(SelectedItem.Model);
-                await SaveAsync();
+                await DomainService.Update(SelectedItem.Model);
             }
 
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
@@ -216,24 +215,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             var dialog = new OkCancelViewModel("Delete item?", "You are about to delete an item. This operation cannot be undone. Are you sure?");
             var result = DialogService.OpenDialog(dialog);
 
-            if (result == DialogResult.No) { }
-            else
-            {
-                await DomainService.RemoveAsync(SelectedItem.Model.Id);
-                await SaveAsync();
+            if (result == DialogResult.No) return;
 
-                CloseDetailViewExecute();
+            await DomainService.RemoveAsync(SelectedItem.Model.Id);
 
-                EventAggregator.GetEvent<ChangeDetailsViewEvent>()
-                    .Publish(new ChangeDetailsViewEventArgs
-                    {
-                        Message = CreateChangeMessage(DatabaseOperation.DELETE),
-                        MessageBackgroundColor = Brushes.DimGray
-                    });
-            }
+            CloseDetailViewExecute();
+
+            EventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                .Publish(new ChangeDetailsViewEventArgs
+                {
+                    Message = CreateChangeMessage(DatabaseOperation.DELETE),
+                    MessageBackgroundColor = Brushes.DimGray
+                });
         }
-
-        private Task SaveAsync()
-            => DomainService.SaveChanges();
     }
 }

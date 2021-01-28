@@ -55,6 +55,26 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
         }
 
         public Guid GetId(FormatId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Format model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(FormatId id)
+        {
+            var command = new DeleteFormat
+            {
+                Id = id.Value
+            };
+
+            return Handle(command);
+        }
 
         private async Task HandleCreate(Create cmd)
         {

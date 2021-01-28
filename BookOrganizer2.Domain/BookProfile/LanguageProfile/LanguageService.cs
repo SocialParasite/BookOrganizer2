@@ -41,6 +41,27 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             return await Repository.GetAsync(command.Id);
         }
 
+        public Task Update(Language model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(LanguageId id)
+        {
+            var command = new DeleteLanguage
+            {
+                Id = id.Value
+            };
+
+            return Handle(command);
+        }
+
         public Guid GetId(LanguageId id) => id?.Value ?? Guid.Empty;
 
         private async Task HandleCreate(Create cmd)

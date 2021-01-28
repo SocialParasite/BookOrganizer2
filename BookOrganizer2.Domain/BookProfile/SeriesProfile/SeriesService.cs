@@ -53,6 +53,29 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         }
 
         public Guid GetId(SeriesId id) => id?.Value ?? Guid.Empty;
+        public Task Update(Series model)
+        {
+            var command = new Update
+            {
+                Id = model.Id,
+                Name = model.Name,
+                PicturePath = model.PicturePath,
+                Description = model.Description,
+                Books = model.Books
+            };
+
+            return Handle(command);
+        }
+
+        public Task RemoveAsync(SeriesId id)
+        {
+            var command = new DeleteSeries
+            {
+                Id = id
+            };
+
+            return Handle(command);
+        }
 
         private async Task HandleCreate(Create cmd)
         {
