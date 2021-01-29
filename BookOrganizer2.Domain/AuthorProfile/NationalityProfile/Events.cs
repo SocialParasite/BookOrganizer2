@@ -4,25 +4,19 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
     public static class Events
     {
-        public class NationalityCreated
+        public class Created
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class NationalityUpdated
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-        }
-
-        public class NationalityNameChanged
+        public class Updated
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
         }
         
-        public class NationalityDeleted
+        public class Deleted
         {
             public Guid Id { get; set; }
         }

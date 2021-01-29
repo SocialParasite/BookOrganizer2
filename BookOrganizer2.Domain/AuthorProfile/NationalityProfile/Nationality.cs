@@ -12,13 +12,16 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
         public string Name { get; private set; }
         public ICollection<Author> Authors { get; set; }
 
+        public static Nationality NewNationality
+            => new() { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
+
         public static Nationality Create(NationalityId id, string name)
         {
             ValidateParameters();
 
             var nationality = new Nationality();
 
-            nationality.Apply(new Events.NationalityCreated
+            nationality.Apply(new Events.Created
             {
                 Id = id,
                 Name = name
@@ -39,17 +42,23 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             }
         }
 
-        public static Nationality NewNationality
-            => new() { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
-
         public void SetName(string name)
         {
             const string msg =
                 "Invalid name. \nName should be 1-32 characters long.\nName may not contain non alphabet characters.";
+
             if (ValidateName(name))
-                Name = name;
+            {
+                Apply(new Events.Updated
+                {
+                    Id = Id,
+                    Name = name
+                });
+            }
             else
+            {
                 throw new InvalidNameException(msg);
+            }
         }
 
         internal bool EnsureValidState()
@@ -81,14 +90,14 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
         {
             switch (@event)
             {
-                case Events.NationalityCreated e:
+                case Events.Created e:
                     Id = new NationalityId(e.Id);
                     Name = e.Name;
                     break;
-                case Events.NationalityNameChanged e:
+                case Events.Updated e:
                     Name = e.Name;
                     break;
-                case Events.NationalityDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }

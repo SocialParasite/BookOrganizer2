@@ -17,7 +17,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
 
             var genre = new Genre();
 
-            genre.Apply(new Events.GenreCreated
+            genre.Apply(new Events.Created
             {
                 Id = id,
                 Name = name
@@ -46,9 +46,17 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             const string msg =
                 "Invalid name. \nName should be 1-32 characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
-                Name = name;
+            {
+                Apply(new Events.Updated
+                {
+                    Id = Id,
+                    Name = name
+                });
+            }
             else
+            {
                 throw new InvalidNameException(msg);
+            }
         }
 
         internal bool EnsureValidState()
@@ -80,14 +88,14 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         {
             switch (@event)
             {
-                case Events.GenreCreated e:
+                case Events.Created e:
                     Id = new GenreId(e.Id);
                     Name = e.Name;
                     break;
-                case Events.GenreUpdated e:
+                case Events.Updated e:
                     Name = e.Name;
                     break;
-                case Events.GenreDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }

@@ -64,7 +64,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new NationalityRepository(context);
 
             var nationalityService = new NationalityService(repository);
-            var command = new Commands.DeleteNationality
+            var command = new Commands.Delete
             {
                 Id = id,
             };

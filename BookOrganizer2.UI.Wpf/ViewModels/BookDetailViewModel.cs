@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media;
-using BookOrganizer2.DA.Repositories;
-using BookOrganizer2.Domain.BookProfile;
-using BookOrganizer2.Domain.BookProfile.FormatProfile;
-using BookOrganizer2.Domain.BookProfile.GenreProfile;
+﻿using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
-using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
@@ -23,6 +12,13 @@ using BookOrganizer2.UI.Wpf.Wrappers;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -364,19 +360,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 void InitializeSelectedPublisherIfNoneSet()
                 {
-                    if (SelectedPublisher is null)
+                    if (SelectedPublisher is not null) return;
+                    if (SelectedItem.Model.Publisher is not null)
                     {
-                        if (SelectedItem.Model.Publisher is not null)
-                        {
-                            SelectedPublisher =
-                                new LookupItem
-                                {
-                                    Id = SelectedItem.Model.Publisher.Id,
-                                    DisplayMember = SelectedItem.Model.Publisher == null
+                        SelectedPublisher =
+                            new LookupItem
+                            {
+                                Id = SelectedItem.Model.Publisher.Id,
+                                DisplayMember = SelectedItem.Model.Publisher == null
                                     ? Publisher.NewPublisher.Name
                                     : SelectedItem.Model.Publisher.Name
-                                };
-                        }
+                            };
                     }
                 }
 
@@ -389,35 +383,29 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 void InitializeAllBookFormats()
                 {
-                    if (SelectedItem.Model.Formats != null && SelectedItem.Model.Formats.Count > 0)
-                    {
-                        if (!AllBookFormats.Any())
-                        {
-                            AllBookFormats.Clear();
+                    if (SelectedItem.Model.Formats == null || SelectedItem.Model.Formats.Count == 0) return;
+                    if (AllBookFormats.Any()) return;
 
-                            foreach (var item in SelectedItem.Model.Formats)
-                            {
-                                var newLookupItem = new LookupItem { Id = item.Id, DisplayMember = item.Name };
-                                AllBookFormats.Add((newLookupItem, true).ToTuple());
-                            }
-                        }
+                    AllBookFormats.Clear();
+
+                    foreach (var item in SelectedItem.Model.Formats)
+                    {
+                        var newLookupItem = new LookupItem { Id = item.Id, DisplayMember = item.Name };
+                        AllBookFormats.Add((newLookupItem, true).ToTuple());
                     }
                 }
 
                 void InitializeAllBookGenres()
                 {
-                    if (SelectedItem.Model.Genres != null && SelectedItem.Model.Genres.Count > 0)
-                    {
-                        if (!AllBookGenres.Any())
-                        {
-                            AllBookGenres.Clear();
+                    if (SelectedItem.Model.Genres == null || SelectedItem.Model.Genres.Count == 0) return;
+                    if (AllBookGenres.Any()) return;
+                    
+                    AllBookGenres.Clear();
 
-                            foreach (var item in SelectedItem.Model.Genres)
-                            {
-                                var newLookupItem = new LookupItem { Id = item.Id, DisplayMember = item.Name };
-                                AllBookGenres.Add((newLookupItem, true).ToTuple());
-                            }
-                        }
+                    foreach (var item in SelectedItem.Model.Genres)
+                    {
+                        var newLookupItem = new LookupItem { Id = item.Id, DisplayMember = item.Name };
+                        AllBookGenres.Add((newLookupItem, true).ToTuple());
                     }
                 }
 
@@ -434,15 +422,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        protected override bool SaveItemCanExecute()
-        {
-            return (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
-        }
+        protected override bool SaveItemCanExecute() 
+            => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
 
-        protected override string CreateChangeMessage(DatabaseOperation operation)
-        {
-            return $"{operation.ToString()}: {SelectedItem.Title}.";
-        }
+        protected override string CreateChangeMessage(DatabaseOperation operation) 
+            => $"{operation.ToString()}: {SelectedItem.Title}.";
 
         public override async void SwitchEditableStateExecute()
         {
@@ -458,46 +442,43 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializeLanguageCollection()
             {
-                if (!Languages.Any())
+                if (Languages.Any()) { return; }
+
+                Languages.Clear();
+
+                foreach (var item in await GetLanguageList())
                 {
-                    Languages.Clear();
-
-                    foreach (var item in await GetLanguageList())
-                    {
-                        Languages.Add(item);
-                    }
-
-                    if (SelectedItem.Model.Language != null)
-                        SelectedLanguage = Languages.SingleOrDefault(l => l.Id == SelectedItem.Model.Language.Id);
+                    Languages.Add(item);
                 }
+
+                if (SelectedItem.Model.Language != null)
+                    SelectedLanguage = Languages.SingleOrDefault(l => l.Id == SelectedItem.Model.Language.Id);
             }
 
             async Task InitializePublisherCollection()
             {
-                if (!Publishers.Any())
+                if (Publishers.Any()) { return; }
+
+                Publishers.Clear();
+
+                foreach (var item in await GetPublisherList())
                 {
-                    Publishers.Clear();
-
-                    foreach (var item in await GetPublisherList())
-                    {
-                        Publishers.Add(item);
-                    }
-
-                    if (SelectedItem.Model.Publisher != null)
-                        SelectedPublisher = Publishers.SingleOrDefault(p => p.Id == SelectedItem.Model.Publisher.Id);
+                    Publishers.Add(item);
                 }
+
+                if (SelectedItem.Model.Publisher != null)
+                    SelectedPublisher = Publishers.SingleOrDefault(p => p.Id == SelectedItem.Model.Publisher.Id);
             }
 
             async Task InitializeAuthorCollection()
             {
-                if (!Authors.Any())
-                {
-                    Authors.Clear();
+                if (Authors.Any()) { return; }
 
-                    foreach (var item in await GetAuthorList())
-                    {
-                        Authors.Add(item);
-                    }
+                Authors.Clear();
+
+                foreach (var item in await GetAuthorList())
+                {
+                    Authors.Add(item);
                 }
             }
 
@@ -520,7 +501,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var tempBookFormatsCollection = new ObservableCollection<Tuple<LookupItem, bool>>();
                 foreach (var item in AllBookFormats)
                 {
-                    if (item.Item2 == true)
+                    if (item.Item2)
                     {
                         tempBookFormatsCollection.Add(item);
                     }
@@ -552,7 +533,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var tempBookGenresCollection = new ObservableCollection<Tuple<LookupItem, bool>>();
                 foreach (var item in AllBookGenres)
                 {
-                    if (item.Item2 == true)
+                    if (item.Item2)
                     {
                         tempBookGenresCollection.Add(item);
                     }
@@ -586,7 +567,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void RemoveAuthorExecute(Guid? authorId)
         {
-            if (authorId != null)
+            if (authorId is not null)
             {
                 var removedAuthor = await ((IBookDomainService)DomainService).GetAuthorAsync((Guid)authorId);
                 Authors.Add(
@@ -645,7 +626,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnBookFormatSelectionChangedExecute(LookupItem lookupItem)
         {
-            if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == false))
+            if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && !bf.Item2))
             {
                 AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
                 AllBookFormats.Add((lookupItem, true).ToTuple());
@@ -654,7 +635,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 SelectedItem.Model.Formats.Add(newFormat);
             }
-            else if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2 == true))
+            else if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && bf.Item2))
             {
                 AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
                 AllBookFormats.Add((lookupItem, false).ToTuple());
@@ -667,7 +648,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async void OnBookGenreSelectionChangedExecute(LookupItem lookupItem)
         {
-            if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == false))
+            if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && !bg.Item2))
             {
                 AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
                 AllBookGenres.Add((lookupItem, true).ToTuple());
@@ -676,7 +657,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 SelectedItem.Model.Genres.Add(newGenre);
             }
-            else if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2 == true))
+            else if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && bg.Item2))
             {
                 AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
                 AllBookGenres.Add((lookupItem, false).ToTuple());

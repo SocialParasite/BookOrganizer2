@@ -64,7 +64,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new FormatRepository(context);
 
             var formatService = new FormatService(repository);
-            var command = new Commands.DeleteFormat
+            var command = new Commands.Delete
             {
                 Id = id,
             };
