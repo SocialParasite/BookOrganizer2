@@ -31,7 +31,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 SetDescription cmd => HandleUpdate(cmd.Id, (a) => a.SetDescription(cmd.Description),
                     (a) => Repository.Update(a)),
                 SetReadOrder cmd => HandleSeriesBooksUpdate(cmd),
-                DeleteSeries cmd => HandleUpdate(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -69,7 +69,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
 
         public Task RemoveAsync(SeriesId id)
         {
-            var command = new DeleteSeries
+            var command = new Delete
             {
                 Id = id
             };
@@ -158,6 +158,21 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         private Task UpdateSeriesReadOrder(Series series, ICollection<ReadOrder> books)
         {
             return ((ISeriesRepository) Repository).ChangeReadOrder(series, books);
+        }
+
+        private async Task HandleDeleteAsync(Delete cmd)
+        {
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
+
+            if (Repository.RemoveAsync(cmd.Id) == Task.CompletedTask)
+            {
+                await Repository.SaveAsync();
+            }
+            else
+            {
+                throw new ArgumentNullException();
+            }
         }
     }
 }
