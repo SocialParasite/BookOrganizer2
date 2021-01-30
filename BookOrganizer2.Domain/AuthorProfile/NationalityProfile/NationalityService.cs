@@ -7,12 +7,14 @@ using static BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
-    public class NationalityService : ISimpleDomainService<Nationality, NationalityId>
+    public class NationalityService : INationalityService
     {
         public IRepository<Nationality, NationalityId> Repository { get; }
 
         public NationalityService(IRepository<Nationality, NationalityId> repository) 
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+
+        public Guid GetId(NationalityId id) => id?.Value ?? Guid.Empty;
 
         public Nationality CreateItem()
             => Nationality.NewNationality;
@@ -40,11 +42,10 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 
             return await Repository.GetAsync(command.Id);
         }
-
-        public Guid GetId(NationalityId id) => id?.Value ?? Guid.Empty;
+        
         public Task Update(Nationality model)
         {
-            var command = new Events.Updated
+            var command = new Update
             {
                 Id = model.Id,
                 Name = model.Name
