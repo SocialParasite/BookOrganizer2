@@ -113,7 +113,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
                 await Repository.RemoveAsync(cmd.Id);
                 await Repository.SaveAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }

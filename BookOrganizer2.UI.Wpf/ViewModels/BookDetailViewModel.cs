@@ -422,13 +422,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        protected override bool SaveItemCanExecute() 
+        protected override bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
 
         protected override string CreateChangeMessage(DatabaseOperation operation) 
             => $"{operation.ToString()}: {SelectedItem.Title}.";
 
-        public override async void SwitchEditableStateExecute()
+        public override void SwitchEditableStateExecute()
+        {
+            SwitchStateAsync().Await();
+        }
+
+        private async Task SwitchStateAsync()
         {
             base.SwitchEditableStateExecute();
 
@@ -442,7 +447,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializeLanguageCollection()
             {
-                if (Languages.Any()) { return; }
+                if (Languages.Any())
+                {
+                    return;
+                }
 
                 Languages.Clear();
 
@@ -457,7 +465,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializePublisherCollection()
             {
-                if (Publishers.Any()) { return; }
+                if (Publishers.Any())
+                {
+                    return;
+                }
 
                 Publishers.Clear();
 
@@ -472,7 +483,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializeAuthorCollection()
             {
-                if (Authors.Any()) { return; }
+                if (Authors.Any())
+                {
+                    return;
+                }
 
                 Authors.Clear();
 
@@ -481,8 +495,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     Authors.Add(item);
                 }
             }
-
         }
+
         async Task InitializeAllBookFormatsCollection()
         {
             if (!UserMode.Item1)
@@ -565,15 +579,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private Task<IEnumerable<LookupItem>> GetBookGenreList()
             => (DomainService as BookService)!.GetGenreLookupAsync(nameof(GenreDetailViewModel));
 
-        private async void RemoveAuthorExecute(Guid? authorId)
+        private void RemoveAuthorExecute(Guid? authorId)
+        {
+            RemoveAuthorAsync(authorId).Await();
+        }
+
+        private async Task RemoveAuthorAsync(Guid? authorId)
         {
             if (authorId is not null)
             {
-                var removedAuthor = await ((IBookDomainService)DomainService).GetAuthorAsync((Guid)authorId);
+                var removedAuthor = await ((IBookDomainService) DomainService).GetAuthorAsync((Guid) authorId);
                 Authors.Add(
                     new LookupItem
                     {
-                        Id = (Guid)authorId,
+                        Id = (Guid) authorId,
                         DisplayMember = $"{removedAuthor.LastName}, {removedAuthor.FirstName}"
                     });
 
@@ -593,10 +612,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private async void AddBookAuthorExecute(LookupItem lookupItem)
+        private void AddBookAuthorExecute(LookupItem lookupItem)
         {
             if (lookupItem is null) return;
 
+            AddAuthorAsync(lookupItem).Await();
+        }
+
+        private async Task AddAuthorAsync(LookupItem lookupItem)
+        {
             var addedAuthor = await ((IBookDomainService) DomainService).GetAuthorAsync(lookupItem.Id);
 
             SelectedItem.Model.Authors.Add(addedAuthor);
@@ -624,7 +648,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        private async void OnBookFormatSelectionChangedExecute(LookupItem lookupItem)
+        private void OnBookFormatSelectionChangedExecute(LookupItem lookupItem)
+        {
+            EditBooksFormatsAsync(lookupItem).Await();
+        }
+
+        private async Task EditBooksFormatsAsync(LookupItem lookupItem)
         {
             if (AllBookFormats.Any(bf => bf.Item1.Id == lookupItem.Id && !bf.Item2))
             {
@@ -643,10 +672,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var item = SelectedItem.Model.Formats.Single(f => f.Id == lookupItem.Id);
                 SelectedItem.Model.Formats.Remove(item);
             }
+
             SetChangeTracker();
         }
 
-        private async void OnBookGenreSelectionChangedExecute(LookupItem lookupItem)
+        private void OnBookGenreSelectionChangedExecute(LookupItem lookupItem)
+        {
+            EditBooksGenresAsync(lookupItem).Await();
+        }
+
+        private async Task EditBooksGenresAsync(LookupItem lookupItem)
         {
             if (AllBookGenres.Any(bg => bg.Item1.Id == lookupItem.Id && !bg.Item2))
             {
@@ -665,9 +700,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var item = SelectedItem.Model.Genres.Single(g => g.Id == lookupItem.Id);
                 SelectedItem.Model.Genres.Remove(item);
             }
+
             SetChangeTracker();
         }
-        
+
         private bool OnShowSelectedAuthorCanExecute(Guid? id)
             => id is not null && id != Guid.Empty;
 
@@ -762,7 +798,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnAddNewGenreExecute(string genre)
         {
-            AddNewGenre(genre);
+            AddNewGenre(genre).Await();
         }
 
         private async Task AddNewGenre(string genre)
@@ -773,7 +809,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnAddNewFormatExecute(string format)
         {
-            AddNewFormat(format);
+            AddNewFormat(format).Await();
         }
 
         private async Task AddNewFormat(string format)
@@ -781,6 +817,5 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             await ((IBookDomainService)DomainService).AddNewFormat(format);
             await InitializeAllBookFormatsCollection();
         }
-
     }
 }

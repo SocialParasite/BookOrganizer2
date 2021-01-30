@@ -11,6 +11,10 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         public GenreId Id { get; private set; }
         public string Name { get; private set; }
         public ICollection<Book> Books { get; set; }
+
+        public static Genre NewGenre
+            => new() { Id = new GenreId(SequentialGuid.NewSequentialGuid()) };
+
         public static Genre Create(GenreId id, string name)
         {
             ValidateParameters();
@@ -37,9 +41,6 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
                     throw new ArgumentNullException(nameof(name), "Genre without name cannot be created.");
             }
         }
-
-        public static Genre NewGenre
-            => new() { Id = new GenreId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {

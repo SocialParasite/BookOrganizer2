@@ -137,7 +137,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        protected override async void SaveItemExecute()
+        protected override void SaveItemExecute()
+        {
+            SaveItem().Await();
+        }
+
+        private async Task SaveItem()
         {
             base.SaveItemExecute();
             await LoadAsync(SelectedItem.Id);

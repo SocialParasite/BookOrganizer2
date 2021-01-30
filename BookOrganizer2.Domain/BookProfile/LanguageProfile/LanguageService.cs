@@ -114,7 +114,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
                 await Repository.RemoveAsync(cmd.Id);
                 await Repository.SaveAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }

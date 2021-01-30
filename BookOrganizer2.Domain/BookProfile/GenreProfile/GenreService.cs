@@ -14,6 +14,8 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         public GenreService(IRepository<Genre, GenreId> repository)
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
+        public Guid GetId(GenreId id) => id?.Value ?? Guid.Empty;
+
         public Genre CreateItem() => Genre.NewGenre;
 
         public Task Handle(object command)
@@ -52,7 +54,6 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             return await Repository.GetAsync(command.Id);
         }
 
-        public Guid GetId(GenreId id) => id?.Value ?? Guid.Empty;
         public Task Update(Genre model)
         {
             var command = new Update
@@ -124,7 +125,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
                 await Repository.RemoveAsync(cmd.Id);
                 await Repository.SaveAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }

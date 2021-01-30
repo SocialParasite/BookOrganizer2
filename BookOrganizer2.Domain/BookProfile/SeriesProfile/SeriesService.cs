@@ -170,7 +170,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 await Repository.RemoveAsync(cmd.Id);
                 await Repository.SaveAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }
