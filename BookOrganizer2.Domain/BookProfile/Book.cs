@@ -63,7 +63,7 @@ namespace BookOrganizer2.Domain.BookProfile
 
             var book = new Book();
 
-            book.Apply(new Events.BookCreated
+            book.Apply(new Events.Created
             {
                 Id = id,
                 Title = title,
@@ -292,7 +292,7 @@ namespace BookOrganizer2.Domain.BookProfile
         {
             switch (@event)
             {
-                case Events.BookCreated e:
+                case Events.Created e:
                     Id = new BookId(e.Id);
                     Title = e.Title;
                     ReleaseYear = e.ReleaseYear;
@@ -370,7 +370,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     Id = e.Id;
                     Genres = e.Genres;
                     break;
-                case Events.BookDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }

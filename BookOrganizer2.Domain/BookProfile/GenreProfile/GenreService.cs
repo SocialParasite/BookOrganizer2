@@ -119,11 +119,12 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             if (!await Repository.ExistsAsync(cmd.Id))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
 
-            if (Repository.RemoveAsync(cmd.Id) == Task.CompletedTask)
+            try
             {
+                await Repository.RemoveAsync(cmd.Id);
                 await Repository.SaveAsync();
             }
-            else
+            catch (Exception ex)
             {
                 throw new ArgumentNullException();
             }

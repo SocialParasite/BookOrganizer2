@@ -139,7 +139,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<Genre> Genres { get; set; }
         }
 
-        public class DeleteBook
+        public class Delete
         {
             public Guid Id { get; set; }
         }
