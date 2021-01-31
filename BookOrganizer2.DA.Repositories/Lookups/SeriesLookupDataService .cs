@@ -43,10 +43,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 .ToListAsync();
         }
 
-        private static string GetInfoText(Series s)
-        {
-            return $"Books in series: {GetBookCount(s)} \rOwned: {GetOwnedBooks(s)} \rRead: {GetReadBooks(s)}";
-        }
+        private static string GetInfoText(Series s) 
+            => $"Owned: {GetOwnedBooks(s)} of {GetBookCount(s)} \rRead: {GetReadBooks(s)} of {GetBookCount(s)}";
 
         private static SeriesState GetSeriesState(Series s)
         {

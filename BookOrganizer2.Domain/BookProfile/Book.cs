@@ -100,13 +100,17 @@ namespace BookOrganizer2.Domain.BookProfile
         {
             const string msg = "Invalid first name. \nName should be 1-256 characters long.";
             if (ValidateName(name))
+            {
                 Apply(new Events.TitleChanged
                 {
                     Id = Id,
                     Title = name
                 });
+            }
             else
+            {
                 throw new InvalidTitleException(msg);
+            }
 
             static bool ValidateName(string title)
             {
