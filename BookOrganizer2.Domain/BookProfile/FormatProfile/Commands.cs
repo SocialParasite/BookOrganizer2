@@ -16,7 +16,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
             public string Name { get; set; }
         }
 
-        public class DeleteFormat
+        public class Delete
         {
             public Guid Id { get; set; }
         }

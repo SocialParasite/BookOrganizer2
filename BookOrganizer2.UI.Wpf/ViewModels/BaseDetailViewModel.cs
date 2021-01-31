@@ -14,6 +14,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -52,15 +53,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             UserMode = (true, DetailViewState.ViewMode, Brushes.LightGray, false).ToTuple();
         }
 
+        [UsedImplicitly]
         public ICommand SwitchEditableStateCommand { get; }
+        [UsedImplicitly]
         public ICommand SaveItemCommand { get; protected set; }
+        [UsedImplicitly]
         public ICommand DeleteItemCommand { get; }
+        [UsedImplicitly]
         public ICommand CloseDetailViewCommand { get; }
+        [UsedImplicitly]
         public ICommand ShowSelectedBookCommand { get; }
 
         public abstract TBase SelectedItem { get; set; }
+        [UsedImplicitly]
         public bool IsNewItem { get; set; }
 
+        [UsedImplicitly]
         public Tuple<bool, DetailViewState, SolidColorBrush, bool> UserMode
         {
             get => _userMode;
@@ -71,6 +79,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        [UsedImplicitly]
         public bool HasChanges
         {
             get => _hasChanges;
@@ -83,6 +92,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        [UsedImplicitly]
         public virtual string TabTitle
         {
             get
@@ -101,6 +111,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        [UsedImplicitly]
         public Guid SelectedBookId
         {
             get => _selectedBookId;
@@ -142,7 +153,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem);
 
-        protected virtual async void SaveItemExecute()
+        protected virtual void SaveItemExecute()
         {
             if(!IsNewItem)
             {
@@ -156,16 +167,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 }
             }
 
-            if (IsNewItem)
-            {
-                var item = await DomainService.AddNew(SelectedItem.Model);
-
-                await LoadAsync(DomainService.GetId(item.Id));
-            }
-            else
-            {
-                await DomainService.Update(SelectedItem.Model);
-            }
+            SaveItem().Await();
 
             EventAggregator.GetEvent<ChangeDetailsViewEvent>()
                 .Publish(new ChangeDetailsViewEventArgs
@@ -176,6 +178,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             HasChanges = false;
             IsNewItem = false;
+        }
+
+        private async Task SaveItem()
+        {
+            if (IsNewItem)
+            {
+                var item = await DomainService.AddNew(SelectedItem.Model);
+
+                await LoadAsync(DomainService.GetId(item.Id));
+            }
+            else
+            {
+                await DomainService.Update(SelectedItem.Model);
+            }
         }
 
         protected abstract string CreateChangeMessage(DatabaseOperation operation);
@@ -204,15 +220,24 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private bool OnShowSelectedBookCanExecute(Guid? id)
                 => (!(id is null) && id != Guid.Empty);
 
+        [UsedImplicitly]
         public virtual void OnShowSelectedBookExecute(Guid? id)
-            => SelectedBookId = (Guid)id;
+        {
+            if (id is not null) SelectedBookId = (Guid) id;
+        }
 
         private bool DeleteItemCanExecute()
             => SelectedItem.Model.Id != default && UserMode.Item4;
 
-        private async void DeleteItemExecute()
+        private void DeleteItemExecute()
         {
-            var dialog = new OkCancelViewModel("Delete item?", "You are about to delete an item. This operation cannot be undone. Are you sure?");
+            DeleteItemAsync().Await();
+        }
+
+        private async Task DeleteItemAsync()
+        {
+            var dialog = new OkCancelViewModel("Delete item?",
+                "You are about to delete an item. This operation cannot be undone. Are you sure?");
             var result = DialogService.OpenDialog(dialog);
 
             if (result == DialogResult.No) return;

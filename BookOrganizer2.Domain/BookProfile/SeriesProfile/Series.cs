@@ -30,7 +30,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             ValidateParameters();
             var series = new Series();
 
-            series.Apply(new Events.SeriesCreated
+            series.Apply(new Events.Created
             {
                 Id = id,
                 Name = name,
@@ -55,14 +55,20 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         }
 
         public static Series NewSeries
-            => new Series { Id = new SeriesId(SequentialGuid.NewSequentialGuid()) };
+            => new() { Id = new SeriesId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetName(string name)
         {
             const string msg =
                 "Invalid name. \nName should be 1-256 characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
-                Name = name;
+            {
+                Apply(new Events.Updated
+                {
+                    Id = Id,
+                    Name = name
+                });
+            }
             else
                 throw new InvalidNameException(msg);
 
@@ -126,14 +132,14 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
         {
             switch (@event)
             {
-                case Events.SeriesCreated e:
+                case Events.Created e:
                     Id = new SeriesId(e.Id);
                     Name = e.Name;
                     PicturePath = e.PicturePath;
                     Description = e.Description;
                     Books = e.Books;
                     break;
-                case Events.SeriesUpdated e:
+                case Events.Updated e:
                     Name = e.Name;
                     PicturePath = e.PicturePath;
                     Description = e.Description;
@@ -151,7 +157,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                     Id = e.Id;
                     Books = e.Books;
                     break;
-                case Events.SeriesDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }

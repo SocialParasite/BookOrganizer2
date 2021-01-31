@@ -64,7 +64,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new GenreRepository(context);
 
             var genreService = new GenreService(repository);
-            var command = new Commands.DeleteGenre
+            var command = new Commands.Delete
             {
                 Id = id,
             };

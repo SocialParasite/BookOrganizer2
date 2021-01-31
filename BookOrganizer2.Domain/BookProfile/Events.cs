@@ -10,7 +10,7 @@ namespace BookOrganizer2.Domain.BookProfile
 {
     public static class Events
     {
-        public class BookCreated
+        public class Created
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
@@ -30,7 +30,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<Genre> Genres { get; set; }
         }
 
-        public class BookUpdated
+        public class Updated
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
@@ -139,7 +139,7 @@ namespace BookOrganizer2.Domain.BookProfile
             public ICollection<Genre> Genres { get; set; }
         }
 
-        public class BookDeleted
+        public class Deleted
         {
             public Guid Id { get; set; }
         }

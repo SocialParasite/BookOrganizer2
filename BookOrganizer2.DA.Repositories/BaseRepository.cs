@@ -1,9 +1,8 @@
 ﻿using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.DA;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BookOrganizer2.DA.Repositories
 {

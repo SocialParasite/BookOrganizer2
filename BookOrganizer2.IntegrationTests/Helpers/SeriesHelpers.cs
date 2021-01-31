@@ -166,7 +166,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new SeriesRepository(context);
 
             var seriesService = new SeriesService(repository);
-            var command = new Commands.DeleteSeries
+            var command = new Commands.Delete
             {
                 Id = id,
             };

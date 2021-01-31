@@ -16,7 +16,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
 
             var language = new Language();
 
-            language.Apply(new Events.LanguageCreated
+            language.Apply(new Events.Created
             {
                 Id = id,
                 Name = name
@@ -45,7 +45,13 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             const string msg =
                 "Invalid name. \nName should be 1-32 characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
-                Name = name;
+            {
+                Apply(new Events.Updated
+                {
+                    Id = Id,
+                    Name = name
+                });
+            }
             else
                 throw new InvalidNameException(msg);
         }
@@ -79,14 +85,14 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
         {
             switch (@event)
             {
-                case Events.LanguageCreated e:
+                case Events.Created e:
                     Id = new LanguageId(e.Id);
                     Name = e.Name;
                     break;
-                case Events.LanguageUpdated e:
+                case Events.Updated e:
                     Name = e.Name;
                     break;
-                case Events.LanguageDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }

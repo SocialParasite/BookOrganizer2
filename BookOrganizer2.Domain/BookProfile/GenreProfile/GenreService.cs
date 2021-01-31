@@ -14,6 +14,8 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
         public GenreService(IRepository<Genre, GenreId> repository)
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
+        public Guid GetId(GenreId id) => id?.Value ?? Guid.Empty;
+
         public Genre CreateItem() => Genre.NewGenre;
 
         public Task Handle(object command)
@@ -22,7 +24,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                DeleteGenre cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -52,7 +54,6 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             return await Repository.GetAsync(command.Id);
         }
 
-        public Guid GetId(GenreId id) => id?.Value ?? Guid.Empty;
         public Task Update(Genre model)
         {
             var command = new Update
@@ -66,7 +67,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
 
         public Task RemoveAsync(GenreId id)
         {
-            var command = new DeleteGenre
+            var command = new Delete
             {
                 Id = id
             };
@@ -114,21 +115,20 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             }
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Genre> operation, Action<Genre> operation2 = null)
+        private async Task HandleDeleteAsync(Delete cmd)
         {
-            if (await Repository.ExistsAsync(id))
-            {
-                var genre = await Repository.GetAsync(id);
-                operation(genre);
-                operation2?.Invoke(genre);
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
 
-                if (genre.EnsureValidState())
-                {
-                    await Repository.SaveAsync();
-                }
+            try
+            {
+                await Repository.RemoveAsync(cmd.Id);
+                await Repository.SaveAsync();
             }
-            else
-                throw new ArgumentException();
+            catch (Exception)
+            {
+                throw new ArgumentNullException();
+            }
         }
     }
 }

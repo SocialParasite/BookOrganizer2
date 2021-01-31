@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using BookOrganizer2.UI.Wpf.Events;
+using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -45,6 +46,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             UserMode = (!UserMode.Item1, DetailViewState.EditMode, Brushes.LightGray, !UserMode.Item4).ToTuple();
         }
 
+        [UsedImplicitly]
         public ICommand ChangeEditedGenreCommand { get; }
 
         public sealed override GenreWrapper SelectedItem
@@ -57,6 +59,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        [UsedImplicitly]
         public ObservableCollection<LookupItem> Genres { get; }
 
         protected override string CreateChangeMessage(DatabaseOperation operation) 
@@ -68,7 +71,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                Genre genre = null;
+                Genre genre;
 
                 if (id != default)
                 {
@@ -82,7 +85,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 SelectedItem = CreateWrapper(genre);
 
-                SelectedItem.PropertyChanged += (s, e) =>
+                SelectedItem.PropertyChanged += (_, e) =>
                 {
                     if (!HasChanges)
                     {
@@ -135,7 +138,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        protected override async void SaveItemExecute()
+        protected override void SaveItemExecute()
+        {
+            SaveItem().Await();
+        }
+
+        private async Task SaveItem()
         {
             base.SaveItemExecute();
             await LoadAsync(SelectedItem.Id);

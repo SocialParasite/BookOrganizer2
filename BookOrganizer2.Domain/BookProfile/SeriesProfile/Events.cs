@@ -5,7 +5,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
 {
     public static class Events
     {
-        public class SeriesCreated
+        public class Created
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public ICollection<ReadOrder> Books { get; set; }
         }
 
-        public class SeriesUpdated
+        public class Updated
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
@@ -47,7 +47,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             public ICollection<ReadOrder> Books { get; set; }
         }
 
-        public class SeriesDeleted
+        public class Deleted
         {
             public Guid Id { get; set; }
         }

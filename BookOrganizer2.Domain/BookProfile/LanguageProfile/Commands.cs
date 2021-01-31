@@ -16,7 +16,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             public string Name { get; set; }
         }
 
-        public class DeleteLanguage
+        public class Delete
         {
             public Guid Id { get; set; }
         }

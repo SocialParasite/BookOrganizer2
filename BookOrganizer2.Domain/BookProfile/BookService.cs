@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
@@ -9,6 +6,9 @@ using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using static BookOrganizer2.Domain.BookProfile.Commands;
 
 namespace BookOrganizer2.Domain.BookProfile
@@ -85,8 +85,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     async a => await UpdateBookGenresAsync(a, cmd.Genres)),
                 SetBookReadDates cmd => HandleUpdateAsync(cmd.Id,
                     async a => await UpdateBookReadDatesAsync(a, cmd.BookReadDates)),
-
-                DeleteBook cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -119,7 +118,7 @@ namespace BookOrganizer2.Domain.BookProfile
 
         public Task RemoveAsync(BookId id)
         {
-            var command = new DeleteBook
+            var command = new Delete
             {
                 Id = id
             };
@@ -201,7 +200,7 @@ namespace BookOrganizer2.Domain.BookProfile
                 await UpdateBookReadDatesAsync(book, cmd.BookReadDates).ConfigureAwait(false);
             }
 
-            if (book.EnsureValidState()) 
+            if (book.EnsureValidState())
             {
                 await Repository.SaveAsync().ConfigureAwait(false);
             }
@@ -282,14 +281,30 @@ namespace BookOrganizer2.Domain.BookProfile
             }
         }
 
-        private Task UpdateLanguageAsync(Book book, LanguageId languageId) 
+        private async Task HandleDeleteAsync(Delete cmd)
+        {
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
+
+            try
+            {
+                await Repository.RemoveAsync(cmd.Id);
+                await Repository.SaveAsync();
+            }
+            catch (Exception)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+        private Task UpdateLanguageAsync(Book book, LanguageId languageId)
             => ((IBookRepository)Repository).ChangeLanguage(book, languageId);
 
         private Task UpdatePublisherAsync(Book book, PublisherId publisherId)
             => ((IBookRepository)Repository).ChangePublisher(book, publisherId);
 
         private Task UpdateBookAuthorsAsync(Book book, ICollection<Author> authors)
-            => ((IBookRepository) Repository).ChangeAuthors(book, authors);
+            => ((IBookRepository)Repository).ChangeAuthors(book, authors);
 
         private Task UpdateBookGenresAsync(Book book, ICollection<Genre> genres)
             => ((IBookRepository)Repository).ChangeGenres(book, genres);
@@ -300,10 +315,10 @@ namespace BookOrganizer2.Domain.BookProfile
         private Task UpdateBookReadDatesAsync(Book book, ICollection<BookReadDate> bookReadDates)
             => ((IBookRepository)Repository).ChangeReadDates(book, bookReadDates);
 
-        public Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName) 
+        public Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName)
             => _publisherLookupDataService.GetPublisherLookupAsync(viewModelName);
 
-        public Task<IEnumerable<LookupItem>> GetLanguageLookupAsync(string viewModelName) 
+        public Task<IEnumerable<LookupItem>> GetLanguageLookupAsync(string viewModelName)
             => _languageLookupDataService.GetLanguageLookupAsync(viewModelName);
 
         public Task<IEnumerable<LookupItem>> GetAuthorLookupAsync(string viewModelName)

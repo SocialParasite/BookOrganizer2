@@ -16,7 +16,7 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
             public string Name { get; set; }
         }
 
-        public class DeleteGenre
+        public class Delete
         {
             public Guid Id { get; set; }
         }

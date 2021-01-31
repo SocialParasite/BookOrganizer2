@@ -4,19 +4,19 @@ namespace BookOrganizer2.Domain.BookProfile.GenreProfile
 {
     public static class Events
     {
-        public class GenreCreated
+        public class Created
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class GenreUpdated
+        public class Updated
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
         }
 
-        public class GenreDeleted
+        public class Deleted
         {
             public Guid Id { get; set; }
         }

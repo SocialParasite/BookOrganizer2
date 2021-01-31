@@ -23,7 +23,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                DeleteFormat cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -68,7 +68,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
 
         public Task RemoveAsync(FormatId id)
         {
-            var command = new DeleteFormat
+            var command = new Delete
             {
                 Id = id.Value
             };
@@ -116,21 +116,20 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
             }
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Format> operation, Action<Format> operation2 = null)
+        private async Task HandleDeleteAsync(Delete cmd)
         {
-            if (await Repository.ExistsAsync(id))
-            {
-                var format = await Repository.GetAsync(id);
-                operation(format);
-                operation2?.Invoke(format);
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
 
-                if (format.EnsureValidState())
-                {
-                    await Repository.SaveAsync();
-                }
+            try
+            {
+                await Repository.RemoveAsync(cmd.Id);
+                await Repository.SaveAsync();
             }
-            else
-                throw new ArgumentException();
+            catch (Exception ex)
+            {
+                throw new ArgumentNullException(ex.Message);
+            }
         }
     }
 }

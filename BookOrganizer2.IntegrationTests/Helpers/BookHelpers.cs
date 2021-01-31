@@ -362,7 +362,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new BookRepository(context);
 
             var bookService = new BookService(repository);
-            var command = new Commands.DeleteBook
+            var command = new Commands.Delete
             {
                 Id = id,
             };

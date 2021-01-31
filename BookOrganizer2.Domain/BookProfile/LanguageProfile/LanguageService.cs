@@ -23,7 +23,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                DeleteLanguage cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -54,7 +54,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
 
         public Task RemoveAsync(LanguageId id)
         {
-            var command = new DeleteLanguage
+            var command = new Delete
             {
                 Id = id.Value
             };
@@ -104,21 +104,20 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
             }
         }
 
-        private async Task HandleUpdateAsync(Guid id, Action<Language> operation, Action<Language> operation2 = null)
+        private async Task HandleDeleteAsync(Delete cmd)
         {
-            if (await Repository.ExistsAsync(id))
-            {
-                var language = await Repository.GetAsync(id);
-                operation(language);
-                operation2?.Invoke(language);
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
 
-                if (language.EnsureValidState())
-                {
-                    await Repository.SaveAsync();
-                }
+            try
+            {
+                await Repository.RemoveAsync(cmd.Id);
+                await Repository.SaveAsync();
             }
-            else
-                throw new ArgumentException();
+            catch (Exception)
+            {
+                throw new ArgumentNullException();
+            }
         }
     }
 }

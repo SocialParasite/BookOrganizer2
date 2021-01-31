@@ -161,11 +161,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public override async void SwitchEditableStateExecute()
+        public override void SwitchEditableStateExecute()
+        {
+            SwitchStateAsync().Await();
+        }
+
+        private Task SwitchStateAsync()
         {
             base.SwitchEditableStateExecute();
 
-            await InitializeNationalityCollection().ConfigureAwait(false);
+            return InitializeNationalityCollection();
         }
 
         private async Task InitializeNationalityCollection(bool reset = false)
@@ -196,7 +201,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             return (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || NationalityIsDirty);
         }
 
-        protected override async void SaveItemExecute()
+        protected override void SaveItemExecute()
+        {
+           SaveItem().Await();
+        }
+
+        private async Task SaveItem()
         {
             if (_nationalityIsDirty)
             {

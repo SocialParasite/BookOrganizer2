@@ -7,14 +7,16 @@ using static BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Commands;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
-    public class NationalityService : ISimpleDomainService<Nationality, NationalityId>
+    public class NationalityService : INationalityService
     {
         public IRepository<Nationality, NationalityId> Repository { get; }
 
         public NationalityService(IRepository<Nationality, NationalityId> repository) 
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
-        public Nationality CreateItem() 
+        public Guid GetId(NationalityId id) => id?.Value ?? Guid.Empty;
+
+        public Nationality CreateItem()
             => Nationality.NewNationality;
 
         public Task Handle(object command)
@@ -23,8 +25,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             {
                 Create cmd => HandleCreate(cmd),
                 Update cmd => HandleUpdate(cmd),
-                SetNationalityName cmd => HandleUpdateAsync(cmd.Id, (a) => a.SetName(cmd.Name), (a) => Repository.Update(a)),
-                DeleteNationality cmd => HandleUpdateAsync(cmd.Id, _ => Repository.RemoveAsync(cmd.Id)),
+                Delete cmd => HandleDeleteAsync(cmd),
                 _ => Task.CompletedTask
             };
         }
@@ -41,8 +42,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 
             return await Repository.GetAsync(command.Id);
         }
-
-        public Guid GetId(NationalityId id) => id?.Value ?? Guid.Empty;
+        
         public Task Update(Nationality model)
         {
             var command = new Update
@@ -56,7 +56,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 
         public Task RemoveAsync(NationalityId id)
         {
-            var command = new DeleteNationality
+            var command = new Delete
             {
                 Id = id
             };
@@ -103,22 +103,20 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
                 throw new ArgumentNullException();
             }
         }
-
-        private async Task HandleUpdateAsync(Guid id, Action<Nationality> operation, Action<Nationality> operation2 = null)
+        private async Task HandleDeleteAsync(Delete cmd)
         {
-            if (await Repository.ExistsAsync(id))
-            {
-                var nationality = await Repository.GetAsync(id);
-                operation(nationality);
-                operation2?.Invoke(nationality);
+            if (!await Repository.ExistsAsync(cmd.Id))
+                throw new InvalidOperationException($"Entity with id {cmd.Id} was not found! Update cannot finish.");
 
-                if (nationality.EnsureValidState())
-                {
-                    await Repository.SaveAsync();
-                }
+            try
+            {
+                await Repository.RemoveAsync(cmd.Id);
+                await Repository.SaveAsync();
             }
-            else
-                throw new ArgumentException();
+            catch (Exception)
+            {
+                throw new ArgumentNullException();
+            }
         }
     }
 }

@@ -64,7 +64,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new LanguageRepository(context);
 
             var languageService = new LanguageService(repository);
-            var command = new Commands.DeleteLanguage
+            var command = new Commands.Delete
             {
                 Id = id,
             };

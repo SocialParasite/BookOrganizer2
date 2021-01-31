@@ -17,7 +17,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
 
             var format = new Format();
 
-            format.Apply(new Events.FormatCreated
+            format.Apply(new Events.Created
             {
                 Id = id,
                 Name = name
@@ -80,14 +80,14 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
         {
             switch (@event)
             {
-                case Events.FormatCreated e:
+                case Events.Created e:
                     Id = new FormatId(e.Id);
                     Name = e.Name;
                     break;
-                case Events.FormatUpdated e:
+                case Events.Updated e:
                     Name = e.Name;
                     break;
-                case Events.FormatDeleted e:
+                case Events.Deleted e:
                     Id = e.Id;
                     break;
             }
