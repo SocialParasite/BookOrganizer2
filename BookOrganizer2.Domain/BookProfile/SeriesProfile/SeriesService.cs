@@ -110,6 +110,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             updatableSeries.SetName(cmd.Name);
             updatableSeries.SetPicturePath(cmd.PicturePath);
             updatableSeries.SetDescription(cmd.Description);
+            updatableSeries.SetBooks(cmd.Books);
 
             Repository.Update(updatableSeries);
 

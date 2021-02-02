@@ -28,8 +28,8 @@
                                 <ControlTemplate TargetType="{x:Type Label}">
                                     <Label
                                         x:Name="textBlockLabel"
-                                        Background="WhiteSmoke"
-                                        BorderBrush="SteelBlue"
+                                        Background="{StaticResource ItemsViewLabelDefaultBackground}"
+                                        BorderBrush="{StaticResource ItemsViewLabelBorderBrush}"
                                         BorderThickness="1"
                                         FontSize="12"
                                         ToolTip="{Binding InfoText}">
@@ -67,8 +67,8 @@
                                                         x:Name="BooksReadPb"
                                                         Width="300"
                                                         Height="10"
-                                                        Background="Azure"
-                                                        Foreground="LightGreen"
+                                                        Background="{StaticResource SeriesViewProgressBarBackground}"
+                                                        Foreground="{StaticResource SeriesViewBooksReadProgressbBarForeground}"
                                                         Value="{Binding SeriesState, Converter={StaticResource SeriesBooksReadStatus}}" />
                                                     <ProgressBar
                                                         x:Name="BooksOwnedPb"
@@ -76,8 +76,8 @@
                                                         Width="300"
                                                         Height="10"
                                                         Margin="0,2,0,0"
-                                                        Background="Azure"
-                                                        Foreground="LightSalmon"
+                                                        Background="{StaticResource SeriesViewProgressBarBackground}"
+                                                        Foreground="{StaticResource SeriesViewBooksOwnedProgressbBarForeground}"
                                                         Value="{Binding SeriesState, Converter={StaticResource SeriesBooksOwnedStatus}}" />
                                                 </Grid>
                                             </Grid>
@@ -85,7 +85,7 @@
                                     </Label>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="Label.IsMouseOver" Value="True">
-                                            <Setter TargetName="textBlockLabel" Property="Background" Value="LightSkyBlue" />
+                                            <Setter TargetName="textBlockLabel" Property="Background" Value="{StaticResource ItemsViewLabelBackgroundOnMouseOver}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>

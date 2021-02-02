@@ -38,7 +38,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.Reports
             SelectedYear = DateTime.Now.Year;
             SelectedMonth = (Months)DateTime.Now.Month - 1;
 
-            Init(SelectedYear, (int)SelectedMonth + 1);
+            Init(SelectedYear, (int)SelectedMonth);
         }
 
         public ICommand YearSelectionChangedCommand { get; }
