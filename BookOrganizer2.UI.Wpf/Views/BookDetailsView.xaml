@@ -261,7 +261,7 @@
                     Width="50"
                     Margin="5,0,0,5"
                     HorizontalAlignment="Left"
-                    Background="LightSkyBlue"
+                    Background="{StaticResource AddNewItemButton}"
                     Command="{Binding AddNewPublisherCommand}"
                     Content="New"
                     FontWeight="Bold"
@@ -311,7 +311,7 @@
                     Width="50"
                     Margin="5"
                     HorizontalAlignment="Left"
-                    Background="LightSkyBlue"
+                    Background="{StaticResource AddNewItemButton}"
                     Command="{Binding AddNewLanguageCommand}"
                     Content="New"
                     FontWeight="Bold"
@@ -389,7 +389,7 @@
                         x:Name="addNewAuthorButton"
                         Grid.Column="1"
                         Width="50"
-                        Background="LightSkyBlue"
+                        Background="{StaticResource AddNewItemButton}"
                         Command="{Binding AddNewAuthorCommand}"
                         Content="New"
                         FontWeight="Bold"
@@ -512,12 +512,12 @@
                                             <Expander
                                                 x:Name="bookSeriesExpander"
                                                 Margin="0,5,0,5"
-                                                Background="LightSkyBlue"
-                                                BorderBrush="LightSkyBlue"
+                                                Background="{StaticResource ExpanderBackground}"
+                                                BorderBrush="{StaticResource ExpanderBorderBrush}"
                                                 BorderThickness="2,2,0,0">
                                                 <Expander.Header>
                                                     <Label
-                                                        Background="LightSkyBlue"
+                                                        Background="{StaticResource ExpanderHeaderBackground}"
                                                         Content="{Binding Series.Name}"
                                                         FontWeight="Bold"
                                                         Style="{StaticResource LabelStyles}">

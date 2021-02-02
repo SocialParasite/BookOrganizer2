@@ -29,8 +29,8 @@
                                 <ControlTemplate TargetType="{x:Type Label}">
                                     <Label
                                         x:Name="textBlockLabel"
-                                        Background="WhiteSmoke"
-                                        BorderBrush="SteelBlue"
+                                        Background="{StaticResource ItemsViewLabelDefaultBackground}"
+                                        BorderBrush="{StaticResource ItemsViewLabelBorderBrush}"
                                         BorderThickness="1"
                                         FontSize="12"
                                         ToolTip="{Binding InfoText}">
@@ -56,7 +56,7 @@
                                     </Label>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="Label.IsMouseOver" Value="True">
-                                            <Setter TargetName="textBlockLabel" Property="Background" Value="LightSkyBlue" />
+                                            <Setter TargetName="textBlockLabel" Property="Background" Value="{StaticResource ItemsViewLabelBackgroundOnMouseOver}" />
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>

@@ -29,5 +29,7 @@
         <ResourceDictionary Source="Styles/GroupBoxStyles.xaml" />
         <ResourceDictionary Source="Styles/TextBoxStyles.xaml" />
         <ResourceDictionary Source="Styles/ToggleButtonStyles.xaml" />
+
+        <ResourceDictionary Source="Colors/BookOrganizer2.UI.Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

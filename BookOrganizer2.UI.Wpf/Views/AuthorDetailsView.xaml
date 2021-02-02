@@ -181,7 +181,7 @@
                     Width="50"
                     Margin="5,0,0,0"
                     HorizontalAlignment="Left"
-                    Background="LightSkyBlue"
+                    Background="{StaticResource AddNewItemButton}"
                     Command="{Binding AddNewNationalityCommand}"
                     Content="New"
                     FontWeight="Bold"

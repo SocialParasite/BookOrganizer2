@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  AuthorsView, BooksView, PublishersView, SeriesView  -->
+    <SolidColorBrush x:Key="ItemsViewLabelBorderBrush" Color="SteelBlue" />
+    <SolidColorBrush x:Key="ItemsViewLabelDefaultBackground" Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="ItemsViewLabelBackgroundOnMouseOver" Color="Gainsboro" />
+
+    <!--  SeriesView  -->
+    <SolidColorBrush x:Key="SeriesViewBooksReadProgressbBarForeground" Color="LightGreen" />
+    <SolidColorBrush x:Key="SeriesViewBooksOwnedProgressbBarForeground" Color="LightSalmon" />
+    <SolidColorBrush x:Key="SeriesViewProgressBarBackground" Color="Azure" />
+
+    <!--  Buttons  -->
+    <SolidColorBrush x:Key="AddNewItemButton" Color="LightSkyBlue" />
+    <!--  ButtonStyles  -->
+    <SolidColorBrush x:Key="NavigationButtonBackground" Color="SteelBlue" />
+
+    <!--  Expanders  -->
+    <SolidColorBrush x:Key="ExpanderBackground" Color="LightSkyBlue" />
+    <SolidColorBrush x:Key="ExpanderBorderBrush" Color="LightSkyBlue" />
+    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="LightSkyBlue" />
+</ResourceDictionary>
