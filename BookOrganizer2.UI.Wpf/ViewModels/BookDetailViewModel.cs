@@ -86,9 +86,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 .ObservesProperty(() => NewGenreName);
             SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute)
                 .ObservesProperty(() => SelectedItem.Title)
-                .ObservesProperty(() => SelectedItem.PageCount);
-                //.ObservesProperty(() => SelectedItem.LanguageId)
-                //.ObservesProperty(() => SelectedItem.PublisherId);
+                .ObservesProperty(() => SelectedItem.PageCount)
+                .ObservesProperty(() => LanguageIsDirty)
+                .ObservesProperty(() => PublisherIsDirty);
 
             SelectedItem = new BookWrapper(domainService.CreateItem());
 
@@ -424,6 +424,28 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         protected override bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
+
+        protected override void SaveItemExecute()
+        {
+            SaveItem().Await();
+        }
+
+        private async Task SaveItem()
+        {
+            if (PublisherIsDirty)
+            {
+                var currentPublisher =
+                    await ((IBookDomainService)DomainService).GetPublisherAsync(SelectedPublisher.Id);
+                SelectedItem.Model.SetPublisher(currentPublisher);
+            }
+            if (LanguageIsDirty)
+            {
+                var currentLanguage =
+                    await ((IBookDomainService)DomainService).GetLanguageAsync(SelectedLanguage.Id);
+                SelectedItem.Model.SetLanguage(currentLanguage);
+            }
+            base.SaveItemExecute();
+        }
 
         protected override string CreateChangeMessage(DatabaseOperation operation) 
             => $"{operation.ToString()}: {SelectedItem.Title}.";

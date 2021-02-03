@@ -208,7 +208,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async Task SaveItem()
         {
-            if (_nationalityIsDirty)
+            if (NationalityIsDirty)
             {
                 var currentNationality =
                     await ((IAuthorDomainService)DomainService).GetNationalityAsync(SelectedNationality.Id);

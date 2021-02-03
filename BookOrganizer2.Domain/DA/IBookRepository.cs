@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile;
@@ -20,7 +21,9 @@ namespace BookOrganizer2.Domain.DA
         Task ChangeReadDates(Book book, ICollection<BookReadDate> bookReadDates);
 
         ValueTask<Author> GetAuthorAsync(AuthorId authorId);
+        ValueTask<Publisher> GetPublisherAsync(PublisherId publisherId);
         ValueTask<Format> GetFormatAsync(FormatId formatId);
+        ValueTask<Language> GetLanguageAsync(LanguageId languageId);
         ValueTask<Genre> GetGenreAsync(GenreId genreId);
     }
 }
