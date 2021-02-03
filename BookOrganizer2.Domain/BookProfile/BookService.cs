@@ -8,6 +8,7 @@ using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static BookOrganizer2.Domain.BookProfile.Commands;
 
@@ -217,12 +218,21 @@ namespace BookOrganizer2.Domain.BookProfile
 
             var updatableBook = await Repository.GetAsync(cmd.Id);
 
-            //updatableBook.SetFirstName(cmd.FirstName);
-            //updatableBook.SetLastName(cmd.LastName);
-            //updatableBook.SetDateOfBirth(cmd.DateOfBirth);
-            //updatableBook.SetBiography(cmd.Biography);
-            //updatableBook.SetMugshotPath(cmd.MugshotPath);
+            updatableBook.SetTitle(cmd.Title);
+            updatableBook.SetReleaseYear(cmd.ReleaseYear);
+            updatableBook.SetPageCount(cmd.PageCount);
+            updatableBook.SetWordCount(cmd.WordCount);
+            updatableBook.SetIsbn(cmd.Isbn);
+            updatableBook.SetBookCoverPath(cmd.BookCoverPath);
+            updatableBook.SetDescription(cmd.Description);
             updatableBook.SetNotes(cmd.Notes);
+            updatableBook.SetIsRead(cmd.BookReadDates.Any());
+            //updatableBook.SetLanguage(cmd.Language);
+            //updatableBook.SetPublisher(cmd.Publisher);
+            updatableBook.SetAuthors(cmd.Authors);
+            updatableBook.SetReadDates(cmd.BookReadDates);
+            updatableBook.SetFormats(cmd.Formats);
+            updatableBook.SetGenres(cmd.Genres);
 
             Repository.Update(updatableBook);
 

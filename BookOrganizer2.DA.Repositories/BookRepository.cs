@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.AuthorProfile;
@@ -119,10 +120,10 @@ namespace BookOrganizer2.DA.Repositories
                 Context.Remove(entity);
         }
 
-        private ValueTask<Language> GetLanguageAsync(LanguageId languageId) 
+        public ValueTask<Language> GetLanguageAsync(LanguageId languageId) 
             => Context.Languages.FindAsync(languageId);
 
-        private ValueTask<Publisher> GetPublisherAsync(PublisherId publisherId)
+        public ValueTask<Publisher> GetPublisherAsync(PublisherId publisherId)
             => Context.Publishers.FindAsync(publisherId);
 
         public ValueTask<Author> GetAuthorAsync(AuthorId authorId)
