@@ -10,6 +10,7 @@
     <converters:BoolToMaxConverter x:Key="BoolToMaxConverter" />
     <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
     <converters:DobCountAge x:Key="DobCountAge" />
+    <converters:EnumToTextConverter x:Key="EnumToTextConverter" />
     <converters:GuidToVisibilityConverter x:Key="GuidToVisibilityConverter" />
     <converters:MultiValueConverter x:Key="MultiValueConverter" />
     <!-- <local:RowHasValuesConverter x:Key="RowHasValuesConverter" />-->

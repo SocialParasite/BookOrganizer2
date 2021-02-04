@@ -514,7 +514,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 foreach (var item in await GetAuthorList())
                 {
-                    Authors.Add(item);
+                    if (SelectedItem.Model.Authors.All(a => a.Id != item.Id)) 
+                        Authors.Add(item);
                 }
             }
         }

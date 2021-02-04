@@ -138,6 +138,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             updatableAuthor.SetBiography(cmd.Biography);
             updatableAuthor.SetMugshotPath(cmd.MugshotPath);
             updatableAuthor.SetNotes(cmd.Notes);
+            updatableAuthor.SetNationality(cmd.Nationality);
 
             Repository.Update(updatableAuthor);
 
