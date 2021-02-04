@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:BookOrganizer2.UI.Wpf.Views.Reports"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -26,7 +25,7 @@
             Content="Select year: "
             FontSize="18"
             FontWeight="Bold"
-            Foreground="White"
+            Foreground="{StaticResource ReportLabelForeground}"
             Style="{StaticResource LabelStyles}" />
 
         <ComboBox
@@ -56,13 +55,13 @@
             Grid.Row="1"
             Grid.ColumnSpan="2"
             Margin="0,20,0,0"
-            AlternatingRowBackground="WhiteSmoke"
+            AlternatingRowBackground="{StaticResource ReportDataGridAlternatingRowBackground}"
             AutoGenerateColumns="False"
-            Background="Black"
+            Background="{StaticResource ReportDataGridBackground}"
             GridLinesVisibility="Vertical"
             IsReadOnly="True"
             ItemsSource="{Binding ReportData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RowBackground="PapayaWhip">
+            RowBackground="{StaticResource ReportDataGridRowBackground}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding MonthName}" Header="Month" />
                 <DataGridTextColumn Binding="{Binding TotalNumberOfBooksRead, StringFormat={}{0:N0}}" Header="TotalNumberOfBooksRead" />

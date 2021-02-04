@@ -19,4 +19,10 @@
     <SolidColorBrush x:Key="ExpanderBackground" Color="LightSkyBlue" />
     <SolidColorBrush x:Key="ExpanderBorderBrush" Color="LightSkyBlue" />
     <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="LightSkyBlue" />
+
+    <!--  Reports  -->
+    <SolidColorBrush x:Key="ReportLabelForeground" Color="White" />
+    <SolidColorBrush x:Key="ReportDataGridBackground" Color="Black" />
+    <SolidColorBrush x:Key="ReportDataGridAlternatingRowBackground" Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="ReportDataGridRowBackground" Color="PapayaWhip" />
 </ResourceDictionary>

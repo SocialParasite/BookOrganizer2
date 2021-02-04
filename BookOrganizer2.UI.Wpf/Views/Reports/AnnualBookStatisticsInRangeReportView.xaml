@@ -59,7 +59,7 @@
             Content="Select end year: "
             FontSize="18"
             FontWeight="Bold"
-            Foreground="White"
+            Foreground="{StaticResource ReportLabelForeground}"
             Style="{StaticResource LabelStyles}" />
 
         <ComboBox
@@ -90,13 +90,13 @@
             Grid.Row="2"
             Grid.ColumnSpan="2"
             Margin="0,20,0,0"
-            AlternatingRowBackground="WhiteSmoke"
+            AlternatingRowBackground="{StaticResource ReportDataGridAlternatingRowBackground}"
             AutoGenerateColumns="False"
-            Background="Black"
+            Background="{StaticResource ReportDataGridBackground}"
             GridLinesVisibility="Vertical"
             IsReadOnly="True"
             ItemsSource="{Binding ReportData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            RowBackground="PapayaWhip">
+            RowBackground="{StaticResource ReportDataGridRowBackground}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Year, Converter={StaticResource TotalRowIdentifier}}" Header="Year" />
                 <DataGridTextColumn Binding="{Binding TotalNumberOfBooksRead, StringFormat={}{0:N0}}" Header="TotalNumberOfBooksRead" />
