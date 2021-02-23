@@ -75,7 +75,7 @@
 
   <ItemGroup>
     <None Update="Startup\settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
