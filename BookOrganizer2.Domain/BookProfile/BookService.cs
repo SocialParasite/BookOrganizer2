@@ -221,7 +221,11 @@ namespace BookOrganizer2.Domain.BookProfile
             updatableBook.SetTitle(cmd.Title);
             updatableBook.SetReleaseYear(cmd.ReleaseYear);
             updatableBook.SetPageCount(cmd.PageCount);
-            updatableBook.SetWordCount(cmd.WordCount);
+            
+            if (cmd.WordCount > 0)
+            {
+                updatableBook.SetWordCount(cmd.WordCount);
+            }
             updatableBook.SetIsbn(cmd.Isbn);
             updatableBook.SetBookCoverPath(cmd.BookCoverPath);
             updatableBook.SetDescription(cmd.Description);

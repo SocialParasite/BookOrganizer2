@@ -32,7 +32,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public override async Task InitializeRepositoryAsync()
         {
-
             try
             {
                 Items = await _bookLookupDataService.GetBookLookupAsync(nameof(BookDetailViewModel));

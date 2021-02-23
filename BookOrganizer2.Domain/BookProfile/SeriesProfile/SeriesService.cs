@@ -108,7 +108,10 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             var updatableSeries = await Repository.GetAsync(cmd.Id);
 
             updatableSeries.SetName(cmd.Name);
-            updatableSeries.SetPicturePath(cmd.PicturePath);
+            if (!string.IsNullOrWhiteSpace(cmd.PicturePath))
+            {
+                updatableSeries.SetPicturePath(cmd.PicturePath);
+            }
             updatableSeries.SetDescription(cmd.Description);
             updatableSeries.SetBooks(cmd.Books);
 
