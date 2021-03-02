@@ -764,6 +764,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             for (int year = DateTime.Today.Year; year > 0; year--)
                 yield return year;
         }
+
         private void OnAddNewAuthorExecute()
         {
             EventAggregator.GetEvent<OpenDetailViewEvent>()

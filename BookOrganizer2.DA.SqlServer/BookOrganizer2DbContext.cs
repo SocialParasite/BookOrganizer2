@@ -14,13 +14,13 @@ namespace BookOrganizer2.DA.SqlServer
 {
     public class BookOrganizer2DbContext : DbContext
     {
-        private string _connectionString;
+        public string ConnectionString;
 
         public BookOrganizer2DbContext() { }
 
         public BookOrganizer2DbContext(string connectionString)
         {
-            _connectionString = connectionString;
+            ConnectionString = connectionString;
         }
 
         public DbSet<Author> Authors { get; set; }
@@ -54,9 +54,9 @@ namespace BookOrganizer2.DA.SqlServer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            _connectionString ??= ConnectivityService.GetConnectionString();
+            ConnectionString ??= ConnectivityService.GetConnectionString();
 
-            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder.UseSqlServer(ConnectionString);
 
             base.OnConfiguring(optionsBuilder);
         }
