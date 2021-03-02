@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using System.Windows;
+using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.Wpf.Startup;
 
 namespace BookOrganizer2.UI.Wpf
@@ -20,9 +22,9 @@ namespace BookOrganizer2.UI.Wpf
             var mainWindow = Container.Resolve<MainWindow>();
             mainWindow.Show();
 
-            //var dbConnectivity = new DbConnectivityTester(container.Resolve<IMetroDialogService>(),
-            //                                              container.Resolve<BookOrganizer2DbContext>().connectionString);
-            //await dbConnectivity.DbConnectivityCheckAsync();
+            var dbConnectivity = new DbConnectivityTester(Container.Resolve<IDialogService>(),
+                                                          Container.Resolve<BookOrganizer2DbContext>().ConnectionString);
+            await dbConnectivity.DbConnectivityCheckAsync();
         }
     }
 }
