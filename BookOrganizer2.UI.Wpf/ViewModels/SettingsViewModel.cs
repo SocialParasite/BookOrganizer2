@@ -30,7 +30,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public SettingsViewModel(IEventAggregator eventAggregator)
         {
-            this._eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
+            _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
 
             ApplyAndSaveSettingsCommand = new DelegateCommand(OnApplyAndSaveExecute, OnApplyAndSaveCanExecute)
                 .ObservesProperty(() => HasChanges);
@@ -108,12 +108,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             foreach (var item in loop.GetChildren())
             {
-                string newConnectionString = builder.Build().GetConnectionString(item.Key);
+                var newConnectionString = builder.Build().GetConnectionString(item.Key);
                 var decoder = new SqlConnectionStringBuilder(newConnectionString);
 
                 var tempConnectionString = new ConnectionString();
 
-                if (item.Key != null && item.Key == _settings.StartupDatabase)
+                if (item.Key is not null && item.Key == _settings.StartupDatabase)
                 {
                     tempConnectionString.Default = true;
                 }
@@ -166,7 +166,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void SaveSettingsJson()
         {
-            _settings.StartupDatabase = Databases.Where(d => d.Default == true).Select(d => d.Identifier).FirstOrDefault();
+            _settings.StartupDatabase = Databases.Where(d => d.Default).Select(d => d.Identifier).FirstOrDefault();
 
             dynamic jsonSettings = JsonConvert.SerializeObject(_settings, Formatting.Indented);
             File.WriteAllText(@"Startup\settings.json", jsonSettings);

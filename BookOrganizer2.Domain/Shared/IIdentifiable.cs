@@ -1,6 +1,6 @@
 ﻿namespace BookOrganizer2.Domain.Shared
 {
-    public interface IIdentifiable<T> where T: ValueObject
+    public interface IIdentifiable<out T> where T: ValueObject
     {
         T Id { get; }
     }

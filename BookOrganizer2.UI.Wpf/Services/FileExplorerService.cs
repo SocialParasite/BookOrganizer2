@@ -34,6 +34,7 @@ namespace BookOrganizer2.UI.Wpf.Services
 
             var newPath = "";
             int index = path.IndexOf(".", StringComparison.InvariantCulture);
+            bool overwrite = false;
 
             if (index > 0)
                 newPath = path.Substring(0, index) + "_thumb.jpg";
@@ -44,9 +45,11 @@ namespace BookOrganizer2.UI.Wpf.Services
                 var dialog = new OkCancelViewModel("File already exists.", "File already exists. Would you like to replace the existing file?");
                 if (dialogService?.OpenDialog(dialog) == DialogResult.No)
                     return;
+                
+                overwrite = true;
             }
 
-            File.Move("test.jpg", newPath);
+            File.Move("test.jpg", newPath, overwrite);
         }
     }
 }

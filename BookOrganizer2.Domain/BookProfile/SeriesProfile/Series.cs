@@ -63,7 +63,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                 "Invalid name. \nName should be 1-256 characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
             {
-                Apply(new Events.Updated
+                Apply(new Events.SeriesNameChanged
                 {
                     Id = Id,
                     Name = name
@@ -144,6 +144,10 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
                     PicturePath = e.PicturePath;
                     Description = e.Description;
                     Books = e.Books;
+                    break;
+                case Events.SeriesNameChanged e:
+                    Id = e.Id;
+                    Name = e.Name;
                     break;
                 case Events.SeriesPicturePathChanged e:
                     Id = e.Id;

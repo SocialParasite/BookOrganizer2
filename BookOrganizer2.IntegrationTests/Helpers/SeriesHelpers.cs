@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BookOrganizer2.DA.Repositories;
 using BookOrganizer2.DA.SqlServer;
@@ -34,20 +35,25 @@ namespace BookOrganizer2.IntegrationTests.Helpers
 
         public static async Task<Series> CreateValidSeriesWithBooks()
         {
+            var book1 = await BookHelpers.CreateValidBook("Book 1");
+            var book2 = await BookHelpers.CreateValidBook("Book 2");
+
             var connectionString = ConnectivityService.GetConnectionString("TEMP");
             var context = new BookOrganizer2DbContext(connectionString);
+            context.Attach(book1);
+            context.Attach(book2);
+
             var repository = new SeriesRepository(context);
 
             var seriesService = new SeriesService(repository);
             
-            var book1 = await BookHelpers.CreateValidBook("Book 1");
-            var book2 = await BookHelpers.CreateValidBook("Book 2");
             var readOrder = new List<ReadOrder>
             {
                 ReadOrder.NewReadOrder(book1, null, 1),
                 ReadOrder.NewReadOrder(book2, null, 2)
             };
 
+            
             var command = new Commands.Create
             {
                 Id = new SeriesId(SequentialGuid.NewSequentialGuid()),
