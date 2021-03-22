@@ -216,6 +216,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async Task GetBookToAdd(Guid? id)
         {
+            SelectedItem.Model.Books ??= new ObservableCollection<ReadOrder>();
+
             var addedBook = await ((ISeriesDomainService)DomainService).GetBookAsync((Guid)id);
 
             SelectedItem.Model.Books

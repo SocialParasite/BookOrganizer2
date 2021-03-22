@@ -44,7 +44,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         }
 
         private static string GetInfoText(Series s) 
-            => $"Owned: {GetOwnedBooks(s)} of {GetBookCount(s)} \rRead: {GetReadBooks(s)} of {GetBookCount(s)}";
+            => $"Read: {GetReadBooks(s)} of {GetBookCount(s)}\rOwned: {GetOwnedBooks(s)} of {GetBookCount(s)}";
 
         private static SeriesState GetSeriesState(Series s)
         {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.BookProfile;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Xunit;
 
 namespace BookOrganizer2.IntegrationTests
@@ -176,9 +177,9 @@ namespace BookOrganizer2.IntegrationTests
             // Re-order collection
             sut = await repository.LoadAsync(series.Id);
 
-            sut.Books.SingleOrDefault(b => b.Instalment == 1).Instalment = 0;
-            sut.Books.SingleOrDefault(b => b.Instalment == 2).Instalment = 1;
-            sut.Books.SingleOrDefault(b => b.Instalment == 0).Instalment = 2;
+            sut.Books.Single(b => b.Instalment == 1).Instalment = 0;
+            sut.Books.Single(b => b.Instalment == 2).Instalment = 1;
+            sut.Books.Single(b => b.Instalment == 0).Instalment = 2;
 
             await repository.SaveAsync();
             sut = await repository.LoadAsync(series.Id);

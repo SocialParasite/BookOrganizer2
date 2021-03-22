@@ -3,7 +3,6 @@ using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static BookOrganizer2.Domain.BookProfile.SeriesProfile.Commands;
 
@@ -13,7 +12,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
     {
         public IRepository<Series, SeriesId> Repository { get; }
 
-        public SeriesService(IRepository<Series, SeriesId> repository) 
+        public SeriesService(IRepository<Series, SeriesId> repository)
             => Repository = repository ?? throw new ArgumentNullException(nameof(repository));
 
         public Series CreateItem() => Series.NewSeries;
@@ -42,8 +41,8 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             {
                 Id = new SeriesId(SequentialGuid.NewSequentialGuid()),
                 Name = model.Name,
-                PicturePath =  model.PicturePath,
-                Description =  model.Description,
+                PicturePath = model.PicturePath,
+                Description = model.Description,
                 Books = model.Books
             };
 
@@ -82,9 +81,10 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
             if (await Repository.ExistsAsync(cmd.Id))
                 throw new InvalidOperationException($"Entity with id {cmd.Id} already exists");
 
-            var series = Series.Create(cmd.Id, cmd.Name, cmd.PicturePath, cmd.Description);
-            
+            var series = Series.Create(cmd.Id, cmd.Name, cmd.PicturePath, cmd.Description, cmd.Books);
+
             await Repository.AddAsync(series);
+
             if (series.EnsureValidState())
             {
                 await Repository.SaveAsync();
@@ -161,7 +161,7 @@ namespace BookOrganizer2.Domain.BookProfile.SeriesProfile
 
         private Task UpdateSeriesReadOrder(Series series, ICollection<ReadOrder> books)
         {
-            return ((ISeriesRepository) Repository).ChangeReadOrder(series, books);
+            return ((ISeriesRepository)Repository).ChangeReadOrder(series, books);
         }
 
         private async Task HandleDeleteAsync(Delete cmd)
