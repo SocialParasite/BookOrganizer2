@@ -1,5 +1,12 @@
+using BookOrganizer2.DA.Repositories;
+using BookOrganizer2.DA.Repositories.Lookups;
+using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +26,16 @@ namespace BookOrganizer2.UI.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connString = Configuration.GetConnectionString("DEV");
+
+            services.AddDbContext<BookOrganizer2DbContext>(options => options.UseSqlServer(connString));
+
+            services.AddTransient<ISimpleDomainService<Language, LanguageId>, LanguageService>();
+            services.AddTransient<IRepository<Language, LanguageId>, LanguageRepository>();
+            services.AddTransient<ILanguageLookupDataService, LanguageLookupDataService>(ctx =>
+            {
+                return new LanguageLookupDataService(() => ctx.GetService<BookOrganizer2DbContext>());
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
