@@ -112,9 +112,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     SelectedItem.Name = SelectedItem.Model.Name;
                 }
 
-                await InitializeFormatCollection();
+                await InitializeLanguageCollection();
 
-                async Task InitializeFormatCollection()
+                async Task InitializeLanguageCollection()
                 {
                     if (!Languages.Any() || HasChanges)
                     {

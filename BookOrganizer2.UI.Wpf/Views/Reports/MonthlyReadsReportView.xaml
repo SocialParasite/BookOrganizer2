@@ -82,8 +82,8 @@
             </DataGrid.Columns>
             <DataGrid.InputBindings>
                 <MouseBinding
-                    Command="{Binding ShowBooksCommand}"
-                    CommandParameter="{Binding}"
+                    Command="{Binding ShowBookCommand}"
+                    CommandParameter="{Binding Id.Value}"
                     MouseAction="LeftDoubleClick" />
             </DataGrid.InputBindings>
         </DataGrid>

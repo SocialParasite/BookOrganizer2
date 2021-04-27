@@ -1,7 +1,9 @@
 ﻿using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Extensions;
 using BookOrganizer2.UI.Wpf.Interfaces;
+using JetBrains.Annotations;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
@@ -10,8 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BookOrganizer2.UI.BOThemes.DialogServiceManager;
-using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -72,6 +72,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private string _searchString;
+        private int _numberOfItems;
 
         [UsedImplicitly]
         public string SearchString
@@ -85,6 +86,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        public int NumberOfItems
+        {
+            get => _numberOfItems;
+            set { _numberOfItems = value; OnPropertyChanged(); }
+        }
+
         public abstract Task InitializeRepositoryAsync();
 
         private void UpdateFilteredEntityCollection()
@@ -92,7 +99,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             FilteredEntityCollection?.Clear();
             FilteredEntityCollection = EntityCollection?.Where(w => w.DisplayMember
                                                        .IndexOf(SearchString, StringComparison.OrdinalIgnoreCase) != -1)
-                                                       .ToList();
+                                                       .FromListToList();
         }
 
         private void OnAddNewItemExecute(string itemType)
