@@ -43,6 +43,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                         ? b.DisplayMember.Substring(b.DisplayMember.IndexOf(" ", StringComparison.Ordinal) + 1)
                         : b.DisplayMember)
                     .ToList();
+
+                NumberOfItems = EntityCollection.Count();
             }
             catch (Exception ex)
             {

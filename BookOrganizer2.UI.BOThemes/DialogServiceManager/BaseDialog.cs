@@ -2,9 +2,9 @@
 {
     public abstract class BaseDialog<T>
     {
-        public string Title { get; set; }
-        public string Message { get; set; }
-        public T DialogResult { get; set; }
+        public string Title { get; }
+        public string Message { get; }
+        public T DialogResult { get; private set; }
 
         public BaseDialog() : this(string.Empty, string.Empty)
         {
