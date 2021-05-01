@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -36,6 +37,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             ItemNameLabelMouseLeftButtonUpCommand =
                 new DelegateCommand<LookupItem>(OnItemNameLabelMouseLeftButtonUpExecute,
                                            OnItemNameLabelMouseLeftButtonUpCanExecute);
+            FilterExecutedCommand = new DelegateCommand<bool?>(OnFilterExecute);
+        }
+
+
+        private void OnFilterExecute(bool? resetFilters = false)
+        {
+            FilterCollection((bool)resetFilters);
         }
 
         [UsedImplicitly]
@@ -46,6 +54,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand AddNewItemCommand { get; }
         [UsedImplicitly]
         public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
+        public ICommand FilterExecutedCommand { get; }
 
         protected List<LookupItem> EntityCollection
         {
@@ -86,6 +95,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
+        public IEnumerable<string> Filters { get; set; }
+
+        private string _activeFilter;
+
+        public string ActiveFilter
+        {
+            get => _activeFilter;
+            set { _activeFilter = value; OnPropertyChanged(); }
+        }
+
         public int NumberOfItems
         {
             get => _numberOfItems;
@@ -93,6 +112,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         public abstract Task InitializeRepositoryAsync();
+        public abstract Task FilterCollection(bool resetFilters = false);
 
         private void UpdateFilteredEntityCollection()
         {

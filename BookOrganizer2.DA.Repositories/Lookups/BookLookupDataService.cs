@@ -4,10 +4,13 @@ using BookOrganizer2.Domain.DA;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -41,6 +44,43 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                         BookStatus = CheckBookStatus(a.IsRead, a.Formats.Count > 0)
                     })
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName, FilterCondition filterCondition)
+        {
+            var filter = GetFilterCondition(filterCondition);
+            await using var ctx = _contextCreator();
+            return await ctx.Books
+                .Include(f => f.Formats)
+                .Include(r => r.ReadDates)
+                .Include(a => a.Authors)
+                .Where(filter)
+                .AsNoTracking()
+                .OrderBy(a => a.Title)
+                .Select(a =>
+                    new BookLookupItem
+                    {
+                        Id = a.Id,
+                        DisplayMember = a.Title,
+                        Picture = GetPictureThumbnail(a.BookCoverPath) ?? _placeholderPic,
+                        ViewModelName = viewModelName,
+                        InfoText = GetInfoText(a),
+                        BookStatus = CheckBookStatus(a.IsRead, a.Formats.Count > 0)
+                    })
+                .ToListAsync();
+
+            Expression<Func<Book, bool>> GetFilterCondition(FilterCondition condition)
+            {
+                return condition switch
+                {
+                    FilterCondition.NoFilter => b => true,
+                    FilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
+                    FilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
+                    FilterCondition.NoAuthors => b => b.Authors.Count == 0,
+                    FilterCondition.NotRead => b => !b.IsRead,
+                    _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
+                };
+            }
         }
 
         private static string GetInfoText(Book book)
