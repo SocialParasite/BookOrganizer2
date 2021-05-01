@@ -46,6 +46,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
+
+        public override Task FilterCollection(bool resetFilters = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
