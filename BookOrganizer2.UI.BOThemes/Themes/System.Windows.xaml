@@ -5,6 +5,7 @@
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
     <converters:AdjustWidthConverter x:Key="AdjustWidthConverter" />
+    <converters:ItemsCountStatusConverter x:Key="ItemsCountStatusConverter" />
     <converters:BackgroundColorConverter x:Key="BackgroundColorConverter" />
     <converters:BookSeriesHeader x:Key="BookSeriesHeader" />
     <converters:BoolToMaxConverter x:Key="BoolToMaxConverter" />

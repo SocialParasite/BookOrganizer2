@@ -1,16 +1,18 @@
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.DA.Conditions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.DA.Conditions;
+using BookOrganizer2.Domain.BookProfile.FormatProfile;
+using BookOrganizer2.Domain.BookProfile.GenreProfile;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -46,8 +48,15 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName, FilterCondition filterCondition)
+        public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
+            FilterCondition filterCondition,
+            IList<GenreLookupItem> genreFilter = null,
+            IList<FormatLookupItem> formatFilter = null)
         {
+            // TODO: additional filters? How?
+            // - genres: all, 1-n genreFilter=null == all?
+            // - formats: all, 1-n
+
             var filter = GetFilterCondition(filterCondition);
             await using var ctx = _contextCreator();
             return await ctx.Books
@@ -81,6 +90,22 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }
+        }
+
+        public async Task<IEnumerable<GenreLookupItem>> GetGenresAsync()
+        {
+            await using var ctx = _contextCreator();
+            return await ctx.Genres
+                .AsNoTracking()
+                .OrderBy(n => n.Name)
+                .Select(n =>
+                    new GenreLookupItem
+                    {
+                        Id = n.Id,
+                        Name = n.Name,
+                        IsSelected = false
+                    })
+                .ToListAsync();
         }
 
         private static string GetInfoText(Book book)
