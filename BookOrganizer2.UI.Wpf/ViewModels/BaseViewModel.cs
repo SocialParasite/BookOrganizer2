@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -43,18 +42,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnFilterExecute(bool? resetFilters = false)
         {
+            resetFilters ??= false;
+
             FilterCollection((bool)resetFilters);
         }
 
-        [UsedImplicitly]
-        public string ViewModelType { get; init; }
-
+        [UsedImplicitly] public string ViewModelType { get; init; }
         protected IEnumerable<LookupItem> Items;
-        [UsedImplicitly]
-        public ICommand AddNewItemCommand { get; }
-        [UsedImplicitly]
-        public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
-        public ICommand FilterExecutedCommand { get; }
+        [UsedImplicitly] public ICommand AddNewItemCommand { get; }
+        [UsedImplicitly] public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
+        [UsedImplicitly] public ICommand FilterExecutedCommand { get; }
 
         protected List<LookupItem> EntityCollection
         {
@@ -82,6 +79,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private string _searchString;
         private int _numberOfItems;
+        private int _allItemsCount;
 
         [UsedImplicitly]
         public string SearchString
@@ -95,24 +93,32 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public IEnumerable<string> Filters { get; set; }
+        [UsedImplicitly] public IEnumerable<string> Filters { get; set; }
 
         private string _activeFilter;
-
+        [UsedImplicitly]
         public string ActiveFilter
         {
             get => _activeFilter;
             set { _activeFilter = value; OnPropertyChanged(); }
         }
 
+        [UsedImplicitly]
         public int NumberOfItems
         {
             get => _numberOfItems;
             set { _numberOfItems = value; OnPropertyChanged(); }
         }
 
+        [UsedImplicitly]
+        public int AllItemsCount
+        {
+            get => _allItemsCount;
+            set { _allItemsCount = value; OnPropertyChanged(); }
+        }
+
         public abstract Task InitializeRepositoryAsync();
-        public abstract Task FilterCollection(bool resetFilters = false);
+        protected abstract Task FilterCollection(bool resetFilters = false);
 
         private void UpdateFilteredEntityCollection()
         {

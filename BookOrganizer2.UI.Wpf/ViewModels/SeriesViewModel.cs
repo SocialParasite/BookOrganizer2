@@ -47,7 +47,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        public override Task FilterCollection(bool resetFilters = false)
+        protected override Task FilterCollection(bool resetFilters = false)
         {
             throw new NotImplementedException();
         }
