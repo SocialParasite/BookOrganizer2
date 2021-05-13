@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:BookOrganizer2.UI.Wpf.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
     d:DesignHeight="450"
@@ -104,15 +103,15 @@
                 Content="Add new item" />
         </Grid>
         <Expander Grid.Row="2" Header="Filters">
-            <Grid Margin="0,0,0,5" ShowGridLines="True">
+            <Grid Margin="0,0,0,5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" MinWidth="100" />
+                    <ColumnDefinition Width="Auto" MinWidth="110" />
+                    <ColumnDefinition Width="Auto" MinWidth="100" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label Content="Maintenance filters: " Style="{StaticResource LabelStyles}" />
@@ -151,18 +150,12 @@
                     x:Name="FilterByGenreComboBox"
                     Grid.Row="1"
                     Grid.Column="1"
+                    Margin="5,0,5,0"
                     FontSize="16"
-                    IsEditable="True">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding GenreFilterExecutedCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    IsEditable="True"
+                    Style="{StaticResource ComboBoxStyle}">
                     <ComboBox.Resources>
-                        <CollectionViewSource
-                            x:Key="GenreResource"
-                            x:Name="GenreSource"
-                            Source="{Binding Genres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CollectionViewSource x:Key="GenreResource" Source="{Binding Genres, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </ComboBox.Resources>
                     <ComboBox.ItemsSource>
                         <CompositeCollection>
@@ -180,7 +173,44 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <CheckBox
-                                    Name="GenreCheckBox"
+                                    x:Name="GenreCheckBox"
+                                    Command="{Binding DataContext.GenreFilterExecutedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}"
+                                    CommandParameter="{Binding Id}"
+                                    Content="{Binding Name}"
+                                    IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox
+                    x:Name="FilterByFormatComboBox"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    FontSize="16"
+                    IsEditable="True"
+                    Style="{StaticResource ComboBoxStyle}">
+                    <ComboBox.Resources>
+                        <CollectionViewSource x:Key="FormatResource" Source="{Binding Formats, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </ComboBox.Resources>
+                    <ComboBox.ItemsSource>
+                        <CompositeCollection>
+                            <ComboBoxItem>
+                                <CheckBox
+                                    x:Name="AllFormatsCheckBox"
+                                    Command="{Binding AllFormatsSelectionChangedCommand}"
+                                    Content="All"
+                                    IsChecked="{Binding AllFormatsIsSelected, Mode=TwoWay}" />
+                            </ComboBoxItem>
+                            <CollectionContainer Collection="{Binding Source={StaticResource FormatResource}, IsAsync=True}" />
+                        </CompositeCollection>
+                    </ComboBox.ItemsSource>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox
+                                    x:Name="FormatCheckBox"
+                                    Command="{Binding DataContext.FormatFilterExecutedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ComboBox}}}"
+                                    CommandParameter="{Binding Id}"
                                     Content="{Binding Name}"
                                     IsChecked="{Binding IsSelected, Mode=TwoWay}" />
                             </StackPanel>
@@ -191,6 +221,8 @@
                     x:Name="ResetFilterButton"
                     Grid.Row="1"
                     Grid.Column="3"
+                    Margin="0,0,50,10"
+                    HorizontalAlignment="Right"
                     Command="{Binding FilterExecutedCommand}"
                     Content="Reset filter"
                     Style="{StaticResource BaseButtonStyle}">

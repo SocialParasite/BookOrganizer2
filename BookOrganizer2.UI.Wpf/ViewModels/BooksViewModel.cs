@@ -1,7 +1,7 @@
-﻿using BookOrganizer2.Domain.BookProfile.GenreProfile;
+﻿using BookOrganizer2.Domain.BookProfile.FormatProfile;
+using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.DA.Conditions;
-using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Extensions;
@@ -14,15 +14,16 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Threading;
-using BookOrganizer2.Domain.BookProfile.FormatProfile;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
     public class BooksViewModel : BaseViewModel
     {
         private readonly IBookLookupDataService _bookLookupDataService;
+        private bool _allFormatsIsSelected;
         private bool _allGenresIsSelected;
+        private ObservableCollection<GenreLookupItem> _genres;
+        private ObservableCollection<FormatLookupItem> _formats;
 
         public BooksViewModel(IEventAggregator eventAggregator,
             IBookLookupDataService bookLookupDataService,
@@ -33,8 +34,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _bookLookupDataService = bookLookupDataService
                                            ?? throw new ArgumentNullException(nameof(bookLookupDataService));
 
-            GenreFilterExecutedCommand = new DelegateCommand(OnGenreFilterExecuted);
+            FormatFilterExecutedCommand = new DelegateCommand<Guid?>(OnFormatFilterExecuted);
+            GenreFilterExecutedCommand = new DelegateCommand<Guid?>(OnGenreFilterExecuted);
             AllGenresSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
+            AllFormatsSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
 
             Filters = GetFilters();
             ActiveFilter = Filters.First();
@@ -44,22 +47,36 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             ViewModelType = nameof(BookDetailViewModel);
         }
 
-        private void OnAllGenresSelectionChangedExecuted()
-        {
-            //AllGenresIsSelected = !AllGenresIsSelected;
-            // TODO: filter
-        }
-
-        private void OnGenreFilterExecuted()
-        {
-            // TODO: Genres => Dictionary<GenreLookupItem, bool>??
-
-            throw new NotImplementedException();
-        }
-
         public ICommand GenreFilterExecutedCommand { get; }
+        public ICommand FormatFilterExecutedCommand { get; }
+        public ICommand AllFormatsSelectionChangedCommand { get; }
         public ICommand AllGenresSelectionChangedCommand { get; }
-        public ObservableCollection<GenreLookupItem> Genres { get; set; }
+
+        public ObservableCollection<GenreLookupItem> Genres
+        {
+            get => _genres;
+            set
+            {
+                _genres = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<FormatLookupItem> Formats
+        {
+            get => _formats;
+            set
+            {
+                _formats = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AllFormatsIsSelected
+        {
+            get => _allFormatsIsSelected;
+            set { _allFormatsIsSelected = value; OnPropertyChanged(); }
+        }
 
         public bool AllGenresIsSelected
         {
@@ -81,6 +98,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 UpdateEntityCollection();
                 // TODO: Call book service instead
                 Genres = (await _bookLookupDataService.GetGenresAsync()).FromListToObservableCollection();
+                Formats = (await _bookLookupDataService.GetFormatsAsync()).FromListToObservableCollection();
             }
             catch (Exception ex)
             {
@@ -101,8 +119,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
 
             var condition = MapActiveFilterToFilterCondition(ActiveFilter);
-            List<GenreLookupItem> genreFilter = null;
-            List<FormatLookupItem> formatFilter = null;
+            
+            List<Guid> genreFilter = null;
+            List<Guid> formatFilter = null;
+
+            if (!AllGenresIsSelected)
+            {
+                genreFilter = Genres.Where(g => g.IsSelected).Select(g => g.Id).ToList();
+            }
+            if (!AllFormatsIsSelected)
+            {
+                formatFilter = Formats.Where(f => f.IsSelected).Select(f => f.Id).ToList();
+            }
 
             Items = await _bookLookupDataService
                 .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, genreFilter, formatFilter)
@@ -125,6 +153,27 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
+        private void OnAllGenresSelectionChangedExecuted()
+        {
+            //foreach (var genre in Genres)
+            //{
+            //    genre.IsSelected = true;
+            //}
+
+            FilterCollection().Await();
+        }
+
+        private void OnGenreFilterExecuted(Guid? id)
+        {
+            AllGenresIsSelected = Genres.All(g => g.IsSelected);
+            FilterCollection().Await();
+        }
+
+        private void OnFormatFilterExecuted(Guid? id)
+        {
+            AllFormatsIsSelected = Formats.All(f => f.IsSelected);
+            FilterCollection().Await();
+        }
         private static FilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch

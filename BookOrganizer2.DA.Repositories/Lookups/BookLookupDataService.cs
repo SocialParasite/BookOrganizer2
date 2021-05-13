@@ -1,5 +1,7 @@
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.BookProfile.FormatProfile;
+using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.DA.Conditions;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.BookProfile.FormatProfile;
-using BookOrganizer2.Domain.BookProfile.GenreProfile;
-using BookOrganizer2.Domain.Shared;
+using BookOrganizer2.DA.Repositories.Shared;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -50,20 +50,34 @@ namespace BookOrganizer2.DA.Repositories.Lookups
 
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
             FilterCondition filterCondition,
-            IList<GenreLookupItem> genreFilter = null,
-            IList<FormatLookupItem> formatFilter = null)
+            IList<Guid> genreFilter = null,
+            IList<Guid> formatFilter = null)
         {
-            // TODO: additional filters? How?
-            // - genres: all, 1-n genreFilter=null == all?
-            // - formats: all, 1-n
-
             var filter = GetFilterCondition(filterCondition);
+
+            Expression<Func<Book, bool>> combinedFilter = null;
+            if (genreFilter?.Count > 0)
+            {
+                Expression<Func<Book, bool>> genreFilterExpression = b => b.Genres.Any(g => genreFilter.Contains(g.Id));
+                combinedFilter = filter.And(genreFilterExpression);
+            }
+
+            if (formatFilter?.Count > 0)
+            {
+                Expression<Func<Book, bool>> formatFilterExpression = b => b.Formats.Any(f => formatFilter.Contains(f.Id));
+
+                combinedFilter = combinedFilter is null
+                    ? filter.And(formatFilterExpression)
+                    : combinedFilter.And(formatFilterExpression);
+            }
+
             await using var ctx = _contextCreator();
             return await ctx.Books
                 .Include(f => f.Formats)
                 .Include(r => r.ReadDates)
                 .Include(a => a.Authors)
-                .Where(filter)
+                .Include(g => g.Genres)
+                .Where(combinedFilter ?? filter)
                 .AsNoTracking()
                 .OrderBy(a => a.Title)
                 .Select(a =>
@@ -108,6 +122,22 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<FormatLookupItem>> GetFormatsAsync()
+        {
+            await using var ctx = _contextCreator();
+            return await ctx.Formats
+                .AsNoTracking()
+                .OrderBy(n => n.Name)
+                .Select(n =>
+                    new FormatLookupItem
+                    {
+                        Id = n.Id,
+                        Name = n.Name,
+                        IsSelected = false
+                    })
+                .ToListAsync();
+        }
+
         private static string GetInfoText(Book book)
         {
             var owned = "You do not own this book.";
@@ -127,7 +157,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             return $"{owned}\r{read}";
         }
 
-        static BookStatus CheckBookStatus(bool read, bool owned)
+        private static BookStatus CheckBookStatus(bool read, bool owned)
         {
             return read switch
             {

@@ -277,7 +277,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             try
             {
-                Book book = null;
+                Book book;
 
                 if (id != default)
                 {
@@ -288,7 +288,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     book = Book.NewBook;
                     IsNewItem = true;
                 }
-
 
                 SelectedItem = CreateWrapper(book);
 
@@ -342,19 +341,17 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 void InitializeSelectedLanguageIfNoneSet()
                 {
-                    if (SelectedLanguage is null)
+                    if (SelectedLanguage is not null) return;
+                    if (SelectedItem.Model.Language is not null)
                     {
-                        if (SelectedItem.Model.Language != null)
-                        {
-                            SelectedLanguage =
-                                new LookupItem
-                                {
-                                    Id = SelectedItem.Model.Language.Id,
-                                    DisplayMember = SelectedItem.Model.Language == null
+                        SelectedLanguage =
+                            new LookupItem
+                            {
+                                Id = SelectedItem.Model.Language.Id,
+                                DisplayMember = SelectedItem.Model.Language == null
                                     ? Language.NewLanguage.Name
                                     : SelectedItem.Model.Language.Name
-                                };
-                        }
+                            };
                     }
                 }
 
@@ -418,17 +415,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var dialog = new NotificationViewModel("Exception", ex.Message);
                 DialogService.OpenDialog(dialog);
 
-                Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+                Logger.Error(ex,"Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
 
         protected override bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem || LanguageIsDirty || PublisherIsDirty);
 
-        protected override void SaveItemExecute()
-        {
-            SaveItem().Await();
-        }
+        protected override void SaveItemExecute() => SaveItem().Await();
 
         private async Task SaveItem()
         {
@@ -447,13 +441,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             base.SaveItemExecute();
         }
 
-        protected override string CreateChangeMessage(DatabaseOperation operation) 
+        protected override string CreateChangeMessage(DatabaseOperation operation)
             => $"{operation.ToString()}: {SelectedItem.Title}.";
 
-        public override void SwitchEditableStateExecute()
-        {
-            SwitchStateAsync().Await();
-        }
+        public override void SwitchEditableStateExecute() => SwitchStateAsync().Await();
 
         private async Task SwitchStateAsync()
         {
@@ -469,10 +460,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializeLanguageCollection()
             {
-                if (Languages.Any())
-                {
-                    return;
-                }
+                if (Languages.Any()) return;
 
                 Languages.Clear();
 
@@ -487,10 +475,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializePublisherCollection()
             {
-                if (Publishers.Any())
-                {
-                    return;
-                }
+                if (Publishers.Any()) return;
 
                 Publishers.Clear();
 
@@ -505,10 +490,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             async Task InitializeAuthorCollection()
             {
-                if (Authors.Any())
-                {
-                    return;
-                }
+                if (Authors.Any()) return;
 
                 Authors.Clear();
 
@@ -761,7 +743,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private IEnumerable<int> PopulateYearsMenu()
         {
-            for (int year = DateTime.Today.Year; year > 0; year--)
+            for (var year = DateTime.Today.Year; year > 0; year--)
                 yield return year;
         }
 
@@ -794,11 +776,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                            });
         }
 
-        public override BookWrapper CreateWrapper(Book entity)
-        {
-            BookWrapper wrapper = new BookWrapper(entity);
-            return wrapper;
-        }
+        public override BookWrapper CreateWrapper(Book entity) => new BookWrapper(entity);
 
         private bool OnAddNewFormatCanExecute(string formatName)
         {
@@ -820,10 +798,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 => f.Item1.DisplayMember.Equals(genreName, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        private void OnAddNewGenreExecute(string genre)
-        {
-            AddNewGenre(genre).Await();
-        }
+        private void OnAddNewGenreExecute(string genre) => AddNewGenre(genre).Await();
 
         private async Task AddNewGenre(string genre)
         {
@@ -831,10 +806,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             await InitializeAllBookGenresCollection();
         }
 
-        private void OnAddNewFormatExecute(string format)
-        {
-            AddNewFormat(format).Await();
-        }
+        private void OnAddNewFormatExecute(string format) => AddNewFormat(format).Await();
 
         private async Task AddNewFormat(string format)
         {
