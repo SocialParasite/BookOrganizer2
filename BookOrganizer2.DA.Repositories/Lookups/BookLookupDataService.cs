@@ -1,3 +1,4 @@
+using BookOrganizer2.DA.Repositories.Shared;
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
@@ -12,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.DA.Repositories.Shared;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -55,22 +55,16 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         {
             var filter = GetFilterCondition(filterCondition);
 
-            Expression<Func<Book, bool>> combinedFilter = null;
-            if (genreFilter?.Count > 0)
-            {
-                Expression<Func<Book, bool>> genreFilterExpression = b => b.Genres.Any(g => genreFilter.Contains(g.Id));
-                combinedFilter = filter.And(genreFilterExpression);
-            }
+            Expression<Func<Book, bool>> genreFilterExpression = genreFilter?.Count > 0
+                ? b => b.Genres.Any(g => genreFilter.Contains(g.Id))
+                : b => true;
 
-            if (formatFilter?.Count > 0)
-            {
-                Expression<Func<Book, bool>> formatFilterExpression = b => b.Formats.Any(f => formatFilter.Contains(f.Id));
+            Expression<Func<Book, bool>> formatFilterExpression = formatFilter?.Count > 0
+                ? b => b.Formats.Any(f => formatFilter.Contains(f.Id))
+                : b => true;
 
-                combinedFilter = combinedFilter is null
-                    ? filter.And(formatFilterExpression)
-                    : combinedFilter.And(formatFilterExpression);
-            }
-
+            var combinedFilter = filter.And(genreFilterExpression).And(formatFilterExpression);
+            
             await using var ctx = _contextCreator();
             return await ctx.Books
                 .Include(f => f.Formats)
@@ -148,7 +142,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 var formats = string.Join(", ", book.Formats.Select(p => p.Name));
                 owned = $"You own this book ({formats})";
             }
-            
+
             if (book.IsRead && book.ReadDates.Any())
             {
                 var lastReadDate = book.ReadDates.OrderBy(d => d.ReadDate).Last().ReadDate;
