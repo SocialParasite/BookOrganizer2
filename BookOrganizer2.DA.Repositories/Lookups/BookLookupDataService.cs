@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.PublisherProfile;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -49,11 +50,12 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         }
 
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
-            FilterCondition filterCondition,
+            BookFilterCondition bookFilterCondition,
+            bool showOnlyBooksNotRead,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {
-            var filter = GetFilterCondition(filterCondition);
+            var filter = GetFilterCondition(bookFilterCondition);
 
             Expression<Func<Book, bool>> genreFilterExpression = genreFilter?.Count > 0
                 ? b => b.Genres.Any(g => genreFilter.Contains(g.Id))
@@ -63,7 +65,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 ? b => b.Formats.Any(f => formatFilter.Contains(f.Id))
                 : b => true;
 
-            var combinedFilter = filter.And(genreFilterExpression).And(formatFilterExpression);
+            Expression<Func<Book, bool>> onlyNotReadBooksFilter = showOnlyBooksNotRead ? b => !b.IsRead : b => true;
+
+            var combinedFilter = filter.And(onlyNotReadBooksFilter).And(genreFilterExpression).And(formatFilterExpression);
             
             await using var ctx = _contextCreator();
             return await ctx.Books
@@ -86,15 +90,15 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
-            Expression<Func<Book, bool>> GetFilterCondition(FilterCondition condition)
+            Expression<Func<Book, bool>> GetFilterCondition(BookFilterCondition condition)
             {
                 return condition switch
                 {
-                    FilterCondition.NoFilter => b => true,
-                    FilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
-                    FilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
-                    FilterCondition.NoAuthors => b => b.Authors.Count == 0,
-                    FilterCondition.NotRead => b => !b.IsRead,
+                    BookFilterCondition.NoFilter => b => true,
+                    BookFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
+                    BookFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
+                    BookFilterCondition.NoAuthors => b => b.Authors.Count == 0,
+                    BookFilterCondition.NoPublisher => b => b.Publisher.Equals(null),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }

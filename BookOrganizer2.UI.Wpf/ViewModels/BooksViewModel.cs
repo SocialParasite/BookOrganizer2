@@ -22,6 +22,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private readonly IBookLookupDataService _bookLookupDataService;
         private bool _allFormatsIsSelected;
         private bool _allGenresIsSelected;
+        private bool _showOnlyBooksNotRead;
         private ObservableCollection<GenreLookupItem> _genres;
         private ObservableCollection<FormatLookupItem> _formats;
 
@@ -38,6 +39,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             GenreFilterExecutedCommand = new DelegateCommand<Guid?>(OnGenreFilterExecuted);
             AllGenresSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
             AllFormatsSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
+            ShowOnlyNotReadBooksCommand = new DelegateCommand(OnShowOnlyNotReadBooksExecute);
 
             Filters = GetFilters();
             ActiveFilter = Filters.First();
@@ -51,6 +53,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand FormatFilterExecutedCommand { get; }
         public ICommand AllFormatsSelectionChangedCommand { get; }
         public ICommand AllGenresSelectionChangedCommand { get; }
+        public ICommand ShowOnlyNotReadBooksCommand { get; }
 
         public ObservableCollection<GenreLookupItem> Genres
         {
@@ -82,6 +85,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             get => _allGenresIsSelected;
             set { _allGenresIsSelected = value; OnPropertyChanged(); }
+        }
+
+        public bool ShowOnlyBooksNotRead
+        {
+            get => _showOnlyBooksNotRead;
+            set { _showOnlyBooksNotRead = value; OnPropertyChanged(); }
         }
 
         private Task Init()
@@ -133,7 +142,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
 
             Items = await _bookLookupDataService
-                .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, genreFilter, formatFilter)
+                .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, ShowOnlyBooksNotRead, genreFilter, formatFilter)
                 .ConfigureAwait(false);
 
             UpdateEntityCollection();
@@ -153,15 +162,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
-        private void OnAllGenresSelectionChangedExecuted()
-        {
-            //foreach (var genre in Genres)
-            //{
-            //    genre.IsSelected = true;
-            //}
-
-            FilterCollection().Await();
-        }
+        private void OnAllGenresSelectionChangedExecuted() => FilterCollection().Await();
 
         private void OnGenreFilterExecuted(Guid? id)
         {
@@ -174,15 +175,22 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AllFormatsIsSelected = Formats.All(f => f.IsSelected);
             FilterCollection().Await();
         }
-        private static FilterCondition MapActiveFilterToFilterCondition(string filter)
+
+        private void OnShowOnlyNotReadBooksExecute()
+        {
+            ShowOnlyBooksNotRead = !ShowOnlyBooksNotRead;
+            FilterCollection().Await();
+        }
+
+        private static BookFilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => FilterCondition.NoFilter,
-                "Books without description" => FilterCondition.NoDescription,
-                "Books with placeholder picture as cover" => FilterCondition.PlaceholderCover,
-                "Books without author" => FilterCondition.NoAuthors,
-                "Books not read" => FilterCondition.NotRead,
+                "No filter" => BookFilterCondition.NoFilter,
+                "Books without description" => BookFilterCondition.NoDescription,
+                "Books with placeholder picture as cover" => BookFilterCondition.PlaceholderCover,
+                "Books without author" => BookFilterCondition.NoAuthors,
+                "Books without publisher" => BookFilterCondition.NoPublisher,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }
@@ -193,7 +201,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             yield return "Books without description";
             yield return "Books with placeholder picture as cover";
             yield return "Books without author";
-            yield return "Books not read";
+            yield return "Books without publisher";
         }
     }
 }
