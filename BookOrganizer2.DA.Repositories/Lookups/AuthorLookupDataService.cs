@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
@@ -58,7 +59,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                         DisplayMember = $"{a.LastName}, {a.FirstName}",
                         Picture = GetPictureThumbnail(a.MugshotPath) ?? _placeholderPic,
                         ViewModelName = viewModelName,
-                        InfoText = $"Books: {a.Books.Count}"
+                        InfoText = $"Books: {a.Books.Count}",
                     })
                 .ToListAsync();
 
@@ -69,15 +70,13 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     AuthorFilterCondition.NoFilter => a => true,
                     AuthorFilterCondition.NoBio => a => string.IsNullOrEmpty(a.Biography),
                     AuthorFilterCondition.NoBooks => a => a.Books.Count == 0,
-                    AuthorFilterCondition.NoDateOfBirth => a => IsNull(a.DateOfBirth),
+                    AuthorFilterCondition.NoDateOfBirth => a => a.DateOfBirth.Equals((DateTime?)null),
                     AuthorFilterCondition.NoNationality => a => a.Nationality.Equals(null),
                     AuthorFilterCondition.NoMugshot => a => a.MugshotPath.Contains("placeholder"),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }
         }
-
-        private static bool IsNull(DateTime? dob) => dob is null;
 
         private static string GetPictureThumbnail(string picturePath)
         {
