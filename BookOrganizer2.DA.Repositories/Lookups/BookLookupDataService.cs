@@ -50,6 +50,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
 
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
             BookFilterCondition bookFilterCondition,
+            bool showOnlyBooksNotRead,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {
@@ -63,7 +64,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 ? b => b.Formats.Any(f => formatFilter.Contains(f.Id))
                 : b => true;
 
-            var combinedFilter = filter.And(genreFilterExpression).And(formatFilterExpression);
+            Expression<Func<Book, bool>> onlyNotReadBooksFilter = showOnlyBooksNotRead ? b => !b.IsRead : b => true;
+
+            var combinedFilter = filter.And(onlyNotReadBooksFilter).And(genreFilterExpression).And(formatFilterExpression);
             
             await using var ctx = _contextCreator();
             return await ctx.Books
@@ -94,7 +97,6 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     BookFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
                     BookFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
                     BookFilterCondition.NoAuthors => b => b.Authors.Count == 0,
-                    BookFilterCondition.NotRead => b => !b.IsRead,
                     //FilterCondition.NoPublisher => b => (b.Publisher == null)
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };

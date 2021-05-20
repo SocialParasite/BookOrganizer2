@@ -8,7 +8,6 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoDescription,
         PlaceholderCover,
         NoAuthors,
-        NotRead,
         NoPublisher
     }
 
