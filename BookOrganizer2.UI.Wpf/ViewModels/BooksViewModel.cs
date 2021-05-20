@@ -153,15 +153,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
-        private void OnAllGenresSelectionChangedExecuted()
-        {
-            //foreach (var genre in Genres)
-            //{
-            //    genre.IsSelected = true;
-            //}
-
-            FilterCollection().Await();
-        }
+        private void OnAllGenresSelectionChangedExecuted() => FilterCollection().Await();
 
         private void OnGenreFilterExecuted(Guid? id)
         {
@@ -174,15 +166,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AllFormatsIsSelected = Formats.All(f => f.IsSelected);
             FilterCollection().Await();
         }
-        private static FilterCondition MapActiveFilterToFilterCondition(string filter)
+        private static BookFilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => FilterCondition.NoFilter,
-                "Books without description" => FilterCondition.NoDescription,
-                "Books with placeholder picture as cover" => FilterCondition.PlaceholderCover,
-                "Books without author" => FilterCondition.NoAuthors,
-                "Books not read" => FilterCondition.NotRead,
+                "No filter" => BookFilterCondition.NoFilter,
+                "Books without description" => BookFilterCondition.NoDescription,
+                "Books with placeholder picture as cover" => BookFilterCondition.PlaceholderCover,
+                "Books without author" => BookFilterCondition.NoAuthors,
+                "Books not read" => BookFilterCondition.NotRead,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }

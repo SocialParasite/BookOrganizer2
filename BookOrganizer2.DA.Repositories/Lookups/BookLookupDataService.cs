@@ -49,11 +49,11 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         }
 
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
-            FilterCondition filterCondition,
+            BookFilterCondition bookFilterCondition,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {
-            var filter = GetFilterCondition(filterCondition);
+            var filter = GetFilterCondition(bookFilterCondition);
 
             Expression<Func<Book, bool>> genreFilterExpression = genreFilter?.Count > 0
                 ? b => b.Genres.Any(g => genreFilter.Contains(g.Id))
@@ -86,15 +86,16 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
-            Expression<Func<Book, bool>> GetFilterCondition(FilterCondition condition)
+            Expression<Func<Book, bool>> GetFilterCondition(BookFilterCondition condition)
             {
                 return condition switch
                 {
-                    FilterCondition.NoFilter => b => true,
-                    FilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
-                    FilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
-                    FilterCondition.NoAuthors => b => b.Authors.Count == 0,
-                    FilterCondition.NotRead => b => !b.IsRead,
+                    BookFilterCondition.NoFilter => b => true,
+                    BookFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
+                    BookFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
+                    BookFilterCondition.NoAuthors => b => b.Authors.Count == 0,
+                    BookFilterCondition.NotRead => b => !b.IsRead,
+                    //FilterCondition.NoPublisher => b => (b.Publisher == null)
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }
