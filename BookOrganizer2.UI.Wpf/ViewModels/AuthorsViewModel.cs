@@ -41,7 +41,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 Items = await _authorLookupDataService.GetAuthorLookupAsync(nameof(AuthorDetailViewModel));
 
-                EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
+                AllItemsCount = Items.Count();
+                UpdateEntityCollection();
             }
             catch (Exception ex)
             {
@@ -73,13 +74,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void UpdateEntityCollection()
         {
-            EntityCollection = Items
-                .OrderBy(b => b.DisplayMember
-                                  .StartsWith("A ", StringComparison.OrdinalIgnoreCase)
-                              || b.DisplayMember.StartsWith("The ", StringComparison.OrdinalIgnoreCase)
-                    ? b.DisplayMember.Substring(b.DisplayMember.IndexOf(" ", StringComparison.Ordinal) + 1)
-                    : b.DisplayMember)
-                .ToList();
+            EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
 
             NumberOfItems = EntityCollection.Count;
         }
