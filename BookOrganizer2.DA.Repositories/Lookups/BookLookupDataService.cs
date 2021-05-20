@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.PublisherProfile;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -97,7 +98,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     BookFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
                     BookFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
                     BookFilterCondition.NoAuthors => b => b.Authors.Count == 0,
-                    //FilterCondition.NoPublisher => b => (b.Publisher == null)
+                    BookFilterCondition.NoPublisher => b => b.Publisher.Equals(null),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }

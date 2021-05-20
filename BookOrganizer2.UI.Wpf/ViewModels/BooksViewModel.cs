@@ -190,6 +190,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 "Books without description" => BookFilterCondition.NoDescription,
                 "Books with placeholder picture as cover" => BookFilterCondition.PlaceholderCover,
                 "Books without author" => BookFilterCondition.NoAuthors,
+                "Books without publisher" => BookFilterCondition.NoPublisher,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }
@@ -200,6 +201,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             yield return "Books without description";
             yield return "Books with placeholder picture as cover";
             yield return "Books without author";
+            yield return "Books without publisher";
         }
     }
 }
