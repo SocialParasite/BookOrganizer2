@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.PublisherProfile;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -52,6 +51,7 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
             BookFilterCondition bookFilterCondition,
             bool showOnlyBooksNotRead,
+            bool showOnlyNotOwnedBooks,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {
@@ -59,15 +59,19 @@ namespace BookOrganizer2.DA.Repositories.Lookups
 
             Expression<Func<Book, bool>> genreFilterExpression = genreFilter?.Count > 0
                 ? b => b.Genres.Any(g => genreFilter.Contains(g.Id))
-                : b => true;
+                : _ => true;
 
             Expression<Func<Book, bool>> formatFilterExpression = formatFilter?.Count > 0
                 ? b => b.Formats.Any(f => formatFilter.Contains(f.Id))
-                : b => true;
+                : _ => true;
 
-            Expression<Func<Book, bool>> onlyNotReadBooksFilter = showOnlyBooksNotRead ? b => !b.IsRead : b => true;
+            Expression<Func<Book, bool>> onlyNotReadBooksFilter = showOnlyBooksNotRead ? b => !b.IsRead : _ => true;
+            Expression<Func<Book, bool>> onlyNotOwnedBooksFilter = showOnlyNotOwnedBooks ? b => b.Formats.Count == 0 : _ => true;
 
-            var combinedFilter = filter.And(onlyNotReadBooksFilter).And(genreFilterExpression).And(formatFilterExpression);
+            var combinedFilter = filter.And(onlyNotReadBooksFilter)
+                                                       .And(onlyNotOwnedBooksFilter)
+                                                       .And(genreFilterExpression)
+                                                       .And(formatFilterExpression);
             
             await using var ctx = _contextCreator();
             return await ctx.Books

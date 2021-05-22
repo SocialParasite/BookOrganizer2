@@ -114,7 +114,7 @@
                         <Label Content="Maintenance filters: " Style="{StaticResource LabelStyles}" />
                     </GroupBox.Header>
                     <ComboBox
-                        x:Name="FiltersComboBox"
+                        x:Name="MaintenanceFiltersComboBox"
                         Margin="5"
                         FontSize="16"
                         ItemsSource="{Binding Filters}"
@@ -130,13 +130,12 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </GroupBox>
-                <GroupBox Grid.Column="1" Grid.ColumnSpan="2">
+                <GroupBox Grid.Column="1">
                     <GroupBox.Header>
                         <Label Content="Filters: " Style="{StaticResource LabelStyles}" />
                     </GroupBox.Header>
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
@@ -145,18 +144,10 @@
                             <ColumnDefinition Width="Auto" MinWidth="100" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox
-                            Grid.ColumnSpan="2"
-                            Command="{Binding ShowOnlyNotReadBooksCommand}"
-                            Content="Show only books that aren't read."
-                            Style="{StaticResource CheckBoxStyle}" />
-                        <Label
-                            Grid.Row="1"
-                            Content="Genre filter: "
-                            Style="{StaticResource LabelStyles}" />
+                        <Label Content="Genre filter: " Style="{StaticResource LabelStyles}" />
                         <ComboBox
                             x:Name="FilterByGenreComboBox"
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Margin="5,0,5,5"
                             FontSize="16"
                             IsEditable="True"
@@ -190,13 +181,12 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <Label
-                            Grid.Row="1"
                             Grid.Column="1"
                             Content="Format filter: "
                             Style="{StaticResource LabelStyles}" />
                         <ComboBox
                             x:Name="FilterByFormatComboBox"
-                            Grid.Row="2"
+                            Grid.Row="1"
                             Grid.Column="1"
                             Margin="0,0,5,5"
                             FontSize="16"
@@ -230,6 +220,28 @@
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Grid.Column="2">
+                    <GroupBox.Header>
+                        <Label Content="Status: " Style="{StaticResource LabelStyles}" />
+                    </GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <CheckBox
+                            Margin="5,10,5,0"
+                            Command="{Binding ShowOnlyNotReadBooksCommand}"
+                            Content="Show only books that you haven't read."
+                            Style="{StaticResource CheckBoxStyle}" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Margin="5,10,5,0"
+                            Command="{Binding ShowOnlyNotOwnedBooksCommand}"
+                            Content="Show only books that you don't own."
+                            Style="{StaticResource CheckBoxStyle}" />
                     </Grid>
                 </GroupBox>
                 <Grid Grid.Column="3">

@@ -12,7 +12,7 @@ namespace BookOrganizer2.Domain.DA
     {
         Task<IEnumerable<BookLookupItem>> GetBookLookupAsync(string viewModelName);
         Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName, BookFilterCondition bookFilterCondition,
-            bool showOnlyBooksNotRead, IList<Guid> genreFilter, IList<Guid> formatFilter);
+            bool showOnlyBooksNotRead, bool showOnlyNotOwnedBooks, IList<Guid> genreFilter, IList<Guid> formatFilter);
         Task<IEnumerable<GenreLookupItem>> GetGenresAsync();
         Task<IEnumerable<FormatLookupItem>> GetFormatsAsync();
     }
