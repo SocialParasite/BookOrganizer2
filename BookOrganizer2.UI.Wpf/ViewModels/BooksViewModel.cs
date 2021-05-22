@@ -23,6 +23,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private bool _allFormatsIsSelected;
         private bool _allGenresIsSelected;
         private bool _showOnlyBooksNotRead;
+        private bool _showOnlyNotOwnedBooks;
+
         private ObservableCollection<GenreLookupItem> _genres;
         private ObservableCollection<FormatLookupItem> _formats;
 
@@ -40,6 +42,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AllGenresSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
             AllFormatsSelectionChangedCommand = new DelegateCommand(OnAllGenresSelectionChangedExecuted);
             ShowOnlyNotReadBooksCommand = new DelegateCommand(OnShowOnlyNotReadBooksExecute);
+            ShowOnlyNotOwnedBooksCommand = new DelegateCommand(OnShowOnlyNotOwnedBooksExecute);
 
             Filters = GetFilters();
             ActiveFilter = Filters.First();
@@ -54,6 +57,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand AllFormatsSelectionChangedCommand { get; }
         public ICommand AllGenresSelectionChangedCommand { get; }
         public ICommand ShowOnlyNotReadBooksCommand { get; }
+        public ICommand ShowOnlyNotOwnedBooksCommand { get; }
 
         public ObservableCollection<GenreLookupItem> Genres
         {
@@ -91,6 +95,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             get => _showOnlyBooksNotRead;
             set { _showOnlyBooksNotRead = value; OnPropertyChanged(); }
+        }
+
+        public bool ShowOnlyNotOwnedBooks
+        {
+            get { return _showOnlyNotOwnedBooks; }
+            set { _showOnlyNotOwnedBooks = value; }
         }
 
         private Task Init()
@@ -142,7 +152,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
 
             Items = await _bookLookupDataService
-                .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, ShowOnlyBooksNotRead, genreFilter, formatFilter)
+                .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, ShowOnlyBooksNotRead,
+                    ShowOnlyNotOwnedBooks, genreFilter, formatFilter)
                 .ConfigureAwait(false);
 
             UpdateEntityCollection();
@@ -179,6 +190,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private void OnShowOnlyNotReadBooksExecute()
         {
             ShowOnlyBooksNotRead = !ShowOnlyBooksNotRead;
+            FilterCollection().Await();
+        }
+
+        private void OnShowOnlyNotOwnedBooksExecute()
+        {
+            ShowOnlyNotOwnedBooks = !ShowOnlyNotOwnedBooks;
             FilterCollection().Await();
         }
 
