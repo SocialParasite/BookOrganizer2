@@ -129,40 +129,17 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Grid Grid.Column="1" Margin="100,0,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Label
-                        x:Name="CountLabel"
-                        Grid.Row="1"
-                        VerticalAlignment="Bottom"
-                        Style="{StaticResource LabelStyles}">
-                        <Label.Content>
-                            <MultiBinding Converter="{StaticResource ItemsCountStatusConverter}">
-                                <Binding Path="AllItemsCount" />
-                                <Binding Path="NumberOfItems" />
-                            </MultiBinding>
-                        </Label.Content>
-                    </Label>
-                    <Button
-                        x:Name="ResetFilterButton"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="0,0,50,10"
-                        Command="{Binding FilterExecutedCommand}"
-                        Content="Reset filter"
-                        Style="{StaticResource BaseButtonStyle}">
-                        <Button.CommandParameter>
-                            <system:Boolean>True</system:Boolean>
-                        </Button.CommandParameter>
-                    </Button>
-                </Grid>
+                <Button
+                    x:Name="ResetFilterButton"
+                    Grid.Column="1"
+                    Margin="0,0,50,10"
+                    Command="{Binding FilterExecutedCommand}"
+                    Content="Reset filter"
+                    Style="{StaticResource BaseButtonStyle}">
+                    <Button.CommandParameter>
+                        <system:Boolean>True</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
             </Grid>
         </Expander>
         <Grid Grid.Row="3">

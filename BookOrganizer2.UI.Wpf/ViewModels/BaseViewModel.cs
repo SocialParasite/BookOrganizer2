@@ -52,6 +52,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         [UsedImplicitly] public ICommand AddNewItemCommand { get; }
         [UsedImplicitly] public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
         [UsedImplicitly] public ICommand FilterExecutedCommand { get; }
+        public virtual string InfoText { get; set; }
 
         protected List<LookupItem> EntityCollection
         {
@@ -107,14 +108,35 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public int NumberOfItems
         {
             get => _numberOfItems;
-            set { _numberOfItems = value; OnPropertyChanged(); }
+            set
+            {
+                _numberOfItems = value;
+
+                _eventAggregator.GetEvent<StatusMessageChangedEvent>()
+                    .Publish(new StatusMessageChangedEventArgs
+                    {
+                        InfoText = InfoText,
+                        AllItemsCount = AllItemsCount,
+                        NumberOfItems = NumberOfItems
+                    });
+            }
         }
 
         [UsedImplicitly]
         public int AllItemsCount
         {
             get => _allItemsCount;
-            set { _allItemsCount = value; OnPropertyChanged(); }
+            set
+            {
+                _allItemsCount = value;
+                _eventAggregator.GetEvent<StatusMessageChangedEvent>()
+                    .Publish(new StatusMessageChangedEventArgs
+                    {
+                        InfoText = InfoText,
+                        AllItemsCount = AllItemsCount,
+                        NumberOfItems = NumberOfItems
+                    });
+            }
         }
 
         public abstract Task InitializeRepositoryAsync();
