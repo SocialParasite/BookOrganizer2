@@ -31,7 +31,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             ViewModelType = nameof(AuthorDetailViewModel);
         }
-        
+
+        public override string InfoText { get; set; } = "Authors shown";
+
         private Task Init()
             => Task.Run(InitializeRepositoryAsync);
 

@@ -46,6 +46,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             CreateNewItemCommand = new DelegateCommand<Type>(OnCreateNewItemExecute);
 
             IsMenuBarVisible = true;
+            ItemStatusCounter = "";
 
             OnOpenSelectedViewExecute(nameof(MainPageViewModel));
 
@@ -84,6 +85,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 _eventAggregator.GetEvent<ChangeDetailsViewEvent>()
                     .Subscribe(OnChangeDetailsView);
             }
+
+            _eventAggregator.GetEvent<StatusMessageChangedEvent>().Subscribe(OnStatusMessageChanged);
         }
 
         public ICommand ShowMenuCommand { get; }
@@ -165,6 +168,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             set { _shouldAnimate = value; OnPropertyChanged(); }
         }
 
+        private string _itemStatusCounter;
+
+        public string ItemStatusCounter
+        {
+            get => _itemStatusCounter;
+            set { _itemStatusCounter = value; OnPropertyChanged(); }
+        }
         private void OnOpenSelectedItemView(OpenItemViewEventArgs args)
         {
             OnOpenSelectedViewExecute(args.ViewModelName);
@@ -199,6 +209,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 SelectedDetailViewModel = DetailViewModels.SingleOrDefault(b => b.Id == args.Id);
 
             IsViewVisible = false;
+            ItemStatusCounter = "";
         }
 
         private void OnOpenSelectedViewExecute(string viewModel)
@@ -267,6 +278,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 DetailViewModels.Remove(detailViewModel);
             }
+
+            SelectedDetailViewModel = null;
         }
 
         private void OnChangeDetailsView(ChangeDetailsViewEventArgs args)
@@ -292,6 +305,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                });
             }
 
+        }
+
+        private void OnStatusMessageChanged(StatusMessageChangedEventArgs obj)
+        {
+
+            if (SelectedVm is IItemLists)
+            {
+                ItemStatusCounter = $"{obj.InfoText}: {obj.NumberOfItems} / {obj.AllItemsCount}";
+            }
         }
     }
 }

@@ -59,6 +59,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand ShowOnlyNotReadBooksCommand { get; }
         public ICommand ShowOnlyNotOwnedBooksCommand { get; }
 
+        public override string InfoText { get; set; } = "Books shown";
+
         public ObservableCollection<GenreLookupItem> Genres
         {
             get => _genres;

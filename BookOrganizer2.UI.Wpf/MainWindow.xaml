@@ -263,5 +263,16 @@
                 </TabControl.ItemTemplate>
             </TabControl>
         </DockPanel>
+        <StatusBar
+            Grid.Row="2"
+            Height="20"
+            Margin="0,5,0,0"
+            VerticalAlignment="Bottom"
+            Background="SteelBlue">
+            <StatusBarItem>
+                <TextBlock Text="{Binding ItemStatusCounter, Mode=TwoWay}" />
+            </StatusBarItem>
+            <Separator />
+        </StatusBar>
     </Grid>
 </Window>
