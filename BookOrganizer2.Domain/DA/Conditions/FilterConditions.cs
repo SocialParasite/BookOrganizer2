@@ -28,4 +28,12 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoBooks,
         NoDescription
     }
+
+    public enum SeriesFilterCondition
+    {
+        NoFilter,
+        NoPicture,
+        NoBooks,
+        NoDescription
+    }
 }

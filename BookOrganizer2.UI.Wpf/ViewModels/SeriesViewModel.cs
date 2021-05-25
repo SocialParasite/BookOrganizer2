@@ -4,8 +4,10 @@ using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using Prism.Events;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -22,10 +24,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _seriesLookupDataService = seriesLookupDataService
                                           ?? throw new ArgumentNullException(nameof(seriesLookupDataService));
 
+
+            Filters = GetFilters();
+            ActiveFilter = Filters.First();
+
             Init().Await();
 
             ViewModelType = nameof(SeriesDetailViewModel);
         }
+
+        public override string InfoText { get; set; } = "Series shown";
 
         private Task Init()
             => Task.Run(InitializeRepositoryAsync);
@@ -36,7 +44,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 Items = await _seriesLookupDataService.GetSeriesLookupAsync(nameof(SeriesDetailViewModel));
 
-                EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
+                AllItemsCount = Items.Count();
+                UpdateEntityCollection();
             }
             catch (Exception ex)
             {
@@ -45,11 +54,52 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
+
+            ActiveFilter = Filters.First();
         }
 
-        protected override Task FilterCollection(bool resetFilters = false)
+        protected override async Task FilterCollection(bool resetFilters = false)
         {
-            throw new NotImplementedException();
+            if (resetFilters)
+            {
+                await InitializeRepositoryAsync();
+            }
+
+            var condition = MapActiveFilterToFilterCondition(ActiveFilter);
+
+            Items = await _seriesLookupDataService
+                .GetFilteredSeriesLookupAsync(nameof(SeriesDetailViewModel), condition)
+                .ConfigureAwait(false);
+
+            UpdateEntityCollection();
+            SearchString = "";
+        }
+
+        private void UpdateEntityCollection()
+        {
+            EntityCollection = Items.OrderBy(p => p.DisplayMember).ToList();
+
+            NumberOfItems = EntityCollection.Count;
+        }
+
+        private static SeriesFilterCondition MapActiveFilterToFilterCondition(string filter)
+        {
+            return filter switch
+            {
+                "No filter" => SeriesFilterCondition.NoFilter,
+                "Series without description" => SeriesFilterCondition.NoDescription,
+                "Series without books" => SeriesFilterCondition.NoBooks,
+                "Series without picture" => SeriesFilterCondition.NoPicture,
+                _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
+            };
+        }
+
+        private static IEnumerable<string> GetFilters()
+        {
+            yield return "No filter";
+            yield return "Series without description";
+            yield return "Series without books";
+            yield return "Series without picture";
         }
     }
 }

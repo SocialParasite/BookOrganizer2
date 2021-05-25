@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.DA.Conditions;
+using System.Linq.Expressions;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -41,6 +44,42 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                         SeriesState = GetSeriesState(s)
                     })
                 .ToListAsync();
+        }
+        public async Task<IEnumerable<SeriesLookupItem>> GetFilteredSeriesLookupAsync(string viewModelName, SeriesFilterCondition seriesFilterCondition)
+        {
+            var filter = GetFilterCondition(seriesFilterCondition);
+
+            await using var ctx = _contextCreator();
+            return await ctx.Series
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Book)
+                .ThenInclude(b => b.Formats)
+                .AsNoTracking()
+                .Where(filter)
+                .OrderBy(s => s.Name)
+                .Select(s =>
+                    new SeriesLookupItem
+                    {
+                        Id = s.Id,
+                        DisplayMember = s.Name,
+                        Picture = GetPictureThumbnail(s.PicturePath) ?? _placeholderPic,
+                        ViewModelName = viewModelName,
+                        InfoText = GetInfoText(s),
+                        SeriesState = GetSeriesState(s)
+                    })
+                .ToListAsync();
+
+            static Expression<Func<Series, bool>> GetFilterCondition(SeriesFilterCondition condition)
+            {
+                return condition switch
+                {
+                    SeriesFilterCondition.NoFilter => p => true,
+                    SeriesFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
+                    SeriesFilterCondition.NoBooks => p => p.Books.Count == 0,
+                    SeriesFilterCondition.NoPicture => p => p.PicturePath.Contains("placeholder"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
+                };
+            }
         }
 
         private static string GetInfoText(Series s) 
