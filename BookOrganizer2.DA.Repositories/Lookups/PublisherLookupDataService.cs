@@ -1,5 +1,6 @@
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.DA.Conditions;
 using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.PublisherProfile;
+using System.Linq.Expressions;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -48,6 +51,39 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             var filePath = Path.GetDirectoryName(picturePath);
             var thumbPath = $@"{filePath}\{thumbnail}";
             return thumbPath;
+        }
+
+        public async Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherFilterCondition publisherFilterCondition)
+        {
+            var filter = GetFilterCondition(publisherFilterCondition);
+
+            await using var ctx = _contextCreator();
+            return await ctx.Publishers
+                .AsNoTracking()
+                .Where(filter)
+                .OrderBy(p => p.Name)
+                .Select(p =>
+                    new LookupItem
+                    {
+                        Id = p.Id,
+                        DisplayMember = p.Name,
+                        Picture = GetPictureThumbnail(p.LogoPath) ?? _placeholderPic,
+                        ViewModelName = viewModelName,
+                        InfoText = $"Books: {p.Books.Count}",
+                    })
+                .ToListAsync();
+
+            static Expression<Func<Publisher, bool>> GetFilterCondition(PublisherFilterCondition condition)
+            {
+                return condition switch
+                {
+                    PublisherFilterCondition.NoFilter => p => true,
+                    PublisherFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
+                    PublisherFilterCondition.NoBooks => p => p.Books.Count == 0,
+                    PublisherFilterCondition.NoLogoPicture => p => p.LogoPath.Contains("placeholder"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
+                };
+            }
         }
     }
 }
