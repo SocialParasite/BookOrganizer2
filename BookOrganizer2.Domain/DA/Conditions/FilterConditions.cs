@@ -20,4 +20,20 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoBooks,
         NoBio
     }
+
+    public enum PublisherFilterCondition
+    {
+        NoFilter,
+        NoLogoPicture,
+        NoBooks,
+        NoDescription
+    }
+
+    public enum SeriesFilterCondition
+    {
+        NoFilter,
+        NoPicture,
+        NoBooks,
+        NoDescription
+    }
 }
