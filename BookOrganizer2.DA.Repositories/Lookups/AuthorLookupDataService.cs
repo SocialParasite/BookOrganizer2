@@ -1,5 +1,7 @@
 using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.DA.Conditions;
 using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,9 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.BookProfile;
-using BookOrganizer2.Domain.DA.Conditions;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -43,9 +42,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<LookupItem>> GetFilteredAuthorLookupAsync(string viewModelName, AuthorFilterCondition authorFilterCondition)
+        public async Task<IEnumerable<LookupItem>> GetFilteredAuthorLookupAsync(string viewModelName, AuthorMaintenanceFilterCondition authorMaintenanceFilterCondition)
         {
-            var filter = GetFilterCondition(authorFilterCondition);
+            var filter = GetFilterCondition(authorMaintenanceFilterCondition);
 
             await using var ctx = _contextCreator();
             return await ctx.Authors
@@ -63,16 +62,16 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
-            static Expression<Func<Author, bool>> GetFilterCondition(AuthorFilterCondition condition)
+            static Expression<Func<Author, bool>> GetFilterCondition(AuthorMaintenanceFilterCondition condition)
             {
                 return condition switch
                 {
-                    AuthorFilterCondition.NoFilter => a => true,
-                    AuthorFilterCondition.NoBio => a => string.IsNullOrEmpty(a.Biography),
-                    AuthorFilterCondition.NoBooks => a => a.Books.Count == 0,
-                    AuthorFilterCondition.NoDateOfBirth => a => a.DateOfBirth.Equals((DateTime?)null),
-                    AuthorFilterCondition.NoNationality => a => a.Nationality.Equals(null),
-                    AuthorFilterCondition.NoMugshot => a => a.MugshotPath.Contains("placeholder"),
+                    AuthorMaintenanceFilterCondition.NoFilter => a => true,
+                    AuthorMaintenanceFilterCondition.NoBio => a => string.IsNullOrEmpty(a.Biography),
+                    AuthorMaintenanceFilterCondition.NoBooks => a => a.Books.Count == 0,
+                    AuthorMaintenanceFilterCondition.NoDateOfBirth => a => a.DateOfBirth.Equals((DateTime?)null),
+                    AuthorMaintenanceFilterCondition.NoNationality => a => a.Nationality.Equals(null),
+                    AuthorMaintenanceFilterCondition.NoMugshot => a => a.MugshotPath.Contains("placeholder"),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }

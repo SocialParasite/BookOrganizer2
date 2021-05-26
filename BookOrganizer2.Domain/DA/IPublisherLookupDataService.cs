@@ -8,6 +8,6 @@ namespace BookOrganizer2.Domain.DA
     public interface IPublisherLookupDataService
     {
         Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName);
-        Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherFilterCondition condition);
+        Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherMaintenanceFilterCondition condition);
     }
 }

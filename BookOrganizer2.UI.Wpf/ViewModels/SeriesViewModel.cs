@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookOrganizer2.Domain.DA.Conditions;
+using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -25,8 +26,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                           ?? throw new ArgumentNullException(nameof(seriesLookupDataService));
 
 
+            MaintenanceFilters = GetMaintenanceFilters();
             Filters = GetFilters();
-            ActiveFilter = Filters.First();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
 
             Init().Await();
 
@@ -34,6 +36,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         public override string InfoText { get; set; } = "Series shown";
+        [UsedImplicitly] public IEnumerable<string> Filters { get; set; }
+
+        private string _activeFilter;
+        [UsedImplicitly]
+        public string ActiveFilter
+        {
+            get => _activeFilter;
+            set { _activeFilter = value; OnPropertyChanged(); }
+        }
 
         private Task Init()
             => Task.Run(InitializeRepositoryAsync);
@@ -55,6 +66,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
 
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
             ActiveFilter = Filters.First();
         }
 
@@ -65,10 +77,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 await InitializeRepositoryAsync();
             }
 
-            var condition = MapActiveFilterToFilterCondition(ActiveFilter);
+            var condition = MapActiveMaintenanceFilterToMaintenanceFilterCondition(ActiveMaintenanceFilter);
+            var condition2 = MapActiveFilterToFilterCondition(ActiveFilter);
 
             Items = await _seriesLookupDataService
-                .GetFilteredSeriesLookupAsync(nameof(SeriesDetailViewModel), condition)
+                .GetFilteredSeriesLookupAsync(nameof(SeriesDetailViewModel), condition, condition2)
                 .ConfigureAwait(false);
 
             UpdateEntityCollection();
@@ -82,24 +95,44 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
-        private static SeriesFilterCondition MapActiveFilterToFilterCondition(string filter)
+        private static SeriesMaintenanceFilterCondition MapActiveMaintenanceFilterToMaintenanceFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => SeriesFilterCondition.NoFilter,
-                "Series without description" => SeriesFilterCondition.NoDescription,
-                "Series without books" => SeriesFilterCondition.NoBooks,
-                "Series without picture" => SeriesFilterCondition.NoPicture,
+                "No filter" => SeriesMaintenanceFilterCondition.NoFilter,
+                "Series without description" => SeriesMaintenanceFilterCondition.NoDescription,
+                "Series without books" => SeriesMaintenanceFilterCondition.NoBooks,
+                "Series without picture" => SeriesMaintenanceFilterCondition.NoPicture,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
+            };
+        }
+
+        private static IEnumerable<string> GetMaintenanceFilters()
+        {
+            yield return "No filter";
+            yield return "Series without description";
+            yield return "Series without books";
+            yield return "Series without picture";
+        }
+
+        private SeriesFilterCondition MapActiveFilterToFilterCondition(string activeFilter)
+        {
+            return activeFilter switch
+            {
+                "No filter" => SeriesFilterCondition.NoFilter,
+                "Series not started" => SeriesFilterCondition.NotStarted,
+                "Series partly read" => SeriesFilterCondition.PartlyRead,
+                "Series not all books owned" => SeriesFilterCondition.NotFullyOwned,
+                _ => throw new ArgumentOutOfRangeException(nameof(activeFilter), "Invalid filter condition")
             };
         }
 
         private static IEnumerable<string> GetFilters()
         {
             yield return "No filter";
-            yield return "Series without description";
-            yield return "Series without books";
-            yield return "Series without picture";
+            yield return "Series not started";
+            yield return "Series partly read";
+            yield return "Series not all books owned";
         }
     }
 }

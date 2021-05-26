@@ -24,8 +24,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _authorLookupDataService = authorLookupDataService
                                            ?? throw new ArgumentNullException(nameof(authorLookupDataService));
 
-            Filters = GetFilters();
-            ActiveFilter = Filters.First();
+            MaintenanceFilters = GetMaintenanceFilters();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
 
             Init().Await();
 
@@ -54,7 +54,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
 
-            ActiveFilter = Filters.First();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
         }
 
         protected override async Task FilterCollection(bool resetFilters = false)
@@ -64,7 +64,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 await InitializeRepositoryAsync();
             }
 
-            var condition = MapActiveFilterToFilterCondition(ActiveFilter);
+            var condition = MapActiveFilterToFilterCondition(ActiveMaintenanceFilter);
 
             Items = await _authorLookupDataService
                 .GetFilteredAuthorLookupAsync(nameof(AuthorDetailViewModel), condition)
@@ -81,21 +81,21 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
-        private static AuthorFilterCondition MapActiveFilterToFilterCondition(string filter)
+        private static AuthorMaintenanceFilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => AuthorFilterCondition.NoFilter,
-                "Authors without biography" => AuthorFilterCondition.NoBio,
-                "Authors without books" => AuthorFilterCondition.NoBooks,
-                "Authors without date of birth" => AuthorFilterCondition.NoDateOfBirth,
-                "Authors without nationality" => AuthorFilterCondition.NoNationality,
-                "Authors with placeholder picture as mugshot" => AuthorFilterCondition.NoMugshot,
+                "No filter" => AuthorMaintenanceFilterCondition.NoFilter,
+                "Authors without biography" => AuthorMaintenanceFilterCondition.NoBio,
+                "Authors without books" => AuthorMaintenanceFilterCondition.NoBooks,
+                "Authors without date of birth" => AuthorMaintenanceFilterCondition.NoDateOfBirth,
+                "Authors without nationality" => AuthorMaintenanceFilterCondition.NoNationality,
+                "Authors with placeholder picture as mugshot" => AuthorMaintenanceFilterCondition.NoMugshot,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }
 
-        private static IEnumerable<string> GetFilters()
+        private static IEnumerable<string> GetMaintenanceFilters()
         {
             yield return "No filter";
             yield return "Authors without biography";

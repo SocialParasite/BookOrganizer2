@@ -24,8 +24,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _publisherLookupDataService = publisherLookupDataService 
                                           ?? throw new ArgumentNullException(nameof(publisherLookupDataService));
 
-            Filters = GetFilters();
-            ActiveFilter = Filters.First();
+            MaintenanceFilters = GetMaintenanceFilters();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
 
             Init().Await();
 
@@ -54,7 +54,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
 
-            ActiveFilter = Filters.First();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
         }
 
         protected override async Task FilterCollection(bool resetFilters = false)
@@ -64,7 +64,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 await InitializeRepositoryAsync();
             }
 
-            var condition = MapActiveFilterToFilterCondition(ActiveFilter);
+            var condition = MapActiveFilterToFilterCondition(ActiveMaintenanceFilter);
 
             Items = await _publisherLookupDataService
                 .GetFilteredPublisherLookupAsync(nameof(PublisherDetailViewModel), condition)
@@ -81,19 +81,19 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             NumberOfItems = EntityCollection.Count;
         }
 
-        private static PublisherFilterCondition MapActiveFilterToFilterCondition(string filter)
+        private static PublisherMaintenanceFilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => PublisherFilterCondition.NoFilter,
-                "Publishers without description" => PublisherFilterCondition.NoDescription,
-                "Publishers without books" => PublisherFilterCondition.NoBooks,
-                "Publishers without logo" => PublisherFilterCondition.NoLogoPicture,
+                "No filter" => PublisherMaintenanceFilterCondition.NoFilter,
+                "Publishers without description" => PublisherMaintenanceFilterCondition.NoDescription,
+                "Publishers without books" => PublisherMaintenanceFilterCondition.NoBooks,
+                "Publishers without logo" => PublisherMaintenanceFilterCondition.NoLogoPicture,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }
 
-        private static IEnumerable<string> GetFilters()
+        private static IEnumerable<string> GetMaintenanceFilters()
         {
             yield return "No filter";
             yield return "Publishers without description";
