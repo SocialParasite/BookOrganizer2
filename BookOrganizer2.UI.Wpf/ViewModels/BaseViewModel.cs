@@ -94,14 +94,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
         }
 
-        [UsedImplicitly] public IEnumerable<string> Filters { get; set; }
+        [UsedImplicitly] public IEnumerable<string> MaintenanceFilters { get; set; }
 
-        private string _activeFilter;
+        private string _activeMaintenanceFilter;
         [UsedImplicitly]
-        public string ActiveFilter
+        public string ActiveMaintenanceFilter
         {
-            get => _activeFilter;
-            set { _activeFilter = value; OnPropertyChanged(); }
+            get => _activeMaintenanceFilter;
+            set { _activeMaintenanceFilter = value; OnPropertyChanged(); }
         }
 
         [UsedImplicitly]

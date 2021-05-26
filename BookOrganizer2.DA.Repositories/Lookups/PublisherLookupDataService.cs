@@ -53,9 +53,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             return thumbPath;
         }
 
-        public async Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherFilterCondition publisherFilterCondition)
+        public async Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherMaintenanceFilterCondition publisherMaintenanceFilterCondition)
         {
-            var filter = GetFilterCondition(publisherFilterCondition);
+            var filter = GetFilterCondition(publisherMaintenanceFilterCondition);
 
             await using var ctx = _contextCreator();
             return await ctx.Publishers
@@ -73,14 +73,14 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
-            static Expression<Func<Publisher, bool>> GetFilterCondition(PublisherFilterCondition condition)
+            static Expression<Func<Publisher, bool>> GetFilterCondition(PublisherMaintenanceFilterCondition condition)
             {
                 return condition switch
                 {
-                    PublisherFilterCondition.NoFilter => p => true,
-                    PublisherFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
-                    PublisherFilterCondition.NoBooks => p => p.Books.Count == 0,
-                    PublisherFilterCondition.NoLogoPicture => p => p.LogoPath.Contains("placeholder"),
+                    PublisherMaintenanceFilterCondition.NoFilter => p => true,
+                    PublisherMaintenanceFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
+                    PublisherMaintenanceFilterCondition.NoBooks => p => p.Books.Count == 0,
+                    PublisherMaintenanceFilterCondition.NoLogoPicture => p => p.LogoPath.Contains("placeholder"),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }

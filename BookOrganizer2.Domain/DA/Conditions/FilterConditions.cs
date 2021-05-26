@@ -1,8 +1,6 @@
-﻿using System.IO;
-
-namespace BookOrganizer2.Domain.DA.Conditions
+﻿namespace BookOrganizer2.Domain.DA.Conditions
 {
-    public enum BookFilterCondition
+    public enum BookMaintenanceFilterCondition
     {
         NoFilter,
         NoDescription,
@@ -11,7 +9,7 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoPublisher
     }
 
-    public enum AuthorFilterCondition
+    public enum AuthorMaintenanceFilterCondition
     {
         NoFilter,
         NoDateOfBirth,
@@ -21,7 +19,7 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoBio
     }
 
-    public enum PublisherFilterCondition
+    public enum PublisherMaintenanceFilterCondition
     {
         NoFilter,
         NoLogoPicture,
@@ -29,11 +27,19 @@ namespace BookOrganizer2.Domain.DA.Conditions
         NoDescription
     }
 
-    public enum SeriesFilterCondition
+    public enum SeriesMaintenanceFilterCondition
     {
         NoFilter,
         NoPicture,
         NoBooks,
         NoDescription
+    }
+
+    public enum SeriesFilterCondition
+    {
+        NoFilter,
+        NotStarted,
+        PartlyRead,
+        NotFullyOwned
     }
 }

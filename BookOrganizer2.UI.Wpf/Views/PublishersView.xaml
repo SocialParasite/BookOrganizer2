@@ -116,8 +116,8 @@
                     x:Name="FiltersComboBox"
                     Grid.Row="1"
                     FontSize="16"
-                    ItemsSource="{Binding Filters}"
-                    SelectedItem="{Binding ActiveFilter, Mode=TwoWay}">
+                    ItemsSource="{Binding MaintenanceFilters}"
+                    SelectedItem="{Binding ActiveMaintenanceFilter, Mode=TwoWay}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding FilterExecutedCommand}">

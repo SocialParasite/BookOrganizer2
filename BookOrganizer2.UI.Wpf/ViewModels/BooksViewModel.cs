@@ -44,8 +44,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             ShowOnlyNotReadBooksCommand = new DelegateCommand(OnShowOnlyNotReadBooksExecute);
             ShowOnlyNotOwnedBooksCommand = new DelegateCommand(OnShowOnlyNotOwnedBooksExecute);
 
-            Filters = GetFilters();
-            ActiveFilter = Filters.First();
+            MaintenanceFilters = GetMaintenanceFilters();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
 
             Init().Await();
 
@@ -129,7 +129,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
 
-            ActiveFilter = Filters.First();
+            ActiveMaintenanceFilter = MaintenanceFilters.First();
         }
 
         protected override async Task FilterCollection(bool resetFilters = false)
@@ -139,7 +139,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 await InitializeRepositoryAsync();
             }
 
-            var condition = MapActiveFilterToFilterCondition(ActiveFilter);
+            var condition = MapActiveFilterToFilterCondition(ActiveMaintenanceFilter);
             
             List<Guid> genreFilter = null;
             List<Guid> formatFilter = null;
@@ -201,20 +201,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             FilterCollection().Await();
         }
 
-        private static BookFilterCondition MapActiveFilterToFilterCondition(string filter)
+        private static BookMaintenanceFilterCondition MapActiveFilterToFilterCondition(string filter)
         {
             return filter switch
             {
-                "No filter" => BookFilterCondition.NoFilter,
-                "Books without description" => BookFilterCondition.NoDescription,
-                "Books with placeholder picture as cover" => BookFilterCondition.PlaceholderCover,
-                "Books without author" => BookFilterCondition.NoAuthors,
-                "Books without publisher" => BookFilterCondition.NoPublisher,
+                "No filter" => BookMaintenanceFilterCondition.NoFilter,
+                "Books without description" => BookMaintenanceFilterCondition.NoDescription,
+                "Books with placeholder picture as cover" => BookMaintenanceFilterCondition.PlaceholderCover,
+                "Books without author" => BookMaintenanceFilterCondition.NoAuthors,
+                "Books without publisher" => BookMaintenanceFilterCondition.NoPublisher,
                 _ => throw new ArgumentOutOfRangeException(nameof(filter), "Invalid filter condition")
             };
         }
 
-        private static IEnumerable<string> GetFilters()
+        private static IEnumerable<string> GetMaintenanceFilters()
         {
             yield return "No filter";
             yield return "Books without description";

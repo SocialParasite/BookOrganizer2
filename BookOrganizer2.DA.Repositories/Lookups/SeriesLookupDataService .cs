@@ -1,15 +1,16 @@
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.DA.Conditions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.DA.Conditions;
 using System.Linq.Expressions;
-using BookOrganizer2.Domain.Shared;
+using System.Threading.Tasks;
+using BookOrganizer2.DA.Repositories.Shared;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -45,9 +46,13 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
         }
-        public async Task<IEnumerable<SeriesLookupItem>> GetFilteredSeriesLookupAsync(string viewModelName, SeriesFilterCondition seriesFilterCondition)
+        public async Task<IEnumerable<SeriesLookupItem>> GetFilteredSeriesLookupAsync(string viewModelName,
+            SeriesMaintenanceFilterCondition seriesMaintenanceFilterCondition,
+            SeriesFilterCondition filterCondition)
         {
-            var filter = GetFilterCondition(seriesFilterCondition);
+            var maintenanceFilterCondition = GetMaintenanceFilterCondition(seriesMaintenanceFilterCondition);
+            var condition = GetFilterCondition(filterCondition);
+            var filter = maintenanceFilterCondition.And(condition);
 
             await using var ctx = _contextCreator();
             return await ctx.Series
@@ -69,14 +74,26 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
+            static Expression<Func<Series, bool>> GetMaintenanceFilterCondition(SeriesMaintenanceFilterCondition condition)
+            {
+                return condition switch
+                {
+                    SeriesMaintenanceFilterCondition.NoFilter => p => true,
+                    SeriesMaintenanceFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
+                    SeriesMaintenanceFilterCondition.NoBooks => p => p.Books.Count == 0,
+                    SeriesMaintenanceFilterCondition.NoPicture => p => p.PicturePath.Contains("placeholder"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
+                };
+            }
+
             static Expression<Func<Series, bool>> GetFilterCondition(SeriesFilterCondition condition)
             {
                 return condition switch
                 {
-                    SeriesFilterCondition.NoFilter => p => true,
-                    SeriesFilterCondition.NoDescription => p => string.IsNullOrEmpty(p.Description),
-                    SeriesFilterCondition.NoBooks => p => p.Books.Count == 0,
-                    SeriesFilterCondition.NoPicture => p => p.PicturePath.Contains("placeholder"),
+                    SeriesFilterCondition.NoFilter => s => true,
+                    SeriesFilterCondition.NotStarted => s => !s.Books.Any(b => b.Book.IsRead),
+                    SeriesFilterCondition.PartlyRead => s => s.Books.Any(b => b.Book.IsRead) && !s.Books.All(b => b.Book.IsRead),
+                    SeriesFilterCondition.NotFullyOwned => s => s.Books.Any(b => b.Book.Formats.Count == 0),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }

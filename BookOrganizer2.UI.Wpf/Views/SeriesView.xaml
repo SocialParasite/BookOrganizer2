@@ -139,12 +139,34 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MinWidth="200" />
+                    <ColumnDefinition Width="Auto" MinWidth="200" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label Content="Maintenance filters: " Style="{StaticResource LabelStyles}" />
                 <ComboBox
+                    x:Name="MaintenanceFiltersComboBox"
+                    Grid.Row="1"
+                    FontSize="16"
+                    ItemsSource="{Binding MaintenanceFilters}"
+                    SelectedItem="{Binding ActiveMaintenanceFilter, Mode=TwoWay}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding FilterExecutedCommand}">
+                                <i:InvokeCommandAction.CommandParameter>
+                                    <system:Boolean>False</system:Boolean>
+                                </i:InvokeCommandAction.CommandParameter>
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <Label
+                    Grid.Column="1"
+                    Content="MaintenanceFilters: "
+                    Style="{StaticResource LabelStyles}" />
+                <ComboBox
                     x:Name="FiltersComboBox"
                     Grid.Row="1"
+                    Grid.Column="1"
                     FontSize="16"
                     ItemsSource="{Binding Filters}"
                     SelectedItem="{Binding ActiveFilter, Mode=TwoWay}">
@@ -160,7 +182,7 @@
                 </ComboBox>
                 <Button
                     x:Name="ResetFilterButton"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Margin="0,0,50,10"
                     Command="{Binding FilterExecutedCommand}"
                     Content="Reset filter"

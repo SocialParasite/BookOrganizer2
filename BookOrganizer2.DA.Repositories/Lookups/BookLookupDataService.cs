@@ -49,13 +49,13 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         }
 
         public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
-            BookFilterCondition bookFilterCondition,
+            BookMaintenanceFilterCondition bookMaintenanceFilterCondition,
             bool showOnlyBooksNotRead,
             bool showOnlyNotOwnedBooks,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {
-            var filter = GetFilterCondition(bookFilterCondition);
+            var filter = GetFilterCondition(bookMaintenanceFilterCondition);
 
             Expression<Func<Book, bool>> genreFilterExpression = genreFilter?.Count > 0
                 ? b => b.Genres.Any(g => genreFilter.Contains(g.Id))
@@ -94,15 +94,15 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                     })
                 .ToListAsync();
 
-            Expression<Func<Book, bool>> GetFilterCondition(BookFilterCondition condition)
+            Expression<Func<Book, bool>> GetFilterCondition(BookMaintenanceFilterCondition condition)
             {
                 return condition switch
                 {
-                    BookFilterCondition.NoFilter => b => true,
-                    BookFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
-                    BookFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
-                    BookFilterCondition.NoAuthors => b => b.Authors.Count == 0,
-                    BookFilterCondition.NoPublisher => b => b.Publisher.Equals(null),
+                    BookMaintenanceFilterCondition.NoFilter => b => true,
+                    BookMaintenanceFilterCondition.NoDescription => b => string.IsNullOrEmpty(b.Description),
+                    BookMaintenanceFilterCondition.PlaceholderCover => b => b.BookCoverPath.Contains("placeholder"),
+                    BookMaintenanceFilterCondition.NoAuthors => b => b.Authors.Count == 0,
+                    BookMaintenanceFilterCondition.NoPublisher => b => b.Publisher.Equals(null),
                     _ => throw new ArgumentOutOfRangeException(nameof(condition), "Invalid filter condition!")
                 };
             }
