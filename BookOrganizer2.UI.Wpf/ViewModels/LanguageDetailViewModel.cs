@@ -110,6 +110,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 else
                 {
                     SelectedItem.Name = SelectedItem.Model.Name;
+                    Id = language.Id;
                 }
 
                 await InitializeLanguageCollection();

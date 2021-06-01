@@ -111,6 +111,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 else
                 {
                     SelectedItem.Name = SelectedItem.Model.Name;
+                    Id = nationality.Id;
                 }
 
                 await InitializeFormatCollection();
