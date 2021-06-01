@@ -114,6 +114,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     SwitchEditableStateExecute();
                     SelectedItem.Name = "";
+                    Id = series.Id;
                 }
 
                 await PopulateAllBooksCollection();

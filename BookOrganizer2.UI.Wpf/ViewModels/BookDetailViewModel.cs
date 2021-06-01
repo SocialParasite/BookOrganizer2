@@ -318,6 +318,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     SwitchEditableStateExecute();
                     SelectedItem.Title = "";
+                    Id = book.Id;
                 }
 
                 SetDefaultBookCoverIfNoneSet();

@@ -206,7 +206,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 SelectedDetailViewModel = DetailViewModels.Last();
             }
             else
+            {
                 SelectedDetailViewModel = DetailViewModels.SingleOrDefault(b => b.Id == args.Id);
+            }
 
             IsViewVisible = false;
             ItemStatusCounter = "";
@@ -214,6 +216,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void OnOpenSelectedViewExecute(string viewModel)
         {
+            if (viewModel == nameof(MainPageViewModel))
+            {
+                ItemStatusCounter = "";
+            }
             SelectedVm = _viewModelCreator[viewModel];
             IsViewVisible = true;
         }

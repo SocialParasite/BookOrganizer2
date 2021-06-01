@@ -128,6 +128,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     SwitchEditableStateExecute();
                     SelectedItem.FirstName = "";
                     SelectedItem.LastName = "";
+                    Id = author.Id;
                 }
 
                 SetDefaultAuthorPicIfNoneSet();

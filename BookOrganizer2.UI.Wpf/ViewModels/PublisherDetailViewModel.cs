@@ -99,6 +99,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     SwitchEditableStateExecute();
                     SelectedItem.Name = "";
+                    Id = publisher.Id;
                 }
 
                 SetDefaultPublisherLogoIfNoneSet();

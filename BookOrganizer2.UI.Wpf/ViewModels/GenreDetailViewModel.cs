@@ -112,6 +112,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 else
                 {
                     SelectedItem.Name = SelectedItem.Model.Name;
+                    Id = genre.Id;
                 }
 
                 await InitializeFormatCollection();
