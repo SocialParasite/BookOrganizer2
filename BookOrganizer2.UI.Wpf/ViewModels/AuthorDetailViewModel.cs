@@ -54,9 +54,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 .Subscribe(OnNewNationalityAdded);
         }
 
-        private async void OnNewNationalityAdded(NewItemEventArgs obj) 
-            => await InitializeNationalityCollection(true);
-
         public ICommand AddAuthorPictureCommand { get; }
         public ICommand NationalitySelectionChangedCommand { get; }
         public ICommand AddNewNationalityCommand { get; }
@@ -174,6 +171,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             return InitializeNationalityCollection();
         }
 
+        private async void OnNewNationalityAdded(NewItemEventArgs obj)
+            => await InitializeNationalityCollection(true);
+
         private async Task InitializeNationalityCollection(bool reset = false)
         {
             if (!Nationalities.Any() || reset)
@@ -215,7 +215,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     await ((IAuthorDomainService)DomainService).GetNationalityAsync(SelectedNationality.Id);
                 SelectedItem.Model.SetNationality(currentNationality);
             }
+
             base.SaveItemExecute();
+            NewAuthorAdded();
+        }
+
+        private void NewAuthorAdded()
+        {
+            EventAggregator.GetEvent<NewAuthorEvent>()
+                .Publish(new NewAuthorEventArgs());
         }
 
         protected override string CreateChangeMessage(DatabaseOperation operation)

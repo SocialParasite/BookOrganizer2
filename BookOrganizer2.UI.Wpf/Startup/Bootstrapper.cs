@@ -61,7 +61,9 @@ namespace BookOrganizer2.UI.Wpf.Startup
 
             var connectionString = ConnectivityService.GetConnectionString(settings.StartupDatabase);
 
-            builder.RegisterType<BookOrganizer2DbContext>().AsSelf().WithParameter("connectionString", connectionString);
+            builder.RegisterType<BookOrganizer2DbContext>()
+                .AsSelf()
+                .WithParameter("connectionString", connectionString);
 
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
 

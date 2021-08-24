@@ -27,10 +27,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.Reports
 
         private void InitializeView()
         {
-            Reports = new ObservableCollection<IReport>();
-            Reports.Add(_viewModelCreator[nameof(AnnualBookStatisticsReportViewModel)]);
-            Reports.Add(_viewModelCreator[nameof(AnnualBookStatisticsInRangeReportViewModel)]);
-            Reports.Add(_viewModelCreator[nameof(MonthlyReadsReportViewModel)]);
+            Reports = new ObservableCollection<IReport>
+            {
+                _viewModelCreator[nameof(AnnualBookStatisticsReportViewModel)],
+                _viewModelCreator[nameof(AnnualBookStatisticsInRangeReportViewModel)],
+                _viewModelCreator[nameof(MonthlyReadsReportViewModel)],
+                _viewModelCreator[nameof(MaintenanceReportViewModel)]
+            };
             SelectedReport = Reports[0];
         }
     }

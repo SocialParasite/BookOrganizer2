@@ -347,5 +347,11 @@ namespace BookOrganizer2.Domain.BookProfile
         public Task<Genre> AddNewGenre(string name) => _genreService.AddNew(name);
 
         public Task<Format> AddNewFormat(string name) => _formatService.AddNew(name);
+
+        public async Task<int> GetPublisherCount() => await _publisherLookupDataService.GetPublisherCount();
+
+        public async Task<int> GetLanguageCount() => await _languageLookupDataService.GetLanguageCount();
+
+        public async Task<int> GetAuthorCount() => await _authorLookupDataService.GetAuthorCount();
     }
 }

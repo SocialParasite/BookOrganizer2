@@ -11,5 +11,7 @@ namespace BookOrganizer2.Domain.DA
 
         public Task<IEnumerable<LookupItem>> GetFilteredAuthorLookupAsync(string viewModelName,
             AuthorMaintenanceFilterCondition authorMaintenanceFilterCondition);
+
+        public Task<int> GetAuthorCount();
     }
 }

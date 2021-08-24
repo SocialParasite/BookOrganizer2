@@ -9,5 +9,6 @@ namespace BookOrganizer2.Domain.DA
     {
         Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName);
         Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherMaintenanceFilterCondition condition);
+        Task<int> GetPublisherCount();
     }
 }
