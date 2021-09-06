@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using BookOrganizer2.DA.SqlServer;
+﻿using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
@@ -11,6 +8,8 @@ using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.PublisherProfile;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Language = BookOrganizer2.Domain.BookProfile.LanguageProfile.Language;
 
 namespace BookOrganizer2.DA.Repositories

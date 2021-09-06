@@ -230,7 +230,7 @@ namespace BookOrganizer2.Domain.BookProfile
             updatableBook.SetBookCoverPath(cmd.BookCoverPath);
             updatableBook.SetDescription(cmd.Description);
             updatableBook.SetNotes(cmd.Notes);
-            updatableBook.SetIsRead(cmd.BookReadDates.Any());
+            updatableBook.SetIsRead(cmd.IsRead || cmd.BookReadDates.Any());
             //updatableBook.SetLanguage(cmd.Language);
             //updatableBook.SetPublisher(cmd.Publisher);
             updatableBook.SetAuthors(cmd.Authors);
