@@ -53,7 +53,7 @@ namespace BookOrganizer2.Domain.BookProfile.FormatProfile
 
         internal bool EnsureValidState()
         {
-            return Id.Value != default
+            return Id != default
                    && !string.IsNullOrWhiteSpace(Name);
         }
 

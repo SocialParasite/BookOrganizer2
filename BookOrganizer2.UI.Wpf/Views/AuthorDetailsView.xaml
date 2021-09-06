@@ -159,7 +159,7 @@
                     Grid.Column="2"
                     IsEditable="True"
                     IsTextSearchEnabled="True"
-                    ItemsSource="{Binding Nationalities}"
+                    ItemsSource="{Binding Nationalities, Mode=TwoWay}"
                     SelectedItem="{Binding SelectedNationality, Mode=TwoWay}"
                     TextSearch.TextPath="DisplayMember"
                     Visibility="{Binding UserMode.Item4, Converter={StaticResource BoolToVis}}">

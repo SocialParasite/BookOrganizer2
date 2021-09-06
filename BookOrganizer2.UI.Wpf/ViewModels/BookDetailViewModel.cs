@@ -32,7 +32,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             get => _languageIsDirty;
             set { _languageIsDirty = value; OnPropertyChanged(); }
         }
-        
+
         private bool _publisherIsDirty; // _navPropertyIsDirty; ?? Is one enough for all?
 
         private bool PublisherIsDirty
@@ -101,6 +101,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             YearsList = PopulateYearsMenu();
         }
+
+        private async void OnNewLanguageAdded(NewLanguageEventArgs obj) 
+            => await InitializeLanguageCollection(true);
+
+        private async void OnNewPublisherAdded(NewPublisherEventArgs obj) 
+            => await InitializePublisherCollection(true);
+
+        private async void OnNewAuthorAdded(NewAuthorEventArgs obj) 
+            => await InitializeAuthorCollection(true);
 
         public ICommand HighlightMouseLeaveCommand { get; }
         public ICommand HighlightMouseOverCommand { get; }
@@ -397,7 +406,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 {
                     if (SelectedItem.Model.Genres == null || SelectedItem.Model.Genres.Count == 0) return;
                     if (AllBookGenres.Any()) return;
-                    
+
                     AllBookGenres.Clear();
 
                     foreach (var item in SelectedItem.Model.Genres)
@@ -416,7 +425,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 var dialog = new NotificationViewModel("Exception", ex.Message);
                 DialogService.OpenDialog(dialog);
 
-                Logger.Error(ex,"Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
+                Logger.Error(ex, "Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
 
@@ -451,6 +460,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             base.SwitchEditableStateExecute();
 
+            if (!UserMode.Item1)
+            {
+                SubscribeToEvents();
+            }
+            else
+            {
+                UnsubscribeEvents();
+            }
+
             await InitializeLanguageCollection();
             await InitializePublisherCollection();
             await InitializeAuthorCollection();
@@ -459,9 +477,34 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             SelectedItem.ReleaseYear = SelectedReleaseYear == 0 ? 1 : SelectedReleaseYear;
 
-            async Task InitializeLanguageCollection()
+            void UnsubscribeEvents()
             {
-                if (Languages.Any()) return;
+                EventAggregator.GetEvent<NewAuthorEvent>().Unsubscribe(OnNewAuthorAdded);
+                EventAggregator.GetEvent<NewPublisherEvent>().Unsubscribe(OnNewPublisherAdded);
+                EventAggregator.GetEvent<NewLanguageEvent>().Unsubscribe(OnNewLanguageAdded);
+            }
+
+            void SubscribeToEvents()
+            {
+                EventAggregator.GetEvent<NewAuthorEvent>()
+                    .Subscribe(OnNewAuthorAdded);
+                EventAggregator.GetEvent<NewPublisherEvent>()
+                    .Subscribe(OnNewPublisherAdded);
+                EventAggregator.GetEvent<NewLanguageEvent>()
+                    .Subscribe(OnNewLanguageAdded);
+            }
+        }
+
+        async Task InitializeLanguageCollection(bool reset = false)
+        {
+            if (!Languages.Any() || reset)
+            {
+                if (reset)
+                {
+                    while (await ((BookService)DomainService).GetLanguageCount() == Languages.Count)
+                    {
+                    }
+                }
 
                 Languages.Clear();
 
@@ -473,11 +516,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 if (SelectedItem.Model.Language != null)
                     SelectedLanguage = Languages.SingleOrDefault(l => l.Id == SelectedItem.Model.Language.Id);
             }
+        }
 
-            async Task InitializePublisherCollection()
+        async Task InitializePublisherCollection(bool reset = false)
+        {
+            if (!Publishers.Any() || reset)
             {
-                if (Publishers.Any()) return;
-
+                if (reset)
+                {
+                    while (await ((BookService)DomainService).GetPublisherCount() == Publishers.Count)
+                    {
+                    }
+                }
                 Publishers.Clear();
 
                 foreach (var item in await GetPublisherList())
@@ -488,16 +538,23 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 if (SelectedItem.Model.Publisher != null)
                     SelectedPublisher = Publishers.SingleOrDefault(p => p.Id == SelectedItem.Model.Publisher.Id);
             }
+        }
 
-            async Task InitializeAuthorCollection()
+        async Task InitializeAuthorCollection(bool reset = false)
+        {
+            if (!Authors.Any() || reset)
             {
-                if (Authors.Any()) return;
-
+                if (reset)
+                {
+                    while (await ((BookService)DomainService).GetAuthorCount() == Authors.Count)
+                    {
+                    }
+                }
                 Authors.Clear();
 
                 foreach (var item in await GetAuthorList())
                 {
-                    if (SelectedItem.Model.Authors.All(a => a.Id != item.Id)) 
+                    if (SelectedItem.Model.Authors.All(a => a.Id != item.Id))
                         Authors.Add(item);
                 }
             }
@@ -594,11 +651,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             if (authorId is not null)
             {
-                var removedAuthor = await ((IBookDomainService) DomainService).GetAuthorAsync((Guid) authorId);
+                var removedAuthor = await ((IBookDomainService)DomainService).GetAuthorAsync((Guid)authorId);
                 Authors.Add(
                     new LookupItem
                     {
-                        Id = (Guid) authorId,
+                        Id = (Guid)authorId,
                         DisplayMember = $"{removedAuthor.LastName}, {removedAuthor.FirstName}"
                     });
 
@@ -627,7 +684,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async Task AddAuthorAsync(LookupItem lookupItem)
         {
-            var addedAuthor = await ((IBookDomainService) DomainService).GetAuthorAsync(lookupItem.Id);
+            var addedAuthor = await ((IBookDomainService)DomainService).GetAuthorAsync(lookupItem.Id);
 
             SelectedItem.Model.Authors.Add(addedAuthor);
 
@@ -666,7 +723,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 AllBookFormats.Remove(AllBookFormats.Single(bf => bf.Item1.Id == lookupItem.Id));
                 AllBookFormats.Add((lookupItem, true).ToTuple());
 
-                var newFormat = await ((IBookDomainService) DomainService).GetFormatAsync(lookupItem.Id);
+                var newFormat = await ((IBookDomainService)DomainService).GetFormatAsync(lookupItem.Id);
 
                 SelectedItem.Model.Formats.Add(newFormat);
             }
@@ -694,7 +751,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 AllBookGenres.Remove(AllBookGenres.Single(bg => bg.Item1.Id == lookupItem.Id));
                 AllBookGenres.Add((lookupItem, true).ToTuple());
 
-                var newGenre = await ((IBookDomainService) DomainService).GetGenreAsync(lookupItem.Id);
+                var newGenre = await ((IBookDomainService)DomainService).GetGenreAsync(lookupItem.Id);
 
                 SelectedItem.Model.Genres.Add(newGenre);
             }
@@ -754,7 +811,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                            .Publish(new OpenDetailViewEventArgs
                            {
                                Id = new Guid(),
-                               ViewModelName = nameof(AuthorDetailViewModel)
+                               ViewModelName = nameof(AuthorDetailViewModel),
+                               QuickAdd = true
                            });
 
         }
@@ -785,7 +843,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 return false;
             }
-            return !AllBookFormats.Any(f 
+            return !AllBookFormats.Any(f
                 => f.Item1.DisplayMember.Equals(formatName, StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -795,7 +853,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             {
                 return false;
             }
-            return !AllBookGenres.Any(f 
+            return !AllBookGenres.Any(f
                 => f.Item1.DisplayMember.Equals(genreName, StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -803,7 +861,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private async Task AddNewGenre(string genre)
         {
-            await ((IBookDomainService) DomainService).AddNewGenre(genre);
+            await ((IBookDomainService)DomainService).AddNewGenre(genre);
             await InitializeAllBookGenresCollection();
         }
 

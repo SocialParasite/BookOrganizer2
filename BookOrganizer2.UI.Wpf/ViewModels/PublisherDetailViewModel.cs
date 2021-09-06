@@ -12,6 +12,7 @@ using Serilog;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.UI.Wpf.Events;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -117,6 +118,19 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
                 Logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
+        }
+
+        protected override void SaveItemExecute()
+        {
+
+            base.SaveItemExecute();
+            NewPublisherAdded();
+        }
+
+        private void NewPublisherAdded()
+        {
+            EventAggregator.GetEvent<NewPublisherEvent>()
+                .Publish(new NewPublisherEventArgs());
         }
 
         public override PublisherWrapper CreateWrapper(Publisher entity) => new(entity);

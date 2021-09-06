@@ -148,6 +148,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             FilteredEntityCollection = EntityCollection?.Where(w => w.DisplayMember
                                                        .IndexOf(SearchString, StringComparison.OrdinalIgnoreCase) != -1)
                                                        .FromListToList();
+
+            NumberOfItems = FilteredEntityCollection!.Count;
         }
 
         private void OnAddNewItemExecute(string itemType)

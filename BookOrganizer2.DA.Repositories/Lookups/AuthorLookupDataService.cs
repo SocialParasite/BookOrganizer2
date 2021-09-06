@@ -77,6 +77,12 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             }
         }
 
+        public async Task<int> GetAuthorCount()
+        {
+            await using var ctx = _contextCreator();
+            return await ctx.Authors.CountAsync();
+        }
+
         private static string GetPictureThumbnail(string picturePath)
         {
             //var extension = Path.GetExtension(picturePath);

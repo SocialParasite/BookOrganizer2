@@ -85,5 +85,11 @@ namespace BookOrganizer2.DA.Repositories.Lookups
                 };
             }
         }
+
+        public async Task<int> GetPublisherCount()
+        {
+            await using var ctx = _contextCreator();
+            return await ctx.Publishers.CountAsync();
+        }
     }
 }

@@ -10,6 +10,7 @@ using Serilog;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
@@ -64,9 +65,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             if (_eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>() is not null)
             {
-                _eventAggregator.GetEvent<OpenItemViewEvent>()
-                    .Subscribe(OnOpenSelectedItemView);
-
                 _eventAggregator.GetEvent<OpenItemMatchingSelectedBookIdEvent<Guid>>()
                         .Subscribe(OnOpenBookMatchingSelectedId);
 
@@ -202,6 +200,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     return;
                 }
 
+                detailViewModel.IsQuickAdd = args.QuickAdd;
                 DetailViewModels.Add(detailViewModel);
                 SelectedDetailViewModel = DetailViewModels.Last();
             }
@@ -292,7 +291,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             ShouldAnimate = false;
 
-            (SelectedVm as IItemLists)?.InitializeRepositoryAsync();
+            (SelectedVm as IItemLists)?.InitializeRepositoryAsync().Await();
 
             MessageItem = new MessageItem { Message = args.Message, MessageBackgroundColor = args.MessageBackgroundColor };
 

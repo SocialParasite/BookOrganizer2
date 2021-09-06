@@ -146,7 +146,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             base.SaveItemExecute();
             await LoadAsync(SelectedItem.Id);
-            NewItemAdded();
+            if (IsNewItem)
+            {
+                // TODO: Do I need this?
+                NewItemAdded();
+            }
         }
 
         private Task<IEnumerable<LookupItem>> GetFormatList()

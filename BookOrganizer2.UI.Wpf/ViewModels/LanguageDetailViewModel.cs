@@ -173,8 +173,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         private void NewItemAdded()
         {
-            EventAggregator.GetEvent<NewItemEvent>()
-                .Publish(new NewItemEventArgs());
+            EventAggregator.GetEvent<NewLanguageEvent>()
+                .Publish(new NewLanguageEventArgs());
         }
     }
 }
