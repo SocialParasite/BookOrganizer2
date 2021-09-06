@@ -19,9 +19,9 @@ using JetBrains.Annotations;
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
     public abstract class BaseDetailViewModel<T, TId, TBase> : ViewModelBase, IDetailViewModel
-                where TBase : BaseWrapper<T, TId>
                 where T : class, IIdentifiable<TId>
                 where TId : ValueObject
+                where TBase : BaseWrapper<T, TId>
     {
         protected readonly IEventAggregator EventAggregator;
         protected readonly ILogger Logger;
@@ -101,8 +101,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     return "";
                 if (_tabTitle.Length <= 50)
                     return _tabTitle;
-                else
-                    return _tabTitle.Substring(0, 50) + "...";
+
+                return _tabTitle.Substring(0, 50) + "...";
             }
             set
             {
@@ -132,7 +132,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             get => _id;
             set => _id = value;
         }
-
+        public bool IsQuickAdd { get; set; }
+        
         public abstract Task LoadAsync(Guid id);
         public abstract TBase CreateWrapper(T entity);
 
@@ -169,12 +170,20 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             SaveItem().Await();
 
-            EventAggregator.GetEvent<ChangeDetailsViewEvent>()
-                .Publish(new ChangeDetailsViewEventArgs
-                {
-                    Message = CreateChangeMessage(IsNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
-                    MessageBackgroundColor = Brushes.LawnGreen
-                });
+            //if (IsQuickAdd)
+            //{
+            //    CloseDetailViewExecute();
+            //}
+
+            if (!IsQuickAdd)
+            {
+                EventAggregator.GetEvent<ChangeDetailsViewEvent>()
+                    .Publish(new ChangeDetailsViewEventArgs
+                    {
+                        Message = CreateChangeMessage(IsNewItem ? DatabaseOperation.ADD : DatabaseOperation.UPDATE),
+                        MessageBackgroundColor = Brushes.LawnGreen
+                    });
+            }
 
             HasChanges = false;
             IsNewItem = false;

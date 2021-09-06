@@ -7,5 +7,6 @@ namespace BookOrganizer2.UI.Wpf.Interfaces
     {
         Guid Id { get; set; }
         Task LoadAsync(Guid id);
+        bool IsQuickAdd { get; set; }
     }
 }

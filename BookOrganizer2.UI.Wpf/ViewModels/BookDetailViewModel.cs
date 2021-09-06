@@ -1,4 +1,4 @@
-using BookOrganizer2.Domain.BookProfile;
+﻿using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Services;
@@ -811,7 +811,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                            .Publish(new OpenDetailViewEventArgs
                            {
                                Id = new Guid(),
-                               ViewModelName = nameof(AuthorDetailViewModel)
+                               ViewModelName = nameof(AuthorDetailViewModel),
+                               QuickAdd = true
                            });
 
         }

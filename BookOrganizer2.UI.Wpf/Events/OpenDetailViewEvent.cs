@@ -14,5 +14,6 @@ namespace BookOrganizer2.UI.Wpf.Events
     {
         public Guid Id { get; set; }
         public string ViewModelName { get; set; }
+        public bool QuickAdd { get; set; }
     }
 }

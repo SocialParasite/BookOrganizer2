@@ -50,7 +50,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
             Nationalities = new ObservableCollection<LookupItem>();
 
-            eventAggregator.GetEvent<NewItemEvent>()
+            eventAggregator.GetEvent<NewNationalityEvent>()
                 .Subscribe(OnNewNationalityAdded);
         }
 
@@ -171,7 +171,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             return InitializeNationalityCollection();
         }
 
-        private async void OnNewNationalityAdded(NewItemEventArgs obj)
+        private async void OnNewNationalityAdded(NewNationalityEventArgs obj)
             => await InitializeNationalityCollection(true);
 
         private async Task InitializeNationalityCollection(bool reset = false)

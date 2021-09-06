@@ -1,4 +1,4 @@
-using Autofac.Features.Indexed;
+﻿using Autofac.Features.Indexed;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
 using BookOrganizer2.UI.Wpf.Events;
@@ -200,6 +200,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     return;
                 }
 
+                detailViewModel.IsQuickAdd = args.QuickAdd;
                 DetailViewModels.Add(detailViewModel);
                 SelectedDetailViewModel = DetailViewModels.Last();
             }
