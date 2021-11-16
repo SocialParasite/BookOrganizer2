@@ -100,7 +100,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         }
 
         private static string GetInfoText(Series s) 
-            => $"Read: {GetReadBooks(s)} of {GetBookCount(s)}\rOwned: {GetOwnedBooks(s)} of {GetBookCount(s)}";
+            => $"Read: {GetReadBooks(s)} of {GetBookCount(s)}" +
+               $"\rPages read: {GetReadPageCount(s):N0} of {GetPageCount(s):N0}" +
+               $"\rOwned: {GetOwnedBooks(s)} of {GetBookCount(s)}";
 
         private static SeriesState GetSeriesState(Series s)
         {
@@ -117,6 +119,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         private static int GetOwnedBooks(Series series) => series.Books.Count(b => b.Book.Formats.Any()) / 2;
 
         private static int GetBookCount(Series series) => series.Books.Count / 2;
+        private static int GetPageCount(Series series) => series.Books.Sum(b => b.Book.PageCount);
+        private static int GetReadPageCount(Series series) => series.Books.Where(b => b.Book.IsRead).Sum(b => b.Book.PageCount);
 
         private static string GetPictureThumbnail(string picturePath)
         {
