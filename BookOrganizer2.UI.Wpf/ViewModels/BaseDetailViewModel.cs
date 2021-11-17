@@ -227,7 +227,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         }
 
         private bool OnShowSelectedBookCanExecute(Guid? id)
-                => (!(id is null) && id != Guid.Empty);
+            => id is not null && id != Guid.Empty;
 
         [UsedImplicitly]
         public virtual void OnShowSelectedBookExecute(Guid? id)
