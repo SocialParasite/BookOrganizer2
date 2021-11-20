@@ -101,8 +101,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
 
         public bool ShowOnlyNotOwnedBooks
         {
-            get { return _showOnlyNotOwnedBooks; }
-            set { _showOnlyNotOwnedBooks = value; }
+            get => _showOnlyNotOwnedBooks;
+            set => _showOnlyNotOwnedBooks = value;
         }
 
         private Task Init()

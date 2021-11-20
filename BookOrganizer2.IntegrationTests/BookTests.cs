@@ -41,7 +41,7 @@ namespace BookOrganizer2.IntegrationTests
             book.Isbn.Should().Be("9781566199094");
             book.BookCoverPath.Should().Be(@"C:\temp\pic.jpg");
             book.Description.Should().Be("description");
-            book.Notes.Should().Be("notes");
+            book.NotesOld.Should().Be("notes");
             book.IsRead.Should().BeTrue();
 
             book.Language.Should().NotBeNull();
@@ -259,13 +259,13 @@ namespace BookOrganizer2.IntegrationTests
             var bookId = sut.Id;
 
             sut.Should().NotBeNull();
-            sut.Notes.Should().Be("notes");
+            sut.NotesOld.Should().Be("notes");
 
             await BookHelpers.UpdateNotes(sut.Id, "You can always wish...");
 
             await _fixture.Context.Entry(sut).ReloadAsync();
 
-            sut.Notes.Should().Contain("always wish");
+            sut.NotesOld.Should().Contain("always wish");
             sut.Id.Should().Be(bookId);
         }
 

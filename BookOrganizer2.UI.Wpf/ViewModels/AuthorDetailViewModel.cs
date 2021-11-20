@@ -1,5 +1,4 @@
-﻿using BookOrganizer2.DA.Repositories;
-using BookOrganizer2.Domain.AuthorProfile;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;

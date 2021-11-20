@@ -39,7 +39,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     (a) => Repository.Update(a)),
                 SetBiography cmd => HandleUpdate(cmd.Id, (a) => a.SetBiography(cmd.Biography), 
                     (a) => Repository.Update(a)),
-                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotes(cmd.Notes), 
+                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotesOld(cmd.NotesOld),
                     (a) => Repository.Update(a)),
                 SetNationality cmd => HandleUpdateAsync(cmd.Id, 
                         async a => await UpdateNationalityAsync(a, cmd.NationalityId)),
@@ -59,8 +59,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 DateOfBirth = model.DateOfBirth,
                 MugshotPath = model.MugshotPath,
                 Biography = model.Biography,
-                Notes = model.Notes,
-                Nationality = model.Nationality
+                NotesOld = model.NotesOld,
+                Nationality = model.Nationality,
+                Notes = model.Notes
             };
 
             return Handle(command);
@@ -86,8 +87,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 DateOfBirth = model.DateOfBirth,
                 MugshotPath = model.MugshotPath,
                 Biography = model.Biography,
-                Notes = model.Notes,
-                Nationality = model.Nationality
+                NotesOld = model.NotesOld,
+                Nationality = model.Nationality,
+                Notes = model.Notes
             };
 
             await Handle(command);
@@ -106,6 +108,8 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                        cmd.DateOfBirth,
                                        cmd.Biography,
                                        cmd.MugshotPath,
+                                       cmd.NotesOld,
+                                       cmd.Nationality,
                                        cmd.Notes);
 
             await Repository.AddAsync(author);
@@ -137,7 +141,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             updatableAuthor.SetDateOfBirth(cmd.DateOfBirth);
             updatableAuthor.SetBiography(cmd.Biography);
             updatableAuthor.SetMugshotPath(cmd.MugshotPath);
-            updatableAuthor.SetNotes(cmd.Notes);
+            updatableAuthor.SetNotesOld(cmd.NotesOld);
             updatableAuthor.SetNationality(cmd.Nationality);
 
             Repository.Update(updatableAuthor);

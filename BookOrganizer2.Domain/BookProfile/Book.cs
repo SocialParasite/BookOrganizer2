@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.AuthorProfile;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Shared;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Common;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
-    public class Book : IIdentifiable<BookId>
+    public sealed class Book : IIdentifiable<BookId>
     {
         private Book()
         {
@@ -32,7 +33,8 @@ namespace BookOrganizer2.Domain.BookProfile
         public string Isbn { get; private set; }
         public string BookCoverPath { get; private set; }
         public string Description { get; private set; }
-        public string Notes { get; private set; }
+        public string NotesOld { get; private set; }
+        public ICollection<Note> Notes { get; set; }
         public bool IsRead { get; private set; }
         public Language Language { get; private set; }
         public Publisher Publisher { get; private set; }
@@ -117,47 +119,59 @@ namespace BookOrganizer2.Domain.BookProfile
                 if (string.IsNullOrWhiteSpace(title))
                     return false;
 
-                return title.Length >= 1 && title.Length <= 256;
+                return title.Length is >= 1 and <= 256;
             }
         }
 
         public void SetReleaseYear(int releaseYear)
         {
             const string msg = "Invalid year. \nRelease year should be between 1 and 2500.";
-            if (releaseYear > 0 && releaseYear < 2_501)
+            if (releaseYear is > 0 and < 2_501)
+            {
                 Apply(new Events.ReleaseYearChanged
                 {
                     Id = Id,
                     ReleaseYear = releaseYear
                 });
+            }
             else
+            {
                 throw new ArgumentException(msg);
+            }
         }
 
         public void SetPageCount(int pageCount)
         {
             const string msg = "Release year should be between 1 and 99 999.";
-            if (pageCount > 0 && pageCount < 100_000)
+            if (pageCount is > 0 and < 100_000)
+            {
                 Apply(new Events.PageCountChanged
                 {
                     Id = Id,
                     PageCount = pageCount
                 });
+            }
             else
+            {
                 throw new ArgumentException(msg);
+            }
         }
 
         public void SetWordCount(int wordCount)
         {
             const string msg = "Word count should be more than 1.";
             if (wordCount > 1)
+            {
                 Apply(new Events.WordCountChanged
                 {
                     Id = Id,
                     WordCount = wordCount
                 });
+            }
             else
+            {
                 throw new ArgumentException(msg);
+            }
         }
 
         public void SetIsbn(string isbn)
@@ -174,9 +188,9 @@ namespace BookOrganizer2.Domain.BookProfile
             {
                 if (isbn is null || isbn is "") return true;
 
-                var pattern = @"^(97(8|9))?\d{9}(\d|X)$";
+                const string pattern = @"^(97(8|9))?\d{9}(\d|X)$";
 
-                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+                var rgx = new Regex(pattern, RegexOptions.IgnoreCase);
 
                 return rgx.IsMatch(isbn);
             }
@@ -191,13 +205,17 @@ namespace BookOrganizer2.Domain.BookProfile
             string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
 
             if (formats.Contains(Path.GetExtension(pic), StringComparer.InvariantCultureIgnoreCase))
+            {
                 Apply(new Events.BookCoverPathChanged
                 {
                     Id = Id,
                     BookCoverPath = path
                 });
+            }
             else
+            {
                 throw new Exception();
+            }
         }
 
         public void SetDescription(string description)
@@ -281,11 +299,8 @@ namespace BookOrganizer2.Domain.BookProfile
             });
         }
 
-        internal bool EnsureValidState()
-        {
-            return Id.Value != default
-                   && !string.IsNullOrWhiteSpace(Title);
-        }
+        internal bool EnsureValidState() =>
+            Id.Value != default && !string.IsNullOrWhiteSpace(Title);
 
         private void Apply(object @event)
         {
@@ -305,7 +320,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     Isbn = e.Isbn;
                     BookCoverPath = e.BookCoverPath;
                     Description = e.Description;
-                    Notes = e.Notes;
+                    NotesOld = e.Notes;
                     IsRead = e.IsRead;
                     Language = e.Language;
                     Publisher = e.Publisher;
@@ -344,7 +359,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     break;
                 case Events.NotesChanged e:
                     Id = e.Id;
-                    Notes = e.Notes;
+                    NotesOld = e.Notes;
                     break;
                 case Events.IsReadChanged e:
                     Id = e.Id;
