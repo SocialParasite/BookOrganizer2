@@ -35,7 +35,7 @@ namespace BookOrganizer2.IntegrationTests
             author.DateOfBirth.Should().Be(new DateTime(1973, 6, 6));
             author.MugshotPath.Should().Be(@"\\filepath\file.jpg");
             author.Biography.Should().Be("There is no book number three.");
-            author.Notes.Should().Be("...");
+            author.NotesOld.Should().Be("...");
             author.Nationality.Name.Should().Be("american");
         }
 
@@ -203,13 +203,13 @@ namespace BookOrganizer2.IntegrationTests
             var authorId = sut.Id;
 
             sut.Should().NotBeNull();
-            sut.Notes.Should().Be("...");
+            sut.NotesOld.Should().Be("...");
 
             await AuthorHelpers.UpdateAuthorNotes(sut.Id, "Could I please have book number three?");
 
             await _fixture.Context.Entry(sut).ReloadAsync();
 
-            sut.Notes.Should().Contain("Could I please");
+            sut.NotesOld.Should().Contain("Could I please");
             sut.Id.Should().Be(authorId);
         }
 

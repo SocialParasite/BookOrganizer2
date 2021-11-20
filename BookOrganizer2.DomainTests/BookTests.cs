@@ -53,7 +53,7 @@ namespace BookOrganizer2.DomainTests
             sut.Isbn.Should().Be("9781566199094");
             sut.BookCoverPath.Should().Be(@"C:\temp\cover.jpg");
             sut.Description.Should().Be("description");
-            sut.Notes.Should().Be("notes");
+            sut.NotesOld.Should().Be("notes");
             sut.IsRead.Should().BeTrue();
             sut.Language.Should().NotBeNull();
             sut.Language.Id.Should().Be(language.Id);
@@ -234,8 +234,8 @@ namespace BookOrganizer2.DomainTests
             var sut = CreateBook();
             sut.SetNotes(notes);
 
-            sut.Notes.Should().BeOfType<string>();
-            sut.Notes.Should().BeEmpty();
+            sut.NotesOld.Should().BeOfType<string>();
+            sut.NotesOld.Should().BeEmpty();
         }
 
         [Fact]

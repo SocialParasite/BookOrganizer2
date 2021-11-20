@@ -4,14 +4,16 @@ using BookOrganizer2.DA.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookOrganizer2.DA.SqlServer.Migrations
 {
     [DbContext(typeof(BookOrganizer2DbContext))]
-    partial class BookOrganizer2DbContextModelSnapshot : ModelSnapshot
+    [Migration("20211117165640_NotesChange")]
+    partial class NotesChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,7 +94,7 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                     b.Property<Guid?>("NationalityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("NotesOld")
+                    b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -273,6 +275,29 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                     b.ToTable("Series");
                 });
 
+            modelBuilder.Entity("BookOrganizer2.Domain.Common.Note", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("Note");
+                });
+
             modelBuilder.Entity("BookOrganizer2.Domain.PublisherProfile.Publisher", b =>
                 {
                     b.Property<Guid>("Id")
@@ -417,34 +442,7 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                         .WithMany("Authors")
                         .HasForeignKey("NationalityId");
 
-                    b.OwnsMany("BookOrganizer2.Domain.Common.Note", "Note", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("AuthorId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Content")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Title")
-                                .HasMaxLength(64)
-                                .HasColumnType("nvarchar(64)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("AuthorId");
-
-                            b1.ToTable("AuthorNotes");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AuthorId");
-                        });
-
                     b.Navigation("Nationality");
-
-                    b.Navigation("Note");
                 });
 
             modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.Book", b =>
@@ -457,34 +455,7 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                         .WithMany("Books")
                         .HasForeignKey("PublisherId");
 
-                    b.OwnsMany("BookOrganizer2.Domain.Common.Note", "Notes", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("BookId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Content")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Title")
-                                .HasMaxLength(64)
-                                .HasColumnType("nvarchar(64)");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("BookId");
-
-                            b1.ToTable("BookNotes");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BookId");
-                        });
-
                     b.Navigation("Language");
-
-                    b.Navigation("Notes");
 
                     b.Navigation("Publisher");
                 });
@@ -515,6 +486,13 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
                     b.Navigation("Series");
                 });
 
+            modelBuilder.Entity("BookOrganizer2.Domain.Common.Note", b =>
+                {
+                    b.HasOne("BookOrganizer2.Domain.BookProfile.Book", null)
+                        .WithMany("Notes")
+                        .HasForeignKey("BookId");
+                });
+
             modelBuilder.Entity("BookOrganizer2.Domain.AuthorProfile.NationalityProfile.Nationality", b =>
                 {
                     b.Navigation("Authors");
@@ -522,6 +500,8 @@ namespace BookOrganizer2.DA.SqlServer.Migrations
 
             modelBuilder.Entity("BookOrganizer2.Domain.BookProfile.Book", b =>
                 {
+                    b.Navigation("Notes");
+
                     b.Navigation("ReadDates");
 
                     b.Navigation("Series");

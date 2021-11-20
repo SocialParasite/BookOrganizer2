@@ -1,4 +1,5 @@
 ﻿using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +28,7 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
             builder.Property(x => x.BookCoverPath)
                 .HasMaxLength(256);
             builder.Property(x => x.Description);
-            builder.Property(x => x.Notes);
+            builder.Property(x => x.NotesOld);
             builder.Property(x => x.IsRead)
                 .HasColumnType("bit");
 
@@ -38,6 +39,17 @@ namespace BookOrganizer2.DA.SqlServer.EntityConfigurations
             builder.HasMany(x => x.Genres);
             builder.HasMany(x => x.Formats);
             builder.HasMany(x => x.ReadDates);
+
+            builder.OwnsMany(
+                p => p.Notes,
+                a =>
+                {
+                    a.ToTable("BookNotes");
+                    a.WithOwner().HasPrincipalKey("Id");
+                    a.Property<NoteId>("Id").HasConversion(c => c.Value, g => g);
+                    a.HasKey("Id");
+                    a.Property(t => t.Title).HasMaxLength(64);
+                });
         }
     }
 }

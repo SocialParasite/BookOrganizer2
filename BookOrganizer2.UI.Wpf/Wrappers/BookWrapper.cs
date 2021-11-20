@@ -51,7 +51,7 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             set => SetValue(value);
         }
 
-        public string Notes
+        public string NotesOld
         {
             get => GetValue<string>();
             set => SetValue(value);

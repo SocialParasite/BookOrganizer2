@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.AuthorProfile;
+﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Shared;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Common;
 
 namespace BookOrganizer2.Domain.BookProfile
 {
@@ -32,7 +33,8 @@ namespace BookOrganizer2.Domain.BookProfile
         public string Isbn { get; private set; }
         public string BookCoverPath { get; private set; }
         public string Description { get; private set; }
-        public string Notes { get; private set; }
+        public string NotesOld { get; private set; }
+        public ICollection<Note> Notes { get; set; }
         public bool IsRead { get; private set; }
         public Language Language { get; private set; }
         public Publisher Publisher { get; private set; }
@@ -318,7 +320,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     Isbn = e.Isbn;
                     BookCoverPath = e.BookCoverPath;
                     Description = e.Description;
-                    Notes = e.Notes;
+                    NotesOld = e.Notes;
                     IsRead = e.IsRead;
                     Language = e.Language;
                     Publisher = e.Publisher;
@@ -357,7 +359,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     break;
                 case Events.NotesChanged e:
                     Id = e.Id;
-                    Notes = e.Notes;
+                    NotesOld = e.Notes;
                     break;
                 case Events.IsReadChanged e:
                     Id = e.Id;

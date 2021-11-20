@@ -1,5 +1,7 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using System;
+using System.Collections.Generic;
+using BookOrganizer2.Domain.Common;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
@@ -13,8 +15,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public string MugshotPath { get; set; }
             public DateTime? DateOfBirth { get; set; }
             public string Biography { get; set; }
-            public string Notes { get; set; }
+            public string NotesOld { get; set; }
             public Nationality Nationality { get; set; }
+            public ICollection<Note> Notes { get; set; }
         }
 
         public class AuthorUpdated
@@ -25,8 +28,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public string MugshotPath { get; set; }
             public DateTime? DateOfBirth { get; set; }
             public string Biography { get; set; }
-            public string Notes { get; set; }
+            public string NotesOld { get; set; }
             public Nationality Nationality { get; set; }
+            public ICollection<Note> Notes { get; set; }
         }
 
         public class AuthorsFirstNameChanged
@@ -61,7 +65,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public class AuthorsNotesChanged
         {
             public Guid Id { get; set; }
-            public string Notes { get; set; }
+            public string NotesOld { get; set; }
         }
 
         public class NationalityChanged

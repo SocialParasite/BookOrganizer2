@@ -1,12 +1,13 @@
+using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
+using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.Common;
+using BookOrganizer2.Domain.Exceptions;
+using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
-using BookOrganizer2.Domain.BookProfile;
-using BookOrganizer2.Domain.Exceptions;
-using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
@@ -20,7 +21,8 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public DateTime? DateOfBirth { get; private set; }
         public string Biography { get; private set; }
         public string MugshotPath { get; private set; }
-        public string Notes { get; private set; }
+        public string NotesOld { get; private set; }
+        public ICollection<Note> Notes { get; set; }
         public Nationality Nationality { get; private set; }
         public ICollection<Book> Books { get; set; }
 
@@ -30,8 +32,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                     DateTime? dob = null,
                                     string biography = null,
                                     string mugshotPath = null,
-                                    string notes = null,
-                                    Nationality nationality = null)
+                                    string notesOld = null,
+                                    Nationality nationality = null,
+                                    ICollection<Note> notes = null)
         {
             ValidateParameters();
 
@@ -45,8 +48,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
                 DateOfBirth = dob,
                 Biography = biography,
                 MugshotPath = mugshotPath,
-                Notes = notes,
-                Nationality = nationality
+                NotesOld = notesOld,
+                Nationality = nationality,
+                Notes = notes
             });
 
             return author;
@@ -108,12 +112,12 @@ namespace BookOrganizer2.Domain.AuthorProfile
             });
         }
 
-        public void SetNotes(string notes)
+        public void SetNotesOld(string notes)
         {
             Apply(new Events.AuthorsNotesChanged
             {
                 Id = Id,
-                Notes = notes
+                NotesOld = notes
             });
         }
 
@@ -181,8 +185,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     DateOfBirth = e.DateOfBirth;
                     MugshotPath = e.MugshotPath;
                     Biography = e.Biography;
-                    Notes = e.Notes;
+                    NotesOld = e.NotesOld;
                     Nationality = e.Nationality;
+                    Notes = e.Notes;
                     break;
                 case Events.AuthorDateOfBirthChanged e:
                     DateOfBirth = e.DateOfBirth;
@@ -205,7 +210,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     break;
                 case Events.AuthorsNotesChanged e:
                     Id = e.Id;
-                    Notes = e.Notes;
+                    NotesOld = e.NotesOld;
                     break;
                 case Events.NationalityChanged e:
                     Id = e.Id;

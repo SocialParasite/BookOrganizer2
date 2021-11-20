@@ -47,10 +47,10 @@ namespace BookOrganizer2.DA.SqlServer
             modelBuilder.ApplyConfiguration(new SeriesConfig());
             modelBuilder.ApplyConfiguration(new ReadOrderConfig());
 
-            modelBuilder.Entity<AnnualBookStatisticsReport>().HasNoKey().ToView(null);
-            modelBuilder.Entity<AnnualBookStatisticsInRangeReport>().HasNoKey().ToView(null);
-            modelBuilder.Entity<MonthlyReadsReport>().HasNoKey().ToView(null);
-            modelBuilder.Entity<BooksWithoutDescriptionReport>().HasNoKey().ToView(null);
+            modelBuilder.Entity<AnnualBookStatisticsReport>().HasNoKey().ToView(nameof(AnnualBookStatisticsReport));
+            modelBuilder.Entity<AnnualBookStatisticsInRangeReport>().HasNoKey().ToView(nameof(AnnualBookStatisticsInRangeReport));
+            modelBuilder.Entity<MonthlyReadsReport>().HasNoKey().ToView(nameof(MonthlyReadsReport));
+            modelBuilder.Entity<BooksWithoutDescriptionReport>().HasNoKey().ToView(nameof(BooksWithoutDescriptionReport));
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

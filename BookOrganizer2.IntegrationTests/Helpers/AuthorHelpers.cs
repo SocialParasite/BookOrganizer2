@@ -4,7 +4,9 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.AuthorProfile.NationalityProfile;
 using BookOrganizer2.Domain.Shared;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.Common;
 using Commands = BookOrganizer2.Domain.AuthorProfile.Commands;
 
 namespace BookOrganizer2.IntegrationTests.Helpers
@@ -27,7 +29,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 DateOfBirth = new DateTime(1973, 6, 6),
                 MugshotPath = @"\\filepath\file.jpg",
                 Biography = "There is no book number three.",
-                Notes = "...",
+                NotesOld = "...",
             };
 
             await authorService.Handle(command);
@@ -51,8 +53,9 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 DateOfBirth = new DateTime(1973, 6, 6),
                 MugshotPath = @"\\filepath\file.jpg",
                 Biography = "There is no book number three.",
-                Notes = "...",
-                Nationality = nationality
+                NotesOld = "...",
+                Nationality = nationality,
+                Notes = new List<Note>()
             };
 
             await authorService.Handle(command);
@@ -74,6 +77,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
                 DateOfBirth = sut.DateOfBirth,
                 MugshotPath = sut.MugshotPath,
                 Biography = sut.Biography,
+                NotesOld = sut.NotesOld,
                 Notes = sut.Notes
             };
 
@@ -183,7 +187,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var command = new Commands.SetNotes
             {
                 Id = id,
-                Notes = notes
+                NotesOld = notes
             };
 
             return authorService.Handle(command);

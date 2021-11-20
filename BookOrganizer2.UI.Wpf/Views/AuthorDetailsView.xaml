@@ -206,14 +206,14 @@
                     <TabItem Header="Notes">
                         <TabItem.Visibility>
                             <MultiBinding Converter="{StaticResource VisibilityConverter}">
-                                <Binding Path="SelectedItem.Notes.Length" />
+                                <Binding Path="SelectedItem.NotesOld.Length" />
                                 <Binding Path="UserMode.Item1" />
                             </MultiBinding>
                         </TabItem.Visibility>
                         <TextBox
                             x:Name="notesTextBlock"
                             Style="{StaticResource FreeTextBoxStyle}"
-                            Text="{Binding SelectedItem.Notes, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding SelectedItem.NotesOld, UpdateSourceTrigger=PropertyChanged}" />
                     </TabItem>
                     <TabItem Header="Bibliography" Visibility="{Binding SelectedItem.Id, Converter={StaticResource GuidToVisibilityConverter}}">
                         <ListBox

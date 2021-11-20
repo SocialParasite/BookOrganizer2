@@ -108,10 +108,10 @@ namespace BookOrganizer2.DomainTests
         public void Valid_Notes(string notes)
         {
             var sut = CreateAuthor();
-            sut.SetNotes(notes);
+            sut.SetNotesOld(notes);
 
-            sut.Notes.Should().BeOfType<string>();
-            sut.Notes.Should().BeEmpty();
+            sut.NotesOld.Should().BeOfType<string>();
+            sut.NotesOld.Should().BeEmpty();
         }
 
         [Theory]
