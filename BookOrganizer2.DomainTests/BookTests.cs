@@ -232,7 +232,7 @@ namespace BookOrganizer2.DomainTests
         public void Valid_Notes(string notes)
         {
             var sut = CreateBook();
-            sut.SetNotes(notes);
+            sut.SetNotesOld(notes);
 
             sut.NotesOld.Should().BeOfType<string>();
             sut.NotesOld.Should().BeEmpty();

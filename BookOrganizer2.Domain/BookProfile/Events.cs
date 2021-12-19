@@ -4,6 +4,7 @@ using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
+using BookOrganizer2.Domain.Common;
 using BookOrganizer2.Domain.PublisherProfile;
 
 namespace BookOrganizer2.Domain.BookProfile
@@ -91,10 +92,16 @@ namespace BookOrganizer2.Domain.BookProfile
             public string Description { get; set; }
         }
 
-        public class NotesChanged
+        public class NotesOldChanged
         {
             public Guid Id { get; set; }
-            public string Notes { get; set; }
+            public string NotesOld { get; set; }
+        }
+
+        public class BooksNotesChanged
+        {
+            public Guid Id { get; set; }
+            public ICollection<Note> Notes { get; set; }
         }
 
         public class IsReadChanged

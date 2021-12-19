@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using BookOrganizer2.Domain.Common;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -89,6 +90,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 .ObservesProperty(() => SelectedItem.PageCount)
                 .ObservesProperty(() => LanguageIsDirty)
                 .ObservesProperty(() => PublisherIsDirty);
+            AddNewNoteCommand = new DelegateCommand(OnAddNewNoteExecute);
+            RemoveNoteCommand = new DelegateCommand<Note>(OnRemoveNoteExecute);
 
             SelectedItem = new BookWrapper(domainService.CreateItem());
 
@@ -111,6 +114,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private async void OnNewAuthorAdded(NewAuthorEventArgs obj) 
             => await InitializeAuthorCollection(true);
 
+        private void OnRemoveNoteExecute(Note note)
+        {
+            SelectedItem.Model.Notes.Remove(note);
+            SetChangeTracker();
+        }
+
+        private void OnAddNewNoteExecute()
+        {
+            SelectedItem.Model.Notes.Add(Note.NewNote);
+            SetChangeTracker();
+        }
+
         public ICommand HighlightMouseLeaveCommand { get; }
         public ICommand HighlightMouseOverCommand { get; }
         public ICommand SetReadDateCommand { get; }
@@ -131,6 +146,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand BookGenreSelectionChangedCommand { get; }
         public ICommand AddNewFormatCommand { get; }
         public ICommand AddNewGenreCommand { get; }
+        public ICommand AddNewNoteCommand { get; }
+        public ICommand RemoveNoteCommand { get; set; }
 
         public Guid SelectedPublisherId
         {

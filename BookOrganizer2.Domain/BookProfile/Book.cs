@@ -23,6 +23,7 @@ namespace BookOrganizer2.Domain.BookProfile
             Formats ??= new ObservableCollection<Format>();
             Genres ??= new ObservableCollection<Genre>();
             ReadDates ??= new ObservableCollection<BookReadDate>();
+            Notes ??= new ObservableCollection<Note>();
         }
 
         public BookId Id { get; private set; }
@@ -35,6 +36,7 @@ namespace BookOrganizer2.Domain.BookProfile
         public string Description { get; private set; }
         public string NotesOld { get; private set; }
         public ICollection<Note> Notes { get; set; }
+        //public ICollection<Attachment> Attachments { get; set; } // maps, etc.
         public bool IsRead { get; private set; }
         public Language Language { get; private set; }
         public Publisher Publisher { get; private set; }
@@ -227,9 +229,18 @@ namespace BookOrganizer2.Domain.BookProfile
             });
         }
 
-        public void SetNotes(string notes)
+        public void SetNotesOld(string notes)
         {
-            Apply(new Events.NotesChanged
+            Apply(new Events.NotesOldChanged
+            {
+                Id = Id,
+                NotesOld = notes
+            });
+        }
+
+        public void SetNotes(ICollection<Note> notes)
+        {
+            Apply(new Events.BooksNotesChanged
             {
                 Id = Id,
                 Notes = notes
@@ -357,9 +368,13 @@ namespace BookOrganizer2.Domain.BookProfile
                     Id = e.Id;
                     Description = e.Description;
                     break;
-                case Events.NotesChanged e:
+                case Events.NotesOldChanged e:
                     Id = e.Id;
-                    NotesOld = e.Notes;
+                    NotesOld = e.NotesOld;
+                    break;
+                case Events.BooksNotesChanged e:
+                    Id = e.Id;
+                    (Notes as List<Note>)?.AddRange(e.Notes);
                     break;
                 case Events.IsReadChanged e:
                     Id = e.Id;
