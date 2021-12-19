@@ -31,6 +31,7 @@ namespace BookOrganizer2.DA.Repositories
                     .Include(b => b.Formats)
                     .Include(b => b.Genres)
                     .Include(b => b.ReadDates)
+                    .Include(n => n.Notes)
                     .Include(b => b.Series)
                     .ThenInclude(s => s.Series)
                     .ThenInclude(s => s.Books)

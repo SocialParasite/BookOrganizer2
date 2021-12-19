@@ -1,4 +1,6 @@
 ﻿using System;
+using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.Common
 {
@@ -7,5 +9,9 @@ namespace BookOrganizer2.Domain.Common
         public NoteId Id { get; private set; }
         public string Title { get; set; }
         public string Content { get; set; }
+
+        private Note() { }
+
+        public static Note NewNote => new() { Id = new NoteId(SequentialGuid.NewSequentialGuid()) };
     }
 }

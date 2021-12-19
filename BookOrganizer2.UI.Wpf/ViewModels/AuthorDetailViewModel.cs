@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BookOrganizer2.Domain.Common;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -40,11 +41,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             AddAuthorPictureCommand = new DelegateCommand(OnAddAuthorPictureExecute);
             AddNewNationalityCommand = new DelegateCommand(OnAddNewNationalityExecute);
             NationalitySelectionChangedCommand = new DelegateCommand(OnNationalitySelectionChangedExecute);
+            AddNewNoteCommand = new DelegateCommand(OnAddNewNoteExecute);
+            RemoveNoteCommand = new DelegateCommand<Note>(OnRemoveNoteExecute);
 
             SaveItemCommand = new DelegateCommand(SaveItemExecute, SaveItemCanExecute)
                 .ObservesProperty(() => SelectedItem.FirstName)
                 .ObservesProperty(() => SelectedItem.LastName)
                 .ObservesProperty(() => NationalityIsDirty);
+
             SelectedItem = new AuthorWrapper(domainService.CreateItem());
 
             Nationalities = new ObservableCollection<LookupItem>();
@@ -53,9 +57,23 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                 .Subscribe(OnNewNationalityAdded);
         }
 
+        private void OnRemoveNoteExecute(Note note)
+        {
+            SelectedItem.Model.Notes.Remove(note);
+            SetChangeTracker();
+        }
+
+        private void OnAddNewNoteExecute()
+        {
+            SelectedItem.Model.Notes.Add(Note.NewNote);
+            SetChangeTracker();
+        }
+
         public ICommand AddAuthorPictureCommand { get; }
         public ICommand NationalitySelectionChangedCommand { get; }
         public ICommand AddNewNationalityCommand { get; }
+        public ICommand AddNewNoteCommand { get; }
+        public ICommand RemoveNoteCommand { get; set; }
 
         public LookupItem SelectedNationality
         {
@@ -105,8 +123,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                     {
                         ((DelegateCommand)SaveItemCommand).RaiseCanExecuteChanged();
                     }
-                    if (e.PropertyName == nameof(SelectedItem.FirstName)
-                        || e.PropertyName == nameof(SelectedItem.LastName))
+                    if (e.PropertyName is (nameof(SelectedItem.FirstName))
+                        or (nameof(SelectedItem.LastName)))
                     {
                         SetTabTitle();
                     }
@@ -162,6 +180,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         {
             SwitchStateAsync().Await();
         }
+
 
         private Task SwitchStateAsync()
         {

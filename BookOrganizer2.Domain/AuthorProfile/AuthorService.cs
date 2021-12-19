@@ -39,7 +39,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     (a) => Repository.Update(a)),
                 SetBiography cmd => HandleUpdate(cmd.Id, (a) => a.SetBiography(cmd.Biography), 
                     (a) => Repository.Update(a)),
-                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotesOld(cmd.NotesOld),
+                SetNotesOld cmd => HandleUpdate(cmd.Id, (a) => a.SetNotesOld(cmd.NotesOld),
                     (a) => Repository.Update(a)),
                 SetNationality cmd => HandleUpdateAsync(cmd.Id, 
                         async a => await UpdateNationalityAsync(a, cmd.NationalityId)),
@@ -109,7 +109,6 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                        cmd.Biography,
                                        cmd.MugshotPath,
                                        cmd.NotesOld,
-                                       cmd.Nationality,
                                        cmd.Notes);
 
             await Repository.AddAsync(author);
@@ -143,6 +142,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
             updatableAuthor.SetMugshotPath(cmd.MugshotPath);
             updatableAuthor.SetNotesOld(cmd.NotesOld);
             updatableAuthor.SetNationality(cmd.Nationality);
+            updatableAuthor.SetNotes(cmd.Notes);
 
             Repository.Update(updatableAuthor);
 

@@ -463,7 +463,68 @@
                             Style="{StaticResource FreeTextBoxStyle}"
                             Text="{Binding SelectedItem.Description, UpdateSourceTrigger=PropertyChanged}" />
                     </TabItem>
+
                     <TabItem Header="Notes">
+                        <TabItem.Visibility>
+                            <MultiBinding Converter="{StaticResource VisibilityConverter}">
+                                <Binding Path="SelectedItem.Model.Notes.Count" />
+                                <Binding Path="UserMode.Item1" />
+                            </MultiBinding>
+                        </TabItem.Visibility>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Button
+                                HorizontalAlignment="Right"
+                                Command="{Binding AddNewNoteCommand}"
+                                Style="{StaticResource AddItemButtonStyle}"
+                                Visibility="{Binding UserMode.Item4, Converter={StaticResource BoolToVis}}" />
+                            <ListBox
+                                x:Name="notesListBox"
+                                Grid.Row="1"
+                                HorizontalContentAlignment="Stretch"
+                                BorderThickness="0"
+                                ItemsSource="{Binding SelectedItem.Model.Notes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Expander>
+                                            <Expander.Header>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" MinWidth="200" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox
+                                                        FontWeight="Bold"
+                                                        IsReadOnly="{Binding DataContext.UserMode.Item1, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                        Style="{StaticResource BaseTextBoxStyle}"
+                                                        Text="{Binding Title}" />
+                                                    <Button
+                                                        HorizontalAlignment="Left"
+                                                        Command="{Binding DataContext.RemoveNoteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="-"
+                                                        Style="{StaticResource AddItemButtonStyle}"
+                                                        Visibility="{Binding UserMode.Item4, Converter={StaticResource BoolToVis}}" />
+                                                </Grid>
+                                            </Expander.Header>
+                                            <TextBox
+                                                x:Name="basicLabelTextBlock"
+                                                Margin="25,0,0,0"
+                                                FontSize="18"
+                                                IsReadOnly="{Binding DataContext.UserMode.Item1, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                        </Expander>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </TabItem>
+
+                    <TabItem Header="NotesOld">
                         <TabItem.Visibility>
                             <MultiBinding Converter="{StaticResource VisibilityConverter}">
                                 <Binding Path="SelectedItem.NotesOld.Length" />

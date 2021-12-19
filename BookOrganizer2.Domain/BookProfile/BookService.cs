@@ -68,7 +68,7 @@ namespace BookOrganizer2.Domain.BookProfile
                     (a) => Repository.Update(a)),
                 SetDescription cmd => HandleUpdate(cmd.Id, (a) => a.SetDescription(cmd.Description),
                     (a) => Repository.Update(a)),
-                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotes(cmd.Notes),
+                SetNotes cmd => HandleUpdate(cmd.Id, (a) => a.SetNotesOld(cmd.Notes),
                     (a) => Repository.Update(a)),
                 SetIsRead cmd => HandleUpdate(cmd.Id, (a) => a.SetIsRead(cmd.IsRead),
                     (a) => Repository.Update(a)),
@@ -229,7 +229,7 @@ namespace BookOrganizer2.Domain.BookProfile
             updatableBook.SetIsbn(cmd.Isbn);
             updatableBook.SetBookCoverPath(cmd.BookCoverPath);
             updatableBook.SetDescription(cmd.Description);
-            updatableBook.SetNotes(cmd.Notes);
+            updatableBook.SetNotesOld(cmd.Notes);
             updatableBook.SetIsRead(cmd.IsRead || cmd.BookReadDates.Any());
             //updatableBook.SetLanguage(cmd.Language);
             //updatableBook.SetPublisher(cmd.Publisher);

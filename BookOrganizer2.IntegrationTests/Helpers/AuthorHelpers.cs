@@ -184,7 +184,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
             var repository = new AuthorRepository(context);
 
             var authorService = new AuthorService(repository);
-            var command = new Commands.SetNotes
+            var command = new Commands.SetNotesOld
             {
                 Id = id,
                 NotesOld = notes
