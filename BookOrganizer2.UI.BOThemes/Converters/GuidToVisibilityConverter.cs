@@ -12,12 +12,9 @@ namespace BookOrganizer2.UI.BOThemes.Converters
         {
             // TODO: 
             dynamic test = value;
-            if (value != null && (Guid)test.Value == default)
-            {
-                return Visibility.Collapsed;
-            }
-
-            return Visibility.Visible;
+            return value is not null && (Guid)test.Value == default
+                ? Visibility.Collapsed
+                : (object)Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

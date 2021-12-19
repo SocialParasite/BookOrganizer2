@@ -12,6 +12,8 @@ using Newtonsoft.Json.Linq;
 using Prism.Events;
 using Serilog;
 using System.IO;
+using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
+using BookOrganizer2.UI.Wpf.ViewModels.ListViewModels;
 using BookOrganizer2.UI.Wpf.ViewModels.Reports;
 
 namespace BookOrganizer2.UI.Wpf.Startup

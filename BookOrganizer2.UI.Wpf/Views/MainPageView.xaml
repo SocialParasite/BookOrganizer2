@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels"
+    xmlns:listViewModels="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels.ListViewModels"
+    xmlns:detailViewModels="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -31,22 +33,22 @@
                     <Button
                         x:Name="ShowAuthorButton"
                         Command="{Binding ShowItemsCommand}"
-                        CommandParameter="{x:Type viewModel:AuthorsViewModel}"
+                        CommandParameter="{x:Type listViewModels:AuthorsViewModel}"
                         Content="Authors" />
                     <Button
                         x:Name="ShowBookButton"
                         Command="{Binding ShowItemsCommand}"
-                        CommandParameter="{x:Type viewModel:BooksViewModel}"
+                        CommandParameter="{x:Type listViewModels:BooksViewModel}"
                         Content="Books" />
                     <Button
                         x:Name="ShowPublisherButton"
                         Command="{Binding ShowItemsCommand}"
-                        CommandParameter="{x:Type viewModel:PublishersViewModel}"
+                        CommandParameter="{x:Type listViewModels:PublishersViewModel}"
                         Content="Publishers" />
                     <Button
                         x:Name="ShowSeriesButton"
                         Command="{Binding ShowItemsCommand}"
-                        CommandParameter="{x:Type viewModel:SeriesViewModel}"
+                        CommandParameter="{x:Type listViewModels:SeriesViewModel}"
                         Content="Series" />
                 </WrapPanel>
             </GroupBox>
@@ -65,42 +67,42 @@
                     <Button
                         x:Name="AddAuthorButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:AuthorDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:AuthorDetailViewModel}"
                         Content="Add a new author" />
                     <Button
                         x:Name="AddBookButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:BookDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:BookDetailViewModel}"
                         Content="Add a new book" />
                     <Button
                         x:Name="AddFormatButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:FormatDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:FormatDetailViewModel}"
                         Content="Add a new book format" />
                     <Button
                         x:Name="AddGenreButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:GenreDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:GenreDetailViewModel}"
                         Content="Add a new book genre" />
                     <Button
                         x:Name="AddLanguageButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:LanguageDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:LanguageDetailViewModel}"
                         Content="Add a new language" />
                     <Button
                         x:Name="AddNationalityButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:NationalityDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:NationalityDetailViewModel}"
                         Content="Add a new nationality" />
                     <Button
                         x:Name="AddPublisherButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:PublisherDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:PublisherDetailViewModel}"
                         Content="Add a new publisher" />
                     <Button
                         x:Name="AddSeriesButton"
                         Command="{Binding AddNewItemCommand}"
-                        CommandParameter="{x:Type viewModel:SeriesDetailViewModel}"
+                        CommandParameter="{x:Type detailViewModels:SeriesDetailViewModel}"
                         Content="Add a new series" />
                 </WrapPanel>
             </GroupBox>
