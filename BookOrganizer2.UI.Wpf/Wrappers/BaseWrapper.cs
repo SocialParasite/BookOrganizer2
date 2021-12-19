@@ -23,7 +23,7 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             string errorMessage = null;
             try
             {
-                typeof(T).GetMethod($"Set{propertyName}")?.Invoke(Model, new object[] {value});
+                _ = (typeof(T).GetMethod($"Set{propertyName}")?.Invoke(Model, new object[] { value }));
             }
             catch (Exception ex)
             {

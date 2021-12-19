@@ -3,6 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:detailViewModels="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels"
+    xmlns:detailViews="clr-namespace:BookOrganizer2.UI.Wpf.Views.DetailViews"
+    xmlns:listViewModels="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels.ListViewModels"
+    xmlns:listViews="clr-namespace:BookOrganizer2.UI.Wpf.Views.ListViews"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reports="clr-namespace:BookOrganizer2.UI.Wpf.ViewModels.Reports"
     xmlns:reports1="clr-namespace:BookOrganizer2.UI.Wpf.Views.Reports"
@@ -24,44 +28,44 @@
             <DataTemplate DataType="{x:Type viewModel:MainPageViewModel}">
                 <views:MainPageView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:AuthorsViewModel}">
-                <views:AuthorsView />
+            <DataTemplate DataType="{x:Type listViewModels:AuthorsViewModel}">
+                <listViews:AuthorsView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:AuthorDetailViewModel}">
-                <views:AuthorDetailsView />
+            <DataTemplate DataType="{x:Type detailViewModels:AuthorDetailViewModel}">
+                <detailViews:AuthorDetailsView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:BooksViewModel}">
-                <views:BooksView />
+            <DataTemplate DataType="{x:Type listViewModels:BooksViewModel}">
+                <listViews:BooksView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:BookDetailViewModel}">
-                <views:BookDetailsView />
+            <DataTemplate DataType="{x:Type detailViewModels:BookDetailViewModel}">
+                <detailViews:BookDetailsView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type reports:BookStatisticsViewModel}">
                 <reports1:BookStatisticsView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:FormatDetailViewModel}">
-                <views:FormatDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:FormatDetailViewModel}">
+                <detailViews:FormatDetailView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:GenreDetailViewModel}">
-                <views:GenreDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:GenreDetailViewModel}">
+                <detailViews:GenreDetailView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:LanguageDetailViewModel}">
-                <views:LanguageDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:LanguageDetailViewModel}">
+                <detailViews:LanguageDetailView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:NationalityDetailViewModel}">
-                <views:NationalityDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:NationalityDetailViewModel}">
+                <detailViews:NationalityDetailView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:PublishersViewModel}">
-                <views:PublishersView />
+            <DataTemplate DataType="{x:Type listViewModels:PublishersViewModel}">
+                <listViews:PublishersView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:PublisherDetailViewModel}">
-                <views:PublisherDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:PublisherDetailViewModel}">
+                <detailViews:PublisherDetailView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:SeriesViewModel}">
-                <views:SeriesView />
+            <DataTemplate DataType="{x:Type listViewModels:SeriesViewModel}">
+                <listViews:SeriesView />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModel:SeriesDetailViewModel}">
-                <views:SeriesDetailView />
+            <DataTemplate DataType="{x:Type detailViewModels:SeriesDetailViewModel}">
+                <detailViews:SeriesDetailView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
                 <views:SettingsView />

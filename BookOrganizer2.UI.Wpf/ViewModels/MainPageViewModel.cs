@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Windows.Input;
+using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
 using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
