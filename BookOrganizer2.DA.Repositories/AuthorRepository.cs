@@ -20,6 +20,7 @@ namespace BookOrganizer2.DA.Repositories
                 return await Context.Authors
                     .Include(b => b.Nationality)
                     .Include(b => b.Books)
+                    .Include(n => n.Notes)
                     .FirstOrDefaultAsync(b => b.Id == id);
             }
 

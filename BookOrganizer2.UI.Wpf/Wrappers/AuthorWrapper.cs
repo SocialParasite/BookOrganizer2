@@ -1,6 +1,8 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile;
+using BookOrganizer2.Domain.Common;
 using BookOrganizer2.Domain.Services;
 using System;
+using System.Collections.Generic;
 
 namespace BookOrganizer2.UI.Wpf.Wrappers
 {
@@ -43,7 +45,13 @@ namespace BookOrganizer2.UI.Wpf.Wrappers
             get => GetValue<string>();
             set => SetValue(value);
         }
-        
+
+        public List<Note> Notes
+        {
+            get => GetValue<List<Note>>();
+            set => SetValue(value);
+        }
+
         public Guid NationalityId
         {
             get => GetValue<Guid>();

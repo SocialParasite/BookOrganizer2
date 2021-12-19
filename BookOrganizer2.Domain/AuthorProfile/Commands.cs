@@ -63,10 +63,16 @@ namespace BookOrganizer2.Domain.AuthorProfile
             public string Biography { get; set; }
         }
 
-        public class SetNotes
+        public class SetNotesOld
         {
             public Guid Id { get; set; }
             public string NotesOld { get; set; }
+        }
+
+        public class SetNotes
+        {
+            public Guid Id { get; set; }
+            public ICollection<Note> Notes { get; set; }
         }
 
         public class SetNationality

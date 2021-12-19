@@ -5,15 +5,19 @@ using BookOrganizer2.Domain.Exceptions;
 using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace BookOrganizer2.Domain.AuthorProfile
 {
-    public class Author : IIdentifiable<AuthorId>
+    public sealed class Author : IIdentifiable<AuthorId>
     {
-        private Author() { }
+        private Author()
+        {
+            Notes ??= new ObservableCollection<Note>();
+        }
 
         public AuthorId Id { get; private set; }
         public string FirstName { get; private set; }
@@ -33,8 +37,8 @@ namespace BookOrganizer2.Domain.AuthorProfile
                                     string biography = null,
                                     string mugshotPath = null,
                                     string notesOld = null,
-                                    Nationality nationality = null,
-                                    ICollection<Note> notes = null)
+                                    ICollection<Note> notes = null,
+                                    Nationality nationality = null)
         {
             ValidateParameters();
 
@@ -114,10 +118,19 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetNotesOld(string notes)
         {
-            Apply(new Events.AuthorsNotesChanged
+            Apply(new Events.AuthorsNotesOldChanged
             {
                 Id = Id,
                 NotesOld = notes
+            });
+        }
+
+        public void SetNotes(ICollection<Note> notes)
+        {
+            Apply(new Events.AuthorsNotesChanged
+            {
+                Id = Id,
+                Notes = notes
             });
         }
 
@@ -208,9 +221,13 @@ namespace BookOrganizer2.Domain.AuthorProfile
                     Id = e.Id;
                     MugshotPath = e.MugshotPath;
                     break;
-                case Events.AuthorsNotesChanged e:
+                case Events.AuthorsNotesOldChanged e:
                     Id = e.Id;
                     NotesOld = e.NotesOld;
+                    break;
+                case Events.AuthorsNotesChanged e:
+                    Id = e.Id;
+                    (Notes as List<Note>)?.AddRange(e.Notes);
                     break;
                 case Events.NationalityChanged e:
                     Id = e.Id;
