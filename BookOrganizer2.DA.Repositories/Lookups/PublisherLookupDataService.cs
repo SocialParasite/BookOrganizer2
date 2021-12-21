@@ -24,36 +24,8 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             _placeholderPic = imagePath;
         }
 
-        public async Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName)
-        {
-            await using var ctx = _contextCreator();
-            return await ctx.Publishers
-                .AsNoTracking()
-                .OrderBy(a => a.Name)
-                .Select(a =>
-                    new LookupItem
-                    {
-                        Id = a.Id,
-                        DisplayMember = a.Name,
-                        Picture = GetPictureThumbnail(a.LogoPath) ?? _placeholderPic,
-                        ViewModelName = viewModelName,
-                        InfoText = $"Books: {a.Books.Count}"
-                    })
-                .ToListAsync();
-        }
-
-        private static string GetPictureThumbnail(string picturePath)
-        {
-            //var extension = Path.GetExtension(picturePath);
-            var fileName = Path.GetFileNameWithoutExtension(picturePath);
-            //var thumbnail = $"{fileName}_thumb{extension}";
-            var thumbnail = $"{fileName}_thumb.jpg";
-            var filePath = Path.GetDirectoryName(picturePath);
-            var thumbPath = $@"{filePath}\{thumbnail}";
-            return thumbPath;
-        }
-
-        public async Task<IEnumerable<LookupItem>> GetFilteredPublisherLookupAsync(string viewModelName, PublisherMaintenanceFilterCondition publisherMaintenanceFilterCondition)
+        public async Task<IEnumerable<LookupItem>> GetPublisherLookupAsync(string viewModelName, 
+            PublisherMaintenanceFilterCondition publisherMaintenanceFilterCondition = PublisherMaintenanceFilterCondition.NoFilter)
         {
             var filter = GetFilterCondition(publisherMaintenanceFilterCondition);
 
@@ -90,6 +62,17 @@ namespace BookOrganizer2.DA.Repositories.Lookups
         {
             await using var ctx = _contextCreator();
             return await ctx.Publishers.CountAsync();
+        }
+
+        private static string GetPictureThumbnail(string picturePath)
+        {
+            //var extension = Path.GetExtension(picturePath);
+            var fileName = Path.GetFileNameWithoutExtension(picturePath);
+            //var thumbnail = $"{fileName}_thumb{extension}";
+            var thumbnail = $"{fileName}_thumb.jpg";
+            var filePath = Path.GetDirectoryName(picturePath);
+            var thumbPath = $@"{filePath}\{thumbnail}";
+            return thumbPath;
         }
     }
 }
