@@ -155,7 +155,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
             }
 
             Items = await _bookLookupDataService
-                .GetFilteredBookLookupAsync(nameof(BookDetailViewModel), condition, ShowOnlyBooksNotRead,
+                .GetBookLookupAsync(nameof(BookDetailViewModel), condition, ShowOnlyBooksNotRead,
                     ShowOnlyNotOwnedBooks, genreFilter, formatFilter)
                 .ConfigureAwait(false);
 
