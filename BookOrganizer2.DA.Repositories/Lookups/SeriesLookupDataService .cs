@@ -1,3 +1,4 @@
+using BookOrganizer2.DA.Repositories.Shared;
 using BookOrganizer2.DA.SqlServer;
 using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.DA;
@@ -9,8 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using BookOrganizer2.DA.Repositories.Shared;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace BookOrganizer2.DA.Repositories.Lookups
 {
@@ -25,30 +24,9 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             _placeholderPic = imagePath;
         }
 
-        public async Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName)
-        {
-            await using var ctx = _contextCreator();
-            return await ctx.Series
-                .Include(b => b.Books)
-                .ThenInclude(b => b.Book)
-                .ThenInclude(b => b.Formats)
-                .AsNoTracking()
-                .OrderBy(s => s.Name)
-                .Select(s =>
-                    new SeriesLookupItem
-                    {
-                        Id = s.Id,
-                        DisplayMember = s.Name,
-                        Picture = GetPictureThumbnail(s.PicturePath) ?? _placeholderPic,
-                        ViewModelName = viewModelName,
-                        InfoText = GetInfoText(s),
-                        SeriesState = GetSeriesState(s)
-                    })
-                .ToListAsync();
-        }
-        public async Task<IEnumerable<SeriesLookupItem>> GetFilteredSeriesLookupAsync(string viewModelName,
-            SeriesMaintenanceFilterCondition seriesMaintenanceFilterCondition,
-            SeriesFilterCondition filterCondition)
+        public async Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName,
+            SeriesMaintenanceFilterCondition seriesMaintenanceFilterCondition = SeriesMaintenanceFilterCondition.NoFilter,
+            SeriesFilterCondition filterCondition = SeriesFilterCondition.NoFilter)
         {
             var maintenanceFilterCondition = GetMaintenanceFilterCondition(seriesMaintenanceFilterCondition);
             var condition = GetFilterCondition(filterCondition);

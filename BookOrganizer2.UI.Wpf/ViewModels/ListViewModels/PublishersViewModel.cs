@@ -68,7 +68,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
             var condition = MapActiveFilterToFilterCondition(ActiveMaintenanceFilter);
 
             Items = await _publisherLookupDataService
-                .GetFilteredPublisherLookupAsync(nameof(PublisherDetailViewModel), condition)
+                .GetPublisherLookupAsync(nameof(PublisherDetailViewModel), condition)
                 .ConfigureAwait(false);
 
             UpdateEntityCollection();

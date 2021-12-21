@@ -27,31 +27,10 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             _placeholderPic = imagePath;
         }
 
-        public async Task<IEnumerable<BookLookupItem>> GetBookLookupAsync(string viewModelName)
-        {
-            await using var ctx = _contextCreator();
-            return await ctx.Books
-                .Include(f => f.Formats)
-                .Include(r => r.ReadDates)
-                .AsNoTracking()
-                .OrderBy(a => a.Title)
-                .Select(a =>
-                    new BookLookupItem
-                    {
-                        Id = a.Id,
-                        DisplayMember = a.Title,
-                        Picture = GetPictureThumbnail(a.BookCoverPath) ?? _placeholderPic,
-                        ViewModelName = viewModelName,
-                        InfoText = GetInfoText(a),
-                        BookStatus = CheckBookStatus(a.IsRead, a.Formats.Count > 0)
-                    })
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<BookLookupItem>> GetFilteredBookLookupAsync(string viewModelName,
-            BookMaintenanceFilterCondition bookMaintenanceFilterCondition,
-            bool showOnlyBooksNotRead,
-            bool showOnlyNotOwnedBooks,
+        public async Task<IEnumerable<BookLookupItem>> GetBookLookupAsync(string viewModelName,
+            BookMaintenanceFilterCondition bookMaintenanceFilterCondition = BookMaintenanceFilterCondition.NoFilter,
+            bool showOnlyBooksNotRead = false,
+            bool showOnlyNotOwnedBooks = false,
             IList<Guid> genreFilter = null,
             IList<Guid> formatFilter = null)
         {

@@ -7,8 +7,8 @@ namespace BookOrganizer2.Domain.DA
 {
     public interface ISeriesLookupDataService
     {
-        Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName);
-        Task<IEnumerable<SeriesLookupItem>> GetFilteredSeriesLookupAsync(string viewModelName, 
-            SeriesMaintenanceFilterCondition maintenanceFilterCondition, SeriesFilterCondition condition);
+        Task<IEnumerable<SeriesLookupItem>> GetSeriesLookupAsync(string viewModelName, 
+                                                                 SeriesMaintenanceFilterCondition maintenanceFilterCondition = SeriesMaintenanceFilterCondition.NoFilter, 
+                                                                 SeriesFilterCondition condition = SeriesFilterCondition.NoFilter);
     }
 }

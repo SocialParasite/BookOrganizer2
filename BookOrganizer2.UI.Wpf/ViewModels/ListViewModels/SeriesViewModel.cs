@@ -82,7 +82,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
             var condition2 = MapActiveFilterToFilterCondition(ActiveFilter);
 
             Items = await _seriesLookupDataService
-                .GetFilteredSeriesLookupAsync(nameof(SeriesDetailViewModel), condition, condition2)
+                .GetSeriesLookupAsync(nameof(SeriesDetailViewModel), condition, condition2)
                 .ConfigureAwait(false);
 
             UpdateEntityCollection();
