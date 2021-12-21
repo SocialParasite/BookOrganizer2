@@ -7,10 +7,8 @@ namespace BookOrganizer2.Domain.DA
 {
     public interface IAuthorLookupDataService
     {
-        Task<IEnumerable<LookupItem>> GetAuthorLookupAsync(string viewModelName);
-
-        public Task<IEnumerable<LookupItem>> GetFilteredAuthorLookupAsync(string viewModelName,
-            AuthorMaintenanceFilterCondition authorMaintenanceFilterCondition);
+        public Task<IEnumerable<LookupItem>> GetAuthorLookupAsync(string viewModelName,
+            AuthorMaintenanceFilterCondition authorMaintenanceFilterCondition = AuthorMaintenanceFilterCondition.NoFilter);
 
         public Task<int> GetAuthorCount();
     }
