@@ -13,8 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="UserDataTemplate">
-                <VirtualizingStackPanel HorizontalAlignment="Stretch">
-                    <Grid x:Name="UserDTGrid" MinHeight="100">
+                <Grid x:Name="UserDTGrid" MinHeight="100">
                         <Label
                             x:Name="ItemCollectionNameLabel"
                             Width="300"
@@ -64,7 +63,6 @@
                             </Label.Template>
                         </Label>
                     </Grid>
-                </VirtualizingStackPanel>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
