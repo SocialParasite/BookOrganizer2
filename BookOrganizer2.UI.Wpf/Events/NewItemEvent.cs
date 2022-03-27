@@ -6,6 +6,6 @@ namespace BookOrganizer2.UI.Wpf.Events
 
     public class NewItemEventArgs
     {
-        //public string ItemType { get; set; }
+
     }
 }

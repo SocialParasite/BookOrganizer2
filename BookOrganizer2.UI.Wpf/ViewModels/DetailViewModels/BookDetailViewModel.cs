@@ -147,7 +147,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
         public ICommand AddNewFormatCommand { get; }
         public ICommand AddNewGenreCommand { get; }
         public ICommand AddNewNoteCommand { get; }
-        public ICommand RemoveNoteCommand { get; set; }
+        public ICommand RemoveNoteCommand { get; }
 
         public Guid SelectedPublisherId
         {

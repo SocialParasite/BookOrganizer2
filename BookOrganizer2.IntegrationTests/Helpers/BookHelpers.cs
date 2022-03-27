@@ -96,7 +96,7 @@ namespace BookOrganizer2.IntegrationTests.Helpers
         //    {
         //        Id = sut.Id,
         //        Title
-        //        Notes = sut.Notes
+        //        NotesOld = sut.NotesOld
         //    };
 
         //    return bookService.Handle(command);

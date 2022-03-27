@@ -30,6 +30,9 @@ namespace BookOrganizer2.Domain.AuthorProfile
         public Nationality Nationality { get; private set; }
         public ICollection<Book> Books { get; set; }
 
+        private const int NameMinLength = 1;
+        private const int NameMaxLength = 64;
+
         public static Author Create(AuthorId id,
                                     string firstName,
                                     string lastName,
@@ -74,7 +77,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetFirstName(string name)
         {
-            const string msg = "Invalid first name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            var msg = $"Invalid first name. \nName should be {NameMinLength}-{NameMaxLength} characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
                 Apply(new Events.AuthorsFirstNameChanged
                 {
@@ -87,7 +90,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         public void SetLastName(string name)
         {
-            const string msg = "Invalid last name. \nName should be 1-64 characters long.\nName may not contain non alphabet characters.";
+            var msg = $"Invalid last name. \nName should be {NameMinLength}-{NameMaxLength} characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
                 Apply(new Events.AuthorsLastNameChanged
                 {
@@ -134,15 +137,16 @@ namespace BookOrganizer2.Domain.AuthorProfile
             });
         }
 
-        public void SetMugshotPath(string pic)
+        public void SetMugshotPath(string authorPictureFilePath)
         {
-            if (pic.Length > 256)
-                throw new ArgumentException();
+            const int maxFilePathLength = 256;
+            if (authorPictureFilePath.Length > maxFilePathLength)
+                throw new ArgumentException(nameof(authorPictureFilePath));
 
-            var path = Path.GetFullPath(pic);
+            var path = Path.GetFullPath(authorPictureFilePath);
             string[] formats = { ".jpg", ".png", ".gif", ".jpeg" };
 
-            if (formats.Contains(Path.GetExtension(pic), StringComparer.InvariantCultureIgnoreCase))
+            if (formats.Contains(Path.GetExtension(authorPictureFilePath), StringComparer.InvariantCultureIgnoreCase))
                 Apply(new Events.AuthorsMugshotPathChanged
                 {
                     Id = Id,
@@ -163,9 +167,7 @@ namespace BookOrganizer2.Domain.AuthorProfile
 
         private static bool ValidateName(string name)
         {
-            const int minLength = 1;
-            const int maxLength = 64;
-            var pattern = "(?=.{" + minLength + "," + maxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
+            var pattern = "(?=.{" + NameMinLength + "," + NameMaxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
             if (string.IsNullOrWhiteSpace(name))
                 return false;

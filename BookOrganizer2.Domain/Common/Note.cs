@@ -1,10 +1,15 @@
-﻿using System;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.Shared;
+﻿using BookOrganizer2.Domain.Shared;
 
 namespace BookOrganizer2.Domain.Common
 {
-    public sealed class Note
+    public interface INote
+    {
+        NoteId Id { get; }
+        string Title { get; set; }
+        string Content { get; set; }
+    }
+
+    public sealed class Note : INote
     {
         public NoteId Id { get; private set; }
         public string Title { get; set; }

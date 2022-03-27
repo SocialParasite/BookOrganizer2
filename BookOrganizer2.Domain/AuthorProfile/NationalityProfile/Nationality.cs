@@ -3,6 +3,7 @@ using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Helpers.Extensions;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
@@ -11,6 +12,8 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
         public NationalityId Id { get; private set; }
         public string Name { get; private set; }
         public ICollection<Author> Authors { get; set; }
+        private const int MinLength = 1;
+        private const int MaxLength = 32;
 
         public static Nationality NewNationality
             => new() { Id = new NationalityId(SequentialGuid.NewSequentialGuid()) };
@@ -44,8 +47,7 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 
         public void SetName(string name)
         {
-            const string msg =
-                "Invalid name. \nName should be 1-32 characters long.\nName may not contain non alphabet characters.";
+            var msg = $"Invalid name. \nName should be {MinLength}-{MaxLength} characters long.\nName may not contain non alphabet characters.";
 
             if (ValidateName(name))
             {
@@ -61,30 +63,22 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             }
         }
 
-        internal bool EnsureValidState()
-        {
-            return Id.Value != default
-                   && !string.IsNullOrWhiteSpace(Name);
-        }
+        internal bool EnsureValidState() 
+            => Id.Value.HasNonDefaultValue() && !string.IsNullOrWhiteSpace(Name);
 
         private static bool ValidateName(string name)
         {
-            const int minLength = 1;
-            const int maxLength = 32;
-            var pattern = "(?=.{" + minLength + "," + maxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
-
             if (string.IsNullOrWhiteSpace(name))
                 return false;
+
+            var pattern = "(?=.{" + MinLength + "," + MaxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
             var regexPattern = new Regex(pattern);
 
             return regexPattern.IsMatch(name);
         }
 
-        private void Apply(object @event)
-        {
-            When(@event);
-        }
+        private void Apply(object @event) => When(@event);
 
         private void When(object @event)
         {

@@ -9,6 +9,8 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
     {
         public LanguageId Id { get; private set; }
         public string Name { get; private set; }
+        private const int MinLength = 1;
+        private const int MaxLength = 32;
 
         public static Language Create(LanguageId id, string name)
         {
@@ -42,8 +44,7 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
 
         public void SetName(string name)
         {
-            const string msg =
-                "Invalid name. \nName should be 1-32 characters long.\nName may not contain non alphabet characters.";
+            var msg = $"Invalid name. \nName should be {MinLength}-{MaxLength} characters long.\nName may not contain non alphabet characters.";
             if (ValidateName(name))
             {
                 Apply(new Events.Updated
@@ -58,15 +59,14 @@ namespace BookOrganizer2.Domain.BookProfile.LanguageProfile
 
         internal bool EnsureValidState()
         {
-            return Id.Value != default
-                   && !string.IsNullOrWhiteSpace(Name);
+            return HasNonDefaultId() && !string.IsNullOrWhiteSpace(Name);
+
+            bool HasNonDefaultId() => Id.Value != default;
         }
 
         private static bool ValidateName(string name)
         {
-            const int minLength = 1;
-            const int maxLength = 32;
-            var pattern = "(?=.{" + minLength + "," + maxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
+            var pattern = "(?=.{" + MinLength + "," + MaxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
             if (string.IsNullOrWhiteSpace(name))
                 return false;

@@ -151,6 +151,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
                 HasChanges = DomainService.HasChanges();
             }
         }
+
         protected virtual bool SaveItemCanExecute()
             => (!SelectedItem.HasErrors) && (HasChanges || IsNewItem);
 
