@@ -98,7 +98,7 @@ namespace BookOrganizer2.Domain.BookProfile
             }
         }
 
-        public static Book NewBook => new Book { Id = new BookId(SequentialGuid.NewSequentialGuid()) };
+        public static Book NewBook => new() { Id = new BookId(SequentialGuid.NewSequentialGuid()) };
 
         public void SetTitle(string name)
         {

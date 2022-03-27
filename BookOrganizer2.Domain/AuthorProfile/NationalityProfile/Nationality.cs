@@ -3,6 +3,7 @@ using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using BookOrganizer2.Domain.Helpers.Extensions;
 
 namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
 {
@@ -62,19 +63,15 @@ namespace BookOrganizer2.Domain.AuthorProfile.NationalityProfile
             }
         }
 
-        internal bool EnsureValidState()
-        {
-            return HasNonDefaultId() && !string.IsNullOrWhiteSpace(Name);
-
-            bool HasNonDefaultId() => Id.Value != default;
-        }
+        internal bool EnsureValidState() 
+            => Id.Value.HasNonDefaultValue() && !string.IsNullOrWhiteSpace(Name);
 
         private static bool ValidateName(string name)
         {
-            var pattern = "(?=.{" + MinLength + "," + MaxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
-
             if (string.IsNullOrWhiteSpace(name))
                 return false;
+
+            var pattern = "(?=.{" + MinLength + "," + MaxLength + "}$)^[\\p{L}\\p{M}\\s'-]+?$";
 
             var regexPattern = new Regex(pattern);
 

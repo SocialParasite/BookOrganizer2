@@ -310,12 +310,10 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                    ViewModelName = Type.GetType(itemType.FullName).Name
                                });
             }
-
         }
 
         private void OnStatusMessageChanged(StatusMessageChangedEventArgs obj)
         {
-
             if (SelectedVm is IItemLists)
             {
                 ItemStatusCounter = $"{obj.InfoText}: {obj.NumberOfItems} / {obj.AllItemsCount}";

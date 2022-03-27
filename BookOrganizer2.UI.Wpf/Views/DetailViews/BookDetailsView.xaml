@@ -486,7 +486,7 @@
                                 Grid.Row="1"
                                 HorizontalContentAlignment="Stretch"
                                 BorderThickness="0"
-                                ItemsSource="{Binding SelectedItem.Model.Notes}">
+                                ItemsSource="{Binding SelectedItem.Notes}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <Expander>
