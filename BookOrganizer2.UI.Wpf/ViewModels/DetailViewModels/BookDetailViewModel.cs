@@ -362,7 +362,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
 
                 void SetDefaultBookTitleIfNoneSet()
                 {
-                    if (SelectedItem.Title == "" || SelectedItem.Title is null)
+                    if (string.IsNullOrWhiteSpace(SelectedItem.Title))
                         SelectedItem.Title = "Book Title";
                 }
 
