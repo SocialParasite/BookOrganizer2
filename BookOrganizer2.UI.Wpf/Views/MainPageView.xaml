@@ -16,6 +16,33 @@
 
     <ScrollViewer>
         <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <GroupBox x:Name="UniversalSearchGroupBox" Width="{Binding ElementName=AddItemsGroupBox, Path=ActualWidth}">
+                <GroupBox.Header>
+                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                        <Label
+                            Content="&#xE721;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Style="{StaticResource LabelStyles}" />
+                        <Label
+                            Content="Search:"
+                            FontWeight="Bold"
+                            Style="{StaticResource LabelStyles}" />
+                    </StackPanel>
+                </GroupBox.Header>
+                <WrapPanel Margin="10">
+                    <TextBox x:Name="searchTextBox"
+                             Width="400" 
+                             Height="33" 
+                             Style="{StaticResource BaseTextBoxStyle}" />
+                    <Button Content="Search" 
+                            Margin="5 0 0 0" Width="50" 
+                            Style="{StaticResource BaseButtonStyle}" 
+                            Command="{Binding SearchCommand}"
+                            CommandParameter="{Binding Text, ElementName=searchTextBox}" />
+                </WrapPanel>
+            </GroupBox>
+
             <GroupBox x:Name="ShowItemsGroupBox" Width="{Binding ElementName=AddItemsGroupBox, Path=ActualWidth}">
                 <GroupBox.Header>
                     <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">

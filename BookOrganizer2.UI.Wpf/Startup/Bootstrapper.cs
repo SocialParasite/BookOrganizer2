@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Prism.Events;
 using Serilog;
 using System.IO;
+using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
 using BookOrganizer2.UI.Wpf.ViewModels.ListViewModels;
 using BookOrganizer2.UI.Wpf.ViewModels.Reports;
@@ -51,6 +52,8 @@ namespace BookOrganizer2.UI.Wpf.Startup
             builder.RegisterAssemblyTypes(typeof(AuthorRepository).Assembly)
                 .Where(type => type.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces();
+
+            builder.RegisterType<SearchService>().As<ISearchService>();
 
             Settings settings = GetSettings();
 

@@ -5,6 +5,7 @@ using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.DA.Conditions;
+using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -157,6 +158,26 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             var filePath = Path.GetDirectoryName(picturePath);
             var thumbPath = $@"{filePath}\{thumbnail}";
             return thumbPath;
+        }
+
+        public async Task<IList<SearchResult>> Search(string searchTerm)
+        {
+            await using var ctx = _contextCreator();
+            var test = ctx.Books
+                .Where(b => b.Description.Contains(searchTerm)
+                            || b.Title.Contains(searchTerm) 
+                            || b.Notes.Any(n => n.Title.Contains(searchTerm) 
+                                                || n.Content.Contains(searchTerm)))
+                .Select(a =>
+                    new SearchResult
+                    {
+                        Id = a.Id,
+                        Title = a.Title,
+                        Content = a.Description, // TODO:
+                        ParentType = "Book"
+                    });
+
+            return test.ToList();
         }
     }
 }
