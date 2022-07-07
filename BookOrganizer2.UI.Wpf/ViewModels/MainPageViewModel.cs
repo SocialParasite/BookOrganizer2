@@ -32,12 +32,12 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _languageLookupDataService = languageLookupDataService ?? throw new ArgumentNullException(nameof(languageLookupDataService));
 
             ShowItemsCommand = new DelegateCommand<Type>(OnShowItemsExecute);
-
             AddNewItemCommand = new DelegateCommand<Type>(OnAddNewItemExecute);
             EditLanguagesCommand = new DelegateCommand(OnEditLanguagesExecute);
             EditNationalitiesCommand = new DelegateCommand(OnEditNationalitiesExecute);
             EditBookFormatsCommand = new DelegateCommand(OnEditBookFormatsExecute);
             EditBookGenresCommand = new DelegateCommand(OnEditBookGenresExecute);
+            SearchCommand = new DelegateCommand<string>(OnSearchExecute);
         }
 
         public ICommand ShowItemsCommand { get; }
@@ -46,6 +46,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         public ICommand EditNationalitiesCommand { get; }
         public ICommand EditBookFormatsCommand { get; }
         public ICommand EditBookGenresCommand { get; }
+        public ICommand SearchCommand { get; }
 
         private void OnShowItemsExecute(Type itemType)
         {
@@ -103,6 +104,11 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                                Id = await _genreLookupDataService.GetGenreId(),
                                ViewModelName = nameof(GenreDetailViewModel)
                            });
+
+        }
+        private void OnSearchExecute(string searchTerm)
+        {
+            // TODO
 
         }
     }
