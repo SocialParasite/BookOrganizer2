@@ -1,12 +1,13 @@
 ﻿using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Services;
 using BookOrganizer2.UI.Wpf.Events;
 using BookOrganizer2.UI.Wpf.Interfaces;
+using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
+using JetBrains.Annotations;
 using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Windows.Input;
-using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
-using JetBrains.Annotations;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -17,12 +18,14 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
         private readonly IFormatLookupDataService _formatLookupDataService;
         private readonly IGenreLookupDataService _genreLookupDataService;
         private readonly ILanguageLookupDataService _languageLookupDataService;
+        private readonly ISearchService _searchService;
 
         public MainPageViewModel([NotNull] IEventAggregator eventAggregator,
                                  [NotNull] INationalityLookupDataService nationalityLookupDataService,
                                  [NotNull] IFormatLookupDataService formatLookupDataService,
                                  [NotNull] IGenreLookupDataService genreLookupDataService,
-                                 [NotNull] ILanguageLookupDataService languageLookupDataService)
+                                 [NotNull] ILanguageLookupDataService languageLookupDataService,
+                                 [NotNull] ISearchService searchService)
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _nationalityLookupDataService = nationalityLookupDataService 
@@ -30,6 +33,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             _formatLookupDataService = formatLookupDataService ?? throw new ArgumentNullException(nameof(formatLookupDataService));
             _genreLookupDataService = genreLookupDataService ?? throw new ArgumentNullException(nameof(genreLookupDataService));
             _languageLookupDataService = languageLookupDataService ?? throw new ArgumentNullException(nameof(languageLookupDataService));
+            _searchService = searchService;
 
             ShowItemsCommand = new DelegateCommand<Type>(OnShowItemsExecute);
             AddNewItemCommand = new DelegateCommand<Type>(OnAddNewItemExecute);
@@ -106,8 +110,9 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                            });
 
         }
-        private void OnSearchExecute(string searchTerm)
+        private async void OnSearchExecute(string searchTerm)
         {
+            var test = await _searchService.Search(searchTerm);
             // TODO
 
         }

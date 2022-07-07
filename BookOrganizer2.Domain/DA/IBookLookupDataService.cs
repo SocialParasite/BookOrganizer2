@@ -1,10 +1,11 @@
 ﻿using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.BookProfile.FormatProfile;
 using BookOrganizer2.Domain.BookProfile.GenreProfile;
 using BookOrganizer2.Domain.DA.Conditions;
+using BookOrganizer2.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.BookProfile.FormatProfile;
 
 namespace BookOrganizer2.Domain.DA
 {
@@ -16,5 +17,6 @@ namespace BookOrganizer2.Domain.DA
             IList<Guid> genreFilter = null, IList<Guid> formatFilter = null);
         Task<IEnumerable<GenreLookupItem>> GetGenresAsync();
         Task<IEnumerable<FormatLookupItem>> GetFormatsAsync();
+        Task<IList<SearchResult>> Search(string searchTerm);
     }
 }
