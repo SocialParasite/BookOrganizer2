@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BookOrganizer2.Domain.DA;
+﻿using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookOrganizer2.Domain.Shared
 {
     public class SearchService : ISearchService
     {
-        private readonly IBookLookupDataService _bookLookupDataService;
+        private readonly ISearchLookupDataService _searchLookupService;
 
-        public SearchService(IBookLookupDataService bookLookupDataService)
+        public SearchService(ISearchLookupDataService searchLookupService)
         {
-            _bookLookupDataService = bookLookupDataService;
+            _searchLookupService = searchLookupService;
         }
 
         public Task<IList<SearchResult>> Search(string searchTerm)
@@ -25,7 +23,7 @@ namespace BookOrganizer2.Domain.Shared
             
 
             // TODO: all the rest
-            return _bookLookupDataService.Search(searchTerm);
+            return _searchLookupService.Search(searchTerm);
         }
     }
 }
