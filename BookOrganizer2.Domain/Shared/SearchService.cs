@@ -16,12 +16,6 @@ namespace BookOrganizer2.Domain.Shared
 
         public Task<IList<SearchResult>> Search(string searchTerm)
         {
-            // search books (booksRepository)
-            // - title
-            // - notes
-            // - description
-            
-
             // TODO: all the rest
             return _searchLookupService.Search(searchTerm);
         }

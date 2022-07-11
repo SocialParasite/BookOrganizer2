@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels;
+using BookOrganizer2.UI.Wpf.ViewModels.ListViewModels;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels
 {
@@ -86,6 +87,16 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
             }
 
             _eventAggregator.GetEvent<StatusMessageChangedEvent>().Subscribe(OnStatusMessageChanged);
+
+            _eventAggregator.GetEvent<SearchEvent>().Subscribe(OnSearchSent);
+        }
+
+        private void OnSearchSent(SearchEventArgs obj)
+        {
+            var vm = _viewModelCreator["SearchViewModel"];
+            (vm as SearchViewModel)!.SearchTerm = obj.SearchTerm;
+            SelectedVm = vm;
+            IsViewVisible = true;
         }
 
         public ICommand ShowMenuCommand { get; }

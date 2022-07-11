@@ -11,7 +11,7 @@ namespace BookOrganizer2.UI.Wpf.Extensions
             return enumerableList != null ? new List<T>(enumerableList) : null;
         }
 
-        public static ObservableCollection<T> FromListToObservableCollection<T>(this IEnumerable<T> enumerableList)
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerableList)
         {
             return enumerableList != null ? new ObservableCollection<T>(enumerableList) : null;
         }

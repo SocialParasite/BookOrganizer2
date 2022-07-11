@@ -61,6 +61,9 @@
             <DataTemplate DataType="{x:Type detailViewModels:PublisherDetailViewModel}">
                 <detailViews:PublisherDetailView />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type listViewModels:SearchViewModel}">
+                <listViews:SearchView />
+            </DataTemplate>
             <DataTemplate DataType="{x:Type listViewModels:SeriesViewModel}">
                 <listViews:SeriesView />
             </DataTemplate>

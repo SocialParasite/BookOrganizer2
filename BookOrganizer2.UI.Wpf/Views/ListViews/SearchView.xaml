@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="BookOrganizer2.UI.Wpf.Views.ListViews.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="UserDataTemplate">
+                <Grid x:Name="UserDTGrid" MinHeight="100">
+                    <Label
+                            x:Name="ItemCollectionNameLabel"
+                            Height="{Binding Path=Height, ElementName=UserDTGrid}"
+                            Margin="1"
+                            HorizontalAlignment="Stretch">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseLeftButtonUp">
+                                <b:InvokeCommandAction Command="{Binding DataContext.ItemNameLabelMouseLeftButtonUpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}" />
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                        <Label.Template>
+                            <ControlTemplate TargetType="{x:Type Label}">
+                                <Label
+                                        x:Name="textBlockLabel"
+                                        Background="{StaticResource ItemsViewLabelDefaultBackground}"
+                                        BorderBrush="{StaticResource ItemsViewLabelBorderBrush}"
+                                        BorderThickness="1"
+                                        FontSize="12">
+                                    <Label.Content>
+                                        <Grid>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="75" />
+                                                    <RowDefinition Height="20" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="50" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Image
+                                                        x:Name="itemPicture"
+                                                        MaxWidth="75"
+                                                        MaxHeight="75"
+                                                        Grid.RowSpan="2"
+                                                        Source="{Binding Picture}" />
+                                                <TextBlock
+                                                        x:Name="TitleTextBlock"
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Margin="20,0,0,0"
+                                                        Text="{Binding Title}"
+                                                        TextAlignment="Right"
+                                                        TextWrapping="Wrap" />
+                                                <TextBlock
+                                                        x:Name="ContentTextBlock"
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Margin="20,0,0,0"
+                                                        Text="{Binding Content }"
+                                                        TextAlignment="Right"
+                                                        TextWrapping="Wrap" />
+
+                                            </Grid>
+                                        </Grid>
+                                    </Label.Content>
+                                </Label>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Label.IsMouseOver" Value="True">
+                                        <Setter TargetName="textBlockLabel" Property="Background" Value="{StaticResource ItemsViewLabelBackgroundOnMouseOver}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Label.Template>
+                    </Label>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid>
+            <ScrollViewer>
+                <ItemsControl
+                    x:Name="ItemList"
+                    ItemTemplate="{StaticResource UserDataTemplate}"
+                    ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel>
+                                <b:Interaction.Behaviors>
+                                    <b:FluidMoveBehavior AppliesTo="Children" Duration="0:0:0.5">
+                                        <b:FluidMoveBehavior.EaseY>
+                                            <CubicEase EasingMode="EaseInOut" />
+                                        </b:FluidMoveBehavior.EaseY>
+                                        <b:FluidMoveBehavior.EaseX>
+                                            <CubicEase EasingMode="EaseInOut" />
+                                        </b:FluidMoveBehavior.EaseX>
+                                    </b:FluidMoveBehavior>
+                                </b:Interaction.Behaviors>
+                            </StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>
