@@ -35,7 +35,9 @@ public class SearchLookupDataService : ISearchLookupDataService
                     Id = a.Id,
                     Title = a.Title,
                     Content = GetContent(a, searchTerm),
-                    ParentType = "Book"
+                    ParentType = "Book",
+                    Picture = a.BookCoverPath,
+                    ViewModelName = "BookDetailViewModel" // HACK
                 });
 
         return results.ToList();

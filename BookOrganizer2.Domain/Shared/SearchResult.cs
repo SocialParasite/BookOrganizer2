@@ -8,5 +8,7 @@ namespace BookOrganizer2.Domain.Shared
         public string Title { get; init; }
         public string Content { get; init; }
         public string ParentType { get; init; }
+        public string Picture { get; set; }
+        public string ViewModelName { get; set; }
     }
 }

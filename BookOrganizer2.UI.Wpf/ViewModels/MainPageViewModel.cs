@@ -110,10 +110,13 @@ namespace BookOrganizer2.UI.Wpf.ViewModels
                            });
 
         }
-        private async void OnSearchExecute(string searchTerm)
+        private void OnSearchExecute(string searchTerm)
         {
-            var test = await _searchService.Search(searchTerm);
-            // TODO
+            _eventAggregator.GetEvent<SearchEvent>()
+                .Publish(new SearchEventArgs
+                {
+                    SearchTerm = searchTerm
+                });
 
         }
     }

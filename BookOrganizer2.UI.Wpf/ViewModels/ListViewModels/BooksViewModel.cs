@@ -119,8 +119,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
                 AllItemsCount = Items.Count();
                 UpdateEntityCollection();
                 // TODO: Call book service instead
-                Genres = (await _bookLookupDataService.GetGenresAsync()).FromListToObservableCollection();
-                Formats = (await _bookLookupDataService.GetFormatsAsync()).FromListToObservableCollection();
+                Genres = (await _bookLookupDataService.GetGenresAsync()).ToObservableCollection();
+                Formats = (await _bookLookupDataService.GetFormatsAsync()).ToObservableCollection();
             }
             catch (Exception ex)
             {
