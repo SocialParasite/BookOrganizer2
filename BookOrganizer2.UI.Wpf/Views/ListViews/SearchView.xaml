@@ -32,8 +32,8 @@
                                         <Grid>
                                             <Grid>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="75" />
-                                                    <RowDefinition Height="20" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="50" />
@@ -49,17 +49,17 @@
                                                         x:Name="TitleTextBlock"
                                                         Grid.Row="0"
                                                         Grid.Column="1"
+                                                        FontSize="24"
                                                         Margin="20,0,0,0"
                                                         Text="{Binding Title}"
-                                                        TextAlignment="Right"
                                                         TextWrapping="Wrap" />
                                                 <TextBlock
                                                         x:Name="ContentTextBlock"
                                                         Grid.Row="1"
                                                         Grid.Column="1"
+                                                        FontSize="16"
                                                         Margin="20,0,0,0"
                                                         Text="{Binding Content }"
-                                                        TextAlignment="Right"
                                                         TextWrapping="Wrap" />
 
                                             </Grid>

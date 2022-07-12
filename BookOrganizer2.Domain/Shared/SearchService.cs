@@ -14,9 +14,8 @@ namespace BookOrganizer2.Domain.Shared
             _searchLookupService = searchLookupService;
         }
 
-        public Task<IList<SearchResult>> Search(string searchTerm)
+        public Task<List<SearchResult>> Search(string searchTerm)
         {
-            // TODO: all the rest
             return _searchLookupService.Search(searchTerm);
         }
     }

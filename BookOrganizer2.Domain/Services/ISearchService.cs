@@ -6,6 +6,6 @@ namespace BookOrganizer2.Domain.Services
 {
     public interface ISearchService
     {
-        Task<IList<SearchResult>> Search(string searchTerm);
+        Task<List<SearchResult>> Search(string searchTerm);
     }
 }

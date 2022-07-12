@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookOrganizer2.Domain.AuthorProfile;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.Repositories.Lookups;
 
@@ -21,14 +23,29 @@ public class SearchLookupDataService : ISearchLookupDataService
         _placeholderPic = imagePath;
     }
 
-    public async Task<IList<SearchResult>> Search(string searchTerm)
+    public async Task<List<SearchResult>> Search(string searchTerm)
+    {
+        var result = new List<SearchResult>();
+
+        var books = SearchBooks(searchTerm);
+        var authors = SearchAuthors(searchTerm);
+
+        await Task.WhenAll(books, authors);
+        
+        result.AddRange(await books);
+        result.AddRange(await authors);
+
+        return result;
+    }
+
+    private async Task<List<SearchResult>> SearchBooks(string searchTerm)
     {
         await using var ctx = _contextCreator();
         var results = ctx.Books
             .Where(b => b.Description.Contains(searchTerm)
-                   || b.Title.Contains(searchTerm)
-                   || b.Notes.Any(n => n.Title.Contains(searchTerm)
-                                       || n.Content.Contains(searchTerm)))
+                        || b.Title.Contains(searchTerm)
+                        || b.Notes.Any(n => n.Title.Contains(searchTerm)
+                                            || n.Content.Contains(searchTerm)))
             .Select(a =>
                 new SearchResult
                 {
@@ -38,7 +55,33 @@ public class SearchLookupDataService : ISearchLookupDataService
                     ParentType = "Book",
                     Picture = a.BookCoverPath,
                     ViewModelName = "BookDetailViewModel" // HACK
-                });
+                })
+            .AsNoTracking();
+
+        return results.ToList();
+    }
+
+    private async Task<List<SearchResult>> SearchAuthors(string searchTerm)
+    {
+        await using var ctx = _contextCreator();
+        var results = ctx.Authors
+            .Where(a => a.Biography.Contains(searchTerm)
+                        || a.FirstName.Contains(searchTerm)
+                        || a.LastName.Contains(searchTerm)
+                        || a.Nationality.Name.Contains(searchTerm)
+                        || a.Notes.Any(n => n.Title.Contains(searchTerm)
+                                            || n.Content.Contains(searchTerm)))
+            .Select(a =>
+                new SearchResult
+                {
+                    Id = a.Id,
+                    Title = $"{a.LastName}, {a.FirstName}",
+                    Content = GetAuthorContent(a, searchTerm),
+                    ParentType = "Author",
+                    Picture = a.MugshotPath,
+                    ViewModelName = "AuthorDetailViewModel" // HACK
+                })
+            .AsNoTracking();
 
         return results.ToList();
     }
@@ -53,7 +96,7 @@ public class SearchLookupDataService : ISearchLookupDataService
 
         if (book.Notes.Any(n => n.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
         {
-            var note =  book.Notes.First(b => b.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Content.EquallyDividedSubstring(searchTerm);
+            var note = book.Notes.First(b => b.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Content.EquallyDividedSubstring(searchTerm);
             return note;
         }
 
@@ -63,5 +106,27 @@ public class SearchLookupDataService : ISearchLookupDataService
         }
 
         return book.Title;
+    }
+
+    private static string GetAuthorContent(Author author, string searchTerm)
+    {
+        if (author.Notes.Any(n => n.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+        {
+            var note = author.Notes.First(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Title.EquallyDividedSubstring(searchTerm);
+            return note;
+        }
+
+        if (author.Notes.Any(n => n.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
+        {
+            var note = author.Notes.First(b => b.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Content.EquallyDividedSubstring(searchTerm);
+            return note;
+        }
+
+        if (author.Biography is not null && author.Biography.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        {
+            return author.Biography.EquallyDividedSubstring(searchTerm);
+        }
+
+        return $"{author.LastName}, {author.FirstName}";
     }
 }
