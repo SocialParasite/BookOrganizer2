@@ -1,26 +1,24 @@
 ﻿using BookOrganizer2.DA.Repositories.Shared;
 using BookOrganizer2.DA.SqlServer;
+using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Shared;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookOrganizer2.Domain.AuthorProfile;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookOrganizer2.DA.Repositories.Lookups;
 
 public class SearchLookupDataService : ISearchLookupDataService
 {
     private readonly Func<BookOrganizer2DbContext> _contextCreator;
-    private readonly string _placeholderPic;
 
-    public SearchLookupDataService(Func<BookOrganizer2DbContext> contextCreator, string imagePath)
+    public SearchLookupDataService(Func<BookOrganizer2DbContext> contextCreator)
     {
         _contextCreator = contextCreator;
-        _placeholderPic = imagePath;
     }
 
     public async Task<List<SearchResult>> Search(string searchTerm)
