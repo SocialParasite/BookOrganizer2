@@ -1,7 +1,5 @@
 ﻿using BookOrganizer2.DA.Repositories.Shared;
 using BookOrganizer2.DA.SqlServer;
-using BookOrganizer2.Domain.AuthorProfile;
-using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.DA;
 using BookOrganizer2.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -27,8 +25,6 @@ public class SearchLookupDataService : ISearchLookupDataService
 
         var books = SearchBooks(searchTerm);
         var authors = SearchAuthors(searchTerm);
-
-        await Task.WhenAll(books, authors);
         
         result.AddRange(await books);
         result.AddRange(await authors);
@@ -49,7 +45,7 @@ public class SearchLookupDataService : ISearchLookupDataService
                 {
                     Id = a.Id,
                     Title = a.Title,
-                    Content = GetContent(a, searchTerm),
+                    Content = DataHelpers.GetBookContent(a, searchTerm, 100),
                     ParentType = "Book",
                     Picture = a.BookCoverPath,
                     ViewModelName = "BookDetailViewModel" // HACK
@@ -74,7 +70,7 @@ public class SearchLookupDataService : ISearchLookupDataService
                 {
                     Id = a.Id,
                     Title = $"{a.LastName}, {a.FirstName}",
-                    Content = GetAuthorContent(a, searchTerm),
+                    Content = DataHelpers.GetAuthorContent(a, searchTerm, 100),
                     ParentType = "Author",
                     Picture = a.MugshotPath,
                     ViewModelName = "AuthorDetailViewModel" // HACK
@@ -82,49 +78,5 @@ public class SearchLookupDataService : ISearchLookupDataService
             .AsNoTracking();
 
         return results.ToList();
-    }
-
-    private static string GetContent(Book book, string searchTerm)
-    {
-        if (book.Notes.Any(n => n.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
-        {
-            var note = book.Notes.First(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Title.EquallyDividedSubstring(searchTerm);
-            return note;
-        }
-
-        if (book.Notes.Any(n => n.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
-        {
-            var note = book.Notes.First(b => b.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Content.EquallyDividedSubstring(searchTerm);
-            return note;
-        }
-
-        if (book.Description is not null && book.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-        {
-            return book.Description.EquallyDividedSubstring(searchTerm);
-        }
-
-        return book.Title;
-    }
-
-    private static string GetAuthorContent(Author author, string searchTerm)
-    {
-        if (author.Notes.Any(n => n.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
-        {
-            var note = author.Notes.First(b => b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Title.EquallyDividedSubstring(searchTerm);
-            return note;
-        }
-
-        if (author.Notes.Any(n => n.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)))
-        {
-            var note = author.Notes.First(b => b.Content.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Content.EquallyDividedSubstring(searchTerm);
-            return note;
-        }
-
-        if (author.Biography is not null && author.Biography.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-        {
-            return author.Biography.EquallyDividedSubstring(searchTerm);
-        }
-
-        return $"{author.LastName}, {author.FirstName}";
     }
 }

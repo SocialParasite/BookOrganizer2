@@ -1,8 +1,13 @@
 ﻿using BookOrganizer2.Domain.DA;
+using BookOrganizer2.Domain.Services;
 using BookOrganizer2.Domain.Shared;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager;
 using BookOrganizer2.UI.BOThemes.DialogServiceManager.ViewModels;
+using BookOrganizer2.UI.Wpf.Events;
+using BookOrganizer2.UI.Wpf.Extensions;
 using BookOrganizer2.UI.Wpf.Interfaces;
+using JetBrains.Annotations;
+using Prism.Commands;
 using Prism.Events;
 using Serilog;
 using System;
@@ -10,17 +15,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using BookOrganizer2.UI.Wpf.Events;
-using BookOrganizer2.UI.Wpf.Extensions;
-using JetBrains.Annotations;
-using Prism.Commands;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
 {
-    public class SearchViewModel :  ViewModelBase, IItemLists
+    public class SearchViewModel : ViewModelBase, IItemLists
     {
         private readonly IEventAggregator _eventAggregator;
-        private readonly ISearchLookupDataService _searchLookupDataService;
+        private readonly ISearchService _searchService;
         private readonly ILogger _logger;
         private readonly IDialogService _dialogService;
         private ObservableCollection<SearchResult> _items;
@@ -28,19 +29,18 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
         public ObservableCollection<SearchResult> Items
         {
             get => _items;
-            set { _items = value; OnPropertyChanged(); }
+            set { _items = value.ToObservableCollection<SearchResult>(); OnPropertyChanged(); }
         }
 
         public IList<SearchResult> SearchResults { get; set; }
 
         public SearchViewModel(IEventAggregator eventAggregator,
-            ISearchLookupDataService searchLookupDataService,
+            ISearchService searchService,
             ILogger logger,
             IDialogService dialogService)
         {
             _eventAggregator = eventAggregator;
-            _searchLookupDataService = searchLookupDataService
-                                       ?? throw new ArgumentNullException(nameof(searchLookupDataService));
+            _searchService = searchService;
             _logger = logger;
             _dialogService = dialogService;
 
@@ -54,16 +54,15 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
         public string SearchTerm { get; set; }
         [UsedImplicitly] public ICommand ItemNameLabelMouseLeftButtonUpCommand { get; }
 
-        private Task Init()
-            => Task.Run(InitializeRepositoryAsync);
+        private async Task Init()
+            => await Task.Run(InitializeRepositoryAsync);
 
         public async Task InitializeRepositoryAsync()
         {
             try
             {
-                SearchResults = await _searchLookupDataService.Search(SearchTerm);
-                
-                await UpdateItemCollection();
+                await Task.Delay(1000); // HACK
+                Items = (await _searchService.Search(SearchTerm)).ToObservableCollection();
             }
             catch (Exception ex)
             {
@@ -73,9 +72,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
                 _logger.Error("Message: {Message}\n\n Stack trace: {StackTrace}\n\n", ex.Message, ex.StackTrace);
             }
         }
-
-        private async Task UpdateItemCollection() 
-            => Items = (await _searchLookupDataService.Search(SearchTerm)).ToObservableCollection();
 
         private bool OnItemNameLabelMouseLeftButtonUpCanExecute(SearchResult item)
             => item.Id != Guid.Empty;
