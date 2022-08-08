@@ -61,7 +61,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.ListViewModels
         {
             try
             {
-                await Task.Delay(1000); // HACK
+                while (SearchTerm is null) { }
                 Items = (await _searchService.Search(SearchTerm)).ToObservableCollection();
             }
             catch (Exception ex)
