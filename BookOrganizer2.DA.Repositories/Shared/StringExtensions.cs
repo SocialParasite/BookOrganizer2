@@ -4,10 +4,10 @@ namespace BookOrganizer2.DA.Repositories.Shared
 {
     public static class StringExtensions
     {
-        public static string EquallyDividedSubstring(this string text, string searchTerm)
+        public static string EquallyDividedSubstring(this string text, string searchTerm, int substringLength = 50)
         {
             var index = text.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase);
-            var maxLength = 50;
+            var maxLength = substringLength;
             var contentLength = text.Length;
 
             if (maxLength > contentLength)
