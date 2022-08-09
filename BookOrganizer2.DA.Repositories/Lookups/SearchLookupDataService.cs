@@ -25,9 +25,13 @@ public class SearchLookupDataService : ISearchLookupDataService
 
         var books = SearchBooks(searchTerm);
         var authors = SearchAuthors(searchTerm);
-        
+        var publishers = SearchPublishers(searchTerm);
+        var series = SearchSeries(searchTerm);
+
         result.AddRange(await books);
         result.AddRange(await authors);
+        result.AddRange(await publishers);
+        result.AddRange(await series);
 
         return result;
     }
@@ -74,6 +78,46 @@ public class SearchLookupDataService : ISearchLookupDataService
                     ParentType = "Author",
                     Picture = a.MugshotPath,
                     ViewModelName = "AuthorDetailViewModel" // HACK
+                })
+            .AsNoTracking();
+
+        return results.ToList();
+    }
+
+    private async Task<List<SearchResult>> SearchPublishers(string searchTerm)
+    {
+        await using var ctx = _contextCreator();
+        var results = ctx.Publishers
+            .Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm))
+            .Select(p =>
+                new SearchResult
+                {
+                    Id = p.Id,
+                    Title = $"{p.Name}",
+                    Content = DataHelpers.GetPublisherContent(p, searchTerm, 100),
+                    ParentType = "Publisher",
+                    Picture = p.LogoPath,
+                    ViewModelName = "PublisherDetailViewModel" // HACK
+                })
+            .AsNoTracking();
+
+        return results.ToList();
+    }
+
+    private async Task<List<SearchResult>> SearchSeries(string searchTerm)
+    {
+        await using var ctx = _contextCreator();
+        var results = ctx.Series
+            .Where(s => s.Name.Contains(searchTerm) || s.Description.Contains(searchTerm))
+            .Select(s =>
+                new SearchResult
+                {
+                    Id = s.Id,
+                    Title = $"{s.Name}",
+                    Content = DataHelpers.GetSeriesContent(s, searchTerm, 100),
+                    ParentType = "Series",
+                    Picture = s.PicturePath,
+                    ViewModelName = "SeriesDetailViewModel" // HACK
                 })
             .AsNoTracking();
 

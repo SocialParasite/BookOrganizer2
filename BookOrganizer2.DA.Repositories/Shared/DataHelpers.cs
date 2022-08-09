@@ -1,5 +1,7 @@
 ﻿using BookOrganizer2.Domain.AuthorProfile;
 using BookOrganizer2.Domain.BookProfile;
+using BookOrganizer2.Domain.PublisherProfile;
+using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using System;
 using System.Linq;
 
@@ -49,6 +51,26 @@ namespace BookOrganizer2.DA.Repositories.Shared
             }
 
             return $"{author.LastName}, {author.FirstName}";
+        }
+
+        public static string GetPublisherContent(Publisher publisher, string searchTerm, int substringLength = 50)
+        {
+            if (publisher.Description is not null && publisher.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            {
+                return publisher.Description.EquallyDividedSubstring(searchTerm, substringLength);
+            }
+
+            return publisher.Name;
+        }
+
+        public static string GetSeriesContent(Series series, string searchTerm, int substringLength = 50)
+        {
+            if (series.Description is not null && series.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            {
+                return series.Description.EquallyDividedSubstring(searchTerm, substringLength);
+            }
+
+            return series.Name;
         }
     }
 }
