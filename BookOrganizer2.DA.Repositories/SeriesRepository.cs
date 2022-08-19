@@ -49,9 +49,9 @@ namespace BookOrganizer2.DA.Repositories
             if (id != default)
                 return await Context.Series
                     .Include(s => s.Books)
-                    .ThenInclude(b => b.Series.Books)
+                        .ThenInclude(b => b.Series.Books)
                     .Include(s => s.Books)
-                    .ThenInclude(b => b.Book)
+                        .ThenInclude(b => b.Book)
                     .SingleOrDefaultAsync(b => b.Id == id);
 
             return Series.NewSeries;

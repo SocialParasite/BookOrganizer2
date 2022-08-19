@@ -9,6 +9,7 @@ using BookOrganizer2.Domain.BookProfile.SeriesProfile;
 using BookOrganizer2.Domain.PublisherProfile;
 using BookOrganizer2.Domain.Reports;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BookOrganizer2.DA.SqlServer
 {
@@ -58,6 +59,7 @@ namespace BookOrganizer2.DA.SqlServer
             ConnectionString ??= ConnectivityService.GetConnectionString();
 
             optionsBuilder.UseSqlServer(ConnectionString);
+            optionsBuilder.ConfigureWarnings(w => w.Ignore(CoreEventId.NavigationBaseIncludeIgnored, CoreEventId.NavigationBaseIncluded));
 
             base.OnConfiguring(optionsBuilder);
         }
