@@ -291,6 +291,12 @@
                                 <DataTemplate>
                                     <StackPanel>
                                         <Label>
+                                            <Label.Background>
+                                                <MultiBinding Converter="{StaticResource BookBackgroundColorMultiConverter}">
+                                                    <Binding Path="IsRead" />
+                                                    <Binding Path="Formats" />
+                                                </MultiBinding>
+                                            </Label.Background>
                                             <Label.Content>
                                                 <Grid MaxWidth="550">
                                                     <Grid.ColumnDefinitions>
