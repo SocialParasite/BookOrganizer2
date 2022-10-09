@@ -92,11 +92,11 @@ namespace BookOrganizer2.DA.Repositories.Lookups
             };
         }
 
-        private static int GetReadBooks(Series series) => series.Books.Count(b => b.Book.IsRead) / 2;
+        private static int GetReadBooks(Series series) => series.Books.Count(b => b.Book.IsRead);
 
-        private static int GetOwnedBooks(Series series) => series.Books.Count(b => b.Book.Formats.Any()) / 2;
+        private static int GetOwnedBooks(Series series) => series.Books.Count(b => b.Book.Formats.Any());
 
-        private static int GetBookCount(Series series) => series.Books.Count / 2;
+        private static int GetBookCount(Series series) => series.Books.Count;
         private static int GetPageCount(Series series) => series.Books.Sum(b => b.Book.PageCount);
         private static int GetReadPageCount(Series series) => series.Books.Where(b => b.Book.IsRead).Sum(b => b.Book.PageCount);
 
