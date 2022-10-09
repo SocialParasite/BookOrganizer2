@@ -36,6 +36,7 @@ namespace BookOrganizer2.DA.Repositories
                     .ThenInclude(s => s.Series)
                     .ThenInclude(s => s.Books)
                     .ThenInclude(b => b.Book)
+                    .ThenInclude(b => b.Formats)
                     .FirstOrDefaultAsync(b => b.Id == id)
                     .ConfigureAwait(false);
             }
