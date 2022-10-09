@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows.Media;
-using BookOrganizer2.Domain.BookProfile;
+﻿using BookOrganizer2.Domain.BookProfile;
 using BookOrganizer2.Domain.BookProfile.LanguageProfile;
 using BookOrganizer2.Domain.Common;
 using BookOrganizer2.Domain.PublisherProfile;
@@ -20,6 +13,13 @@ using BookOrganizer2.UI.Wpf.Wrappers;
 using Prism.Commands;
 using Prism.Events;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
 {
@@ -103,27 +103,6 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
             AllBookGenres = new ObservableCollection<Tuple<LookupItem, bool>>();
 
             YearsList = PopulateYearsMenu();
-        }
-
-        private async void OnNewLanguageAdded(NewLanguageEventArgs obj) 
-            => await InitializeLanguageCollection(true);
-
-        private async void OnNewPublisherAdded(NewPublisherEventArgs obj) 
-            => await InitializePublisherCollection(true);
-
-        private async void OnNewAuthorAdded(NewAuthorEventArgs obj) 
-            => await InitializeAuthorCollection(true);
-
-        private void OnRemoveNoteExecute(Note note)
-        {
-            SelectedItem.Model.Notes.Remove(note);
-            SetChangeTracker();
-        }
-
-        private void OnAddNewNoteExecute()
-        {
-            SelectedItem.Model.Notes.Add(Note.NewNote);
-            SetChangeTracker();
         }
 
         public ICommand HighlightMouseLeaveCommand { get; }
@@ -860,8 +839,7 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
             {
                 return false;
             }
-            return !AllBookFormats.Any(f
-                => f.Item1.DisplayMember.Equals(formatName, StringComparison.InvariantCultureIgnoreCase));
+            return !AllBookFormats.Any(f => f.Item1.DisplayMember.Equals(formatName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private bool OnAddNewGenreCanExecute(string genreName)
@@ -870,8 +848,8 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
             {
                 return false;
             }
-            return !AllBookGenres.Any(f
-                => f.Item1.DisplayMember.Equals(genreName, StringComparison.InvariantCultureIgnoreCase));
+
+            return !AllBookGenres.Any(f => f.Item1.DisplayMember.Equals(genreName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void OnAddNewGenreExecute(string genre) => AddNewGenre(genre).Await();
@@ -888,6 +866,27 @@ namespace BookOrganizer2.UI.Wpf.ViewModels.DetailViewModels
         {
             await ((IBookDomainService)DomainService).AddNewFormat(format);
             await InitializeAllBookFormatsCollection();
+        }
+
+        private async void OnNewLanguageAdded(NewLanguageEventArgs obj)
+            => await InitializeLanguageCollection(true);
+
+        private async void OnNewPublisherAdded(NewPublisherEventArgs obj)
+            => await InitializePublisherCollection(true);
+
+        private async void OnNewAuthorAdded(NewAuthorEventArgs obj)
+            => await InitializeAuthorCollection(true);
+
+        private void OnRemoveNoteExecute(Note note)
+        {
+            SelectedItem.Model.Notes.Remove(note);
+            SetChangeTracker();
+        }
+
+        private void OnAddNewNoteExecute()
+        {
+            SelectedItem.Model.Notes.Add(Note.NewNote);
+            SetChangeTracker();
         }
     }
 }
